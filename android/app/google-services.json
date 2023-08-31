@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "465560543092",
+    "project_id": "ambulance-dispatch-syste-c3397",
+    "storage_bucket": "ambulance-dispatch-syste-c3397.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:465560543092:android:b1fcdbebb18a479ac15621",
+        "android_client_info": {
+          "package_name": "com.example.ambulance_dispatch_application"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "465560543092-rg4lp1r4h4k73o2bt7f9pa6cbbeje9jd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5QxkOxCTRYppAi-eKLeSAdmYME0P2sj4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "465560543092-rg4lp1r4h4k73o2bt7f9pa6cbbeje9jd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "465560543092-ce8b0rospj7o446mdoto083i25bgkhj2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ambulanceDispatchApplication"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
