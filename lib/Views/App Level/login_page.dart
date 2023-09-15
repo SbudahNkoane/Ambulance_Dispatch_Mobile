@@ -12,7 +12,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
   late TextEditingController usernameController;
   late TextEditingController passwordController;
 
@@ -64,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 80,
                   ),
                   Form(
-                      key: _formKey,
+                      key: _loginFormKey,
                       child: Column(
                         children: [
                           AppTextField(
@@ -73,6 +73,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             validationText: 'Enter your Username',
                             prefixIcon: Icons.mail,
                             keyboardType: TextInputType.emailAddress,
+                            validator: (usernameController) {
+                              return null;
+                            },
                           ),
                           SizedBox(
                             height: 10,
@@ -85,6 +88,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             validationText: 'Enter your Password',
                             prefixIcon: Icons.password,
                             keyboardType: TextInputType.visiblePassword,
+                            validator: (usernameController) {
+                              return null;
+                            },
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,

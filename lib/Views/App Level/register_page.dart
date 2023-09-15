@@ -10,16 +10,38 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  late TextEditingController nameController;
+  final GlobalKey<FormState> _registerFormKey = GlobalKey<FormState>();
+  late TextEditingController namesController;
+  late TextEditingController surnameController;
+  late TextEditingController idNumberController;
+  late TextEditingController emailController;
+  late TextEditingController genderController;
+  late TextEditingController phoneNumberController;
+  late TextEditingController passwordController;
+  late TextEditingController confirmPasswordController;
   @override
   void initState() {
-    nameController = TextEditingController();
+    namesController = TextEditingController();
+    surnameController = TextEditingController();
+    idNumberController = TextEditingController();
+    emailController = TextEditingController();
+    genderController = TextEditingController();
+    phoneNumberController = TextEditingController();
+    passwordController = TextEditingController();
+    confirmPasswordController = TextEditingController();
     super.initState();
   }
 
   @override
   void dispose() {
-    nameController.dispose();
+    namesController.dispose();
+    surnameController.dispose();
+    idNumberController.dispose();
+    emailController.dispose();
+    genderController.dispose();
+    phoneNumberController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -53,111 +75,141 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 SizedBox(
                   height: 25,
                 ),
-                AppTextField(
-                  labelText: 'Names',
-                  validationText: 'Enter Your Names',
-                  prefixIcon: Icons.person,
-                  keyboardType: TextInputType.name,
-                  controller: nameController,
-                ),
-                AppTextField(
-                  labelText: 'Surname',
-                  validationText: 'Enter Your Surname',
-                  prefixIcon: Icons.person,
-                  keyboardType: TextInputType.name,
-                  controller: nameController,
-                ),
-                AppTextField(
-                  labelText: 'ID Number',
-                  validationText: 'Enter Your ID Number',
-                  prefixIcon: Icons.edit_document,
-                  keyboardType: TextInputType.name,
-                  controller: nameController,
-                ),
-                AppTextField(
-                  labelText: 'Email Address',
-                  validationText: 'Enter Your Email Address',
-                  prefixIcon: Icons.mail_outlined,
-                  keyboardType: TextInputType.name,
-                  controller: nameController,
-                ),
-                AppTextField(
-                  labelText: 'Gender',
-                  validationText: 'Enter Your Gender',
-                  prefixIcon: Icons.person,
-                  keyboardType: TextInputType.name,
-                  controller: nameController,
-                ),
-                AppTextField(
-                  labelText: 'Cell Phone Number',
-                  validationText: 'Enter Your CellPhone Number',
-                  prefixIcon: Icons.phone,
-                  keyboardType: TextInputType.name,
-                  controller: nameController,
-                ),
-                AppTextField(
-                  labelText: 'Password',
-                  validationText: 'Enter Your Password',
-                  prefixIcon: Icons.lock_sharp,
-                  keyboardType: TextInputType.name,
-                  controller: nameController,
-                ),
-                AppTextField(
-                  labelText: 'Confirm Password',
-                  validationText: 'Your Passwords Don\'t match',
-                  prefixIcon: Icons.lock_open,
-                  keyboardType: TextInputType.name,
-                  controller: nameController,
-                ),
-                // AppTextField(
-                //   labelText: 'Name',
-                //   validationText: 'Enter Your Name',
-                //   prefixIcon: Icons.person,
-                //   keyboardType: TextInputType.name,
-                //   controller: nameController,
-                // ),
-                // AppTextField(
-                //   labelText: 'Name',
-                //   validationText: 'Enter Your Name',
-                //   prefixIcon: Icons.person,
-                //   keyboardType: TextInputType.name,
-                //   controller: nameController,
-                // ),
-                // AppTextField(
-                //   labelText: 'Name',
-                //   validationText: 'Enter Your Name',
-                //   prefixIcon: Icons.person,
-                //   keyboardType: TextInputType.name,
-                //   controller: nameController,
-                // ),
-                AppBlueButton(),
+                Form(
+                    key: _registerFormKey,
+                    child: Column(
+                      children: [
+                        AppTextField(
+                          labelText: 'Names',
+                          validationText: 'Enter Your Names',
+                          prefixIcon: Icons.person,
+                          keyboardType: TextInputType.name,
+                          controller: namesController,
+                          validator: (value) {
+                            return null;
+                          },
+                        ),
+                        AppTextField(
+                          labelText: 'Surname',
+                          validationText: 'Enter Your Surname',
+                          prefixIcon: Icons.person,
+                          keyboardType: TextInputType.name,
+                          controller: surnameController,
+                          validator: (usernameController) {
+                            return null;
+                          },
+                        ),
+                        AppTextField(
+                          labelText: 'ID Number',
+                          validationText: 'Enter Your ID Number',
+                          prefixIcon: Icons.edit_document,
+                          keyboardType: TextInputType.name,
+                          controller: idNumberController,
+                          validator: (usernameController) {
+                            return null;
+                          },
+                        ),
+                        AppTextField(
+                          labelText: 'Email Address',
+                          validationText: 'Enter Your Email Address',
+                          prefixIcon: Icons.mail_outlined,
+                          keyboardType: TextInputType.name,
+                          controller: emailController,
+                          validator: (usernameController) {
+                            return null;
+                          },
+                        ),
+                        AppTextField(
+                          labelText: 'Gender',
+                          validationText: 'Enter Your Gender',
+                          prefixIcon: Icons.person,
+                          keyboardType: TextInputType.name,
+                          controller: genderController,
+                          validator: (usernameController) {
+                            return null;
+                          },
+                        ),
+                        AppTextField(
+                          labelText: 'Cell Phone Number',
+                          validationText: 'Enter Your CellPhone Number',
+                          prefixIcon: Icons.phone,
+                          keyboardType: TextInputType.name,
+                          controller: phoneNumberController,
+                          validator: (usernameController) {
+                            return null;
+                          },
+                        ),
+                        AppTextField(
+                          labelText: 'Password',
+                          validationText: 'Enter Your Password',
+                          prefixIcon: Icons.lock_sharp,
+                          keyboardType: TextInputType.name,
+                          controller: passwordController,
+                          validator: (usernameController) {
+                            return null;
+                          },
+                        ),
+                        AppTextField(
+                          labelText: 'Confirm Password',
+                          validationText: 'Your Passwords Don\'t match',
+                          prefixIcon: Icons.lock_open,
+                          keyboardType: TextInputType.name,
+                          controller: confirmPasswordController,
+                          validator: (usernameController) {
+                            return null;
+                          },
+                        ),
+                        // AppTextField(
+                        //   labelText: 'Name',
+                        //   validationText: 'Enter Your Name',
+                        //   prefixIcon: Icons.person,
+                        //   keyboardType: TextInputType.name,
+                        //   controller: nameController,
+                        // ),
+                        // AppTextField(
+                        //   labelText: 'Name',
+                        //   validationText: 'Enter Your Name',
+                        //   prefixIcon: Icons.person,
+                        //   keyboardType: TextInputType.name,
+                        //   controller: nameController,
+                        // ),
+                        // AppTextField(
+                        //   labelText: 'Name',
+                        //   validationText: 'Enter Your Name',
+                        //   prefixIcon: Icons.person,
+                        //   keyboardType: TextInputType.name,
+                        //   controller: nameController,
+                        // ),
+                        AppBlueButton(),
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Already have an account?",
-                      style:
-                          TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(
-                      width: 110,
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(
-                        "Sign In",
-                        style: TextStyle(
-                            fontSize: 11, fontWeight: FontWeight.bold),
-                      ),
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: 25,
-                )
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Already have an account?",
+                              style: TextStyle(
+                                  fontSize: 11, fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              width: 110,
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text(
+                                "Sign In",
+                                style: TextStyle(
+                                    fontSize: 11, fontWeight: FontWeight.bold),
+                              ),
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: 25,
+                        )
+                      ],
+                    ))
               ],
             ),
           ),

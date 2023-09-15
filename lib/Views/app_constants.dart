@@ -49,7 +49,8 @@ class AppTextField extends StatefulWidget {
       required this.keyboardType,
       this.hideText = false,
       required this.controller,
-      this.suffixIcon});
+      this.suffixIcon,
+      required this.validator});
   final String labelText;
   final String validationText;
   final IconData prefixIcon;
@@ -59,6 +60,7 @@ class AppTextField extends StatefulWidget {
   final TextEditingController controller;
   final TextInputType keyboardType;
   final bool hideText;
+  final String? Function(String? text)? validator;
   @override
   State<AppTextField> createState() => _AppTextFieldState();
 }
@@ -108,12 +110,13 @@ class _AppTextFieldState extends State<AppTextField> {
           ),
           labelText: widget.labelText,
         ),
-        validator: (String? value) {
-          if (value == null || value.isEmpty) {
-            return widget.validationText;
-          }
-          return null;
-        },
+        validator: widget.validator,
+        //  (String? value) {
+        //   if (value == null || value.isEmpty) {
+        //     return widget.validationText;
+        //   }
+        //   return null;
+        // },
       ),
     );
   }
