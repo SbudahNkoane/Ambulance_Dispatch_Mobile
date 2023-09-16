@@ -1,8 +1,13 @@
-import 'dart:math';
+// ignore_for_file: use_build_context_synchronously
 
 import 'package:ambulance_dispatch_application/Routes/app_routes.dart';
+import 'package:ambulance_dispatch_application/View_Models/User%20Management/Authentication/authentication.dart';
+import 'package:ambulance_dispatch_application/View_Models/User%20Management/user_management.dart';
+import 'package:ambulance_dispatch_application/Views/User/home_page.dart';
 import 'package:ambulance_dispatch_application/Views/app_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -48,19 +53,20 @@ class _LoginScreenState extends State<LoginScreen> {
         child: SingleChildScrollView(
           child: Container(
             // color: Colors.blue,
-            padding: EdgeInsets.only(left: 20, right: 20),
+            padding: const EdgeInsets.only(left: 20, right: 20),
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     "Sign In",
-                    style: TextStyle(
-                        letterSpacing: 1,
-                        fontSize: 40,
-                        fontWeight: FontWeight.bold),
+                    style: GoogleFonts.lato(),
+                    // TextStyle(
+                    //     letterSpacing: 1,
+                    //     fontSize: 40,
+                    //     fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 80,
                   ),
                   Form(
@@ -70,14 +76,16 @@ class _LoginScreenState extends State<LoginScreen> {
                           AppTextField(
                             controller: usernameController,
                             labelText: 'Username',
-                            validationText: 'Enter your Username',
                             prefixIcon: Icons.mail,
                             keyboardType: TextInputType.emailAddress,
-                            validator: (usernameController) {
+                            validator: (value) {
+                              if (usernameController.text.trim().isEmpty) {
+                                return 'Enter your Username';
+                              }
                               return null;
                             },
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           AppTextField(
@@ -85,10 +93,12 @@ class _LoginScreenState extends State<LoginScreen> {
                             hideText: true,
                             controller: passwordController,
                             labelText: 'Password',
-                            validationText: 'Enter your Password',
                             prefixIcon: Icons.password,
                             keyboardType: TextInputType.visiblePassword,
-                            validator: (usernameController) {
+                            validator: (value) {
+                              if (passwordController.text.trim().isEmpty) {
+                                return 'Enter your Password';
+                              }
                               return null;
                             },
                           ),
@@ -98,7 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               InkWell(
                                 onTap: () {
                                   Navigator.of(context).pushNamed(
-                                      AppLevelRouteManager.passwordResetPage);
+                                      AppRouteManager.passwordResetPage);
                                 },
                                 child: Text(
                                   "Forgot Password?",
@@ -110,11 +120,39 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ],
                           ),
-                          AppBlueButton(),
+                          AppBlueButton(
+                            text: 'Sign In',
+                            onPressed: () async {
+                              if (_loginFormKey.currentState!.validate()) {
+                                final user = await context
+                                    .read<Authentication>()
+                                    .loginUser(
+                                      usernameController.text.trim(),
+                                      passwordController.text.trim(),
+                                    );
+                                if (user == null) {
+                                  print('Verify email first');
+                                } else {
+                                  await context
+                                      .read<UserManager>()
+                                      .getCurrentUserData(context
+                                          .read<Authentication>()
+                                          .currentUser!
+                                          .email!);
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute<void>(
+                                        builder: (BuildContext context) =>
+                                            const UserHomePage(),
+                                      ),
+                                      (route) => false);
+                                }
+                              }
+                            },
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
+                              const Text(
                                 "Don’t have an account yet?",
                                 style: TextStyle(
                                     fontSize: 10, fontWeight: FontWeight.bold),
@@ -123,10 +161,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                 onPressed: () {
                                   usernameController.clear();
                                   passwordController.clear();
-                                  Navigator.of(context).pushNamed(
-                                      AppLevelRouteManager.registerPage);
+                                  Navigator.of(context)
+                                      .pushNamed(AppRouteManager.registerPage);
                                 },
-                                child: Text(
+                                child: const Text(
                                   "Sign Up with Us",
                                   style: TextStyle(
                                       fontSize: 10,

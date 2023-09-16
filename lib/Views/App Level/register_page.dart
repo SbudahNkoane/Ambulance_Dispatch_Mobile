@@ -1,6 +1,10 @@
-import 'package:ambulance_dispatch_application/Routes/app_routes.dart';
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:ambulance_dispatch_application/Models/user.dart';
+import 'package:ambulance_dispatch_application/View_Models/User%20Management/Authentication/authentication.dart';
 import 'package:ambulance_dispatch_application/Views/app_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -15,16 +19,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
   late TextEditingController surnameController;
   late TextEditingController idNumberController;
   late TextEditingController emailController;
+  late TextEditingController confirmEmailController;
   late TextEditingController genderController;
   late TextEditingController phoneNumberController;
   late TextEditingController passwordController;
   late TextEditingController confirmPasswordController;
+  String dropdownValue = 'Male';
   @override
   void initState() {
     namesController = TextEditingController();
     surnameController = TextEditingController();
     idNumberController = TextEditingController();
     emailController = TextEditingController();
+    confirmEmailController = TextEditingController();
     genderController = TextEditingController();
     phoneNumberController = TextEditingController();
     passwordController = TextEditingController();
@@ -38,6 +45,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     surnameController.dispose();
     idNumberController.dispose();
     emailController.dispose();
+    confirmEmailController.dispose();
     genderController.dispose();
     phoneNumberController.dispose();
     passwordController.dispose();
@@ -62,17 +70,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
               height: 150,
               width: 150,
             ),
-            Text("Sign Up"),
+            const Text("Sign Up"),
           ],
         ),
       ),
       body: Center(
         child: SingleChildScrollView(
           child: Container(
-            padding: EdgeInsets.only(left: 20, right: 20),
+            padding: const EdgeInsets.only(left: 20, right: 20),
             child: Column(
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 25,
                 ),
                 Form(
@@ -80,82 +88,159 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: Column(
                       children: [
                         AppTextField(
-                          labelText: 'Names',
-                          validationText: 'Enter Your Names',
+                          labelText: 'Name(s)',
                           prefixIcon: Icons.person,
                           keyboardType: TextInputType.name,
                           controller: namesController,
-                          validator: (value) {
+                          validator: (names) {
+                            if (names == null || names.isEmpty) {
+                              return 'Enter Your name(s)';
+                            }
                             return null;
                           },
                         ),
                         AppTextField(
                           labelText: 'Surname',
-                          validationText: 'Enter Your Surname',
                           prefixIcon: Icons.person,
                           keyboardType: TextInputType.name,
                           controller: surnameController,
-                          validator: (usernameController) {
+                          validator: (surname) {
+                            if (surname == null || surname.isEmpty) {
+                              return 'Enter Your Surname';
+                            }
                             return null;
                           },
                         ),
                         AppTextField(
                           labelText: 'ID Number',
-                          validationText: 'Enter Your ID Number',
                           prefixIcon: Icons.edit_document,
-                          keyboardType: TextInputType.name,
+                          keyboardType: TextInputType.number,
                           controller: idNumberController,
-                          validator: (usernameController) {
+                          validator: (idNumber) {
+                            if (idNumber == null || idNumber.isEmpty) {
+                              return 'Enter Your ID Number';
+                            } else if (idNumber.length < 13) {
+                              return 'Enter Valid ID Number';
+                            }
                             return null;
                           },
+                        ),
+                        const SizedBox(
+                          height: 10,
                         ),
                         AppTextField(
                           labelText: 'Email Address',
-                          validationText: 'Enter Your Email Address',
                           prefixIcon: Icons.mail_outlined,
-                          keyboardType: TextInputType.name,
+                          keyboardType: TextInputType.emailAddress,
                           controller: emailController,
-                          validator: (usernameController) {
+                          validator: (email) {
+                            if (email == null || email.isEmpty) {
+                              return 'Enter Your Email Address';
+                            }
                             return null;
                           },
                         ),
                         AppTextField(
-                          labelText: 'Gender',
-                          validationText: 'Enter Your Gender',
-                          prefixIcon: Icons.person,
-                          keyboardType: TextInputType.name,
-                          controller: genderController,
-                          validator: (usernameController) {
+                          labelText: 'Confirm Email Address',
+                          prefixIcon: Icons.mail_outlined,
+                          keyboardType: TextInputType.emailAddress,
+                          controller: confirmEmailController,
+                          validator: (emailConfirm) {
+                            if (emailConfirm == null || emailConfirm.isEmpty) {
+                              return 'Confirm your Email Address';
+                            } else if (emailConfirm.trim() !=
+                                emailController.text.trim()) {
+                              return 'Your Emails Don\'t match';
+                            }
                             return null;
+                          },
+                        ),
+                        DropdownButtonFormField(
+                          alignment: Alignment.centerRight,
+                          value: dropdownValue,
+                          style: const TextStyle(
+                              fontSize: 12, color: Colors.black),
+                          dropdownColor: const Color(0xFFEAEAEA),
+                          decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(14),
+                              borderSide: const BorderSide(
+                                width: 1,
+                                color: Color.fromARGB(255, 59, 59, 59),
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(14),
+                              borderSide: BorderSide(
+                                width: 2,
+                                color: AppConstants().appDarkBlue,
+                              ),
+                            ),
+                            fillColor: const Color(0xFFEAEAEA),
+                            filled: true,
+                          ),
+                          items: <String>[
+                            'Male',
+                            'Female',
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              alignment: Alignment.center,
+                              value: value,
+                              child: Text(
+                                value,
+                                style: const TextStyle(fontSize: 18),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              dropdownValue = newValue!;
+                            });
                           },
                         ),
                         AppTextField(
                           labelText: 'Cell Phone Number',
-                          validationText: 'Enter Your CellPhone Number',
                           prefixIcon: Icons.phone,
-                          keyboardType: TextInputType.name,
+                          keyboardType: TextInputType.phone,
                           controller: phoneNumberController,
-                          validator: (usernameController) {
+                          validator: (phoneNumber) {
+                            if (phoneNumber == null || phoneNumber.isEmpty) {
+                              return 'Enter your Phone Number';
+                            } else if (phoneNumber.trim().length != 10) {
+                              return 'Please enter a Valid Phone Number';
+                            }
                             return null;
                           },
                         ),
                         AppTextField(
                           labelText: 'Password',
-                          validationText: 'Enter Your Password',
                           prefixIcon: Icons.lock_sharp,
-                          keyboardType: TextInputType.name,
+                          keyboardType: TextInputType.visiblePassword,
                           controller: passwordController,
-                          validator: (usernameController) {
+                          validator: (password) {
+                            if (password == null || password.isEmpty) {
+                              return 'Enter your password';
+                            }
+                            // else if (password.trim() !=
+                            //     emailController.text.trim()) {
+                            //   return 'Your Emails Don\'t match';
+                            // }
                             return null;
                           },
                         ),
                         AppTextField(
                           labelText: 'Confirm Password',
-                          validationText: 'Your Passwords Don\'t match',
                           prefixIcon: Icons.lock_open,
-                          keyboardType: TextInputType.name,
+                          keyboardType: TextInputType.visiblePassword,
                           controller: confirmPasswordController,
-                          validator: (usernameController) {
+                          validator: (confirmPassword) {
+                            if (confirmPassword == null ||
+                                confirmPassword.isEmpty) {
+                              return 'Confirm your Password';
+                            } else if (confirmPassword.trim() !=
+                                passwordController.text.trim()) {
+                              return 'Your Passwords Don\'t match';
+                            }
                             return null;
                           },
                         ),
@@ -180,24 +265,57 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         //   keyboardType: TextInputType.name,
                         //   controller: nameController,
                         // ),
-                        AppBlueButton(),
+                        AppBlueButton(
+                          text: 'Sign Up',
+                          onPressed: () async {
+                            User user = User(
+                              names: namesController.text.trim(),
+                              surname: surnameController.text.trim(),
+                              idNumber: idNumberController.text.trim(),
+                              emailaddress: emailController.text.trim(),
+                              gender: genderController.text.trim(),
+                              cellphoneNumber:
+                                  phoneNumberController.text.trim(),
+                            );
+
+                            if (_registerFormKey.currentState!.validate()) {
+                              await context
+                                  .read<Authentication>()
+                                  .registerNewUser(
+                                    emailController.text.trim(),
+                                    passwordController.text.trim(),
+                                    user,
+                                  );
+                              Navigator.of(context).pop();
+                              //  if(context
+                              //       .read<Authentication>()
+                              //       .currentUser!.emailVerified){
+
+                              //  }Navigator.of(context).pushAndRemoveUntil(
+                              //       MaterialPageRoute<void>(
+                              //           builder: (BuildContext context) =>
+                              //               const UserHomePage()),
+                              //       (route) => false);
+                            }
+                          },
+                        ),
 
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
+                            const Text(
                               "Already have an account?",
                               style: TextStyle(
                                   fontSize: 11, fontWeight: FontWeight.bold),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 110,
                             ),
                             TextButton(
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
-                              child: Text(
+                              child: const Text(
                                 "Sign In",
                                 style: TextStyle(
                                     fontSize: 11, fontWeight: FontWeight.bold),
@@ -205,7 +323,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             )
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 25,
                         )
                       ],

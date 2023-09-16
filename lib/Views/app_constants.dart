@@ -12,15 +12,22 @@ class AppConstants {
   Color appDarkWhite = const Color(0xFFF5F5F5);
 }
 
-class AppBlueButton extends StatelessWidget {
-  const AppBlueButton({super.key});
+class AppBlueButton extends StatefulWidget {
+  const AppBlueButton({super.key, required this.onPressed, required this.text});
+  final void Function() onPressed;
+  final String text;
 
+  @override
+  State<AppBlueButton> createState() => _AppBlueButtonState();
+}
+
+class _AppBlueButtonState extends State<AppBlueButton> {
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 12.0),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: widget.onPressed,
         style: ElevatedButton.styleFrom(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -29,8 +36,8 @@ class AppBlueButton extends StatelessWidget {
           backgroundColor: AppConstants().appDarkBlue,
         ),
         child: Text(
-          'Sign In',
-          style: TextStyle(
+          widget.text,
+          style: const TextStyle(
               letterSpacing: 1, fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ),
@@ -39,20 +46,20 @@ class AppBlueButton extends StatelessWidget {
 }
 
 class AppTextField extends StatefulWidget {
-  const AppTextField(
-      {super.key,
-      required this.labelText,
-      required this.validationText,
-      required this.prefixIcon,
-      this.maxCharacters,
-      this.counter,
-      required this.keyboardType,
-      this.hideText = false,
-      required this.controller,
-      this.suffixIcon,
-      required this.validator});
+  const AppTextField({
+    super.key,
+    required this.labelText,
+    required this.prefixIcon,
+    this.maxCharacters,
+    this.counter,
+    required this.keyboardType,
+    this.hideText = false,
+    required this.controller,
+    this.suffixIcon,
+    required this.validator,
+  });
   final String labelText;
-  final String validationText;
+
   final IconData prefixIcon;
   final IconData? suffixIcon;
   final int? counter;
@@ -68,27 +75,45 @@ class AppTextField extends StatefulWidget {
 class _AppTextFieldState extends State<AppTextField> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 65,
+    return Padding(
+      padding: const EdgeInsets.only(top: 10),
       child: TextFormField(
+        keyboardType: widget.keyboardType,
+        style: const TextStyle(fontSize: 12),
         textAlign: TextAlign.left,
         textAlignVertical: TextAlignVertical.center,
-        cursorColor: Color.fromARGB(255, 0, 0, 0),
+        cursorColor: const Color.fromARGB(255, 0, 0, 0),
         cursorHeight: 26,
         obscureText: widget.hideText,
         controller: widget.controller,
         maxLength: widget.maxCharacters,
         decoration: InputDecoration(
+          label: Text(widget.labelText),
           fillColor: const Color(0xFFEAEAEA),
           filled: true,
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: const BorderSide(
+              width: 1,
+              color: Color.fromARGB(255, 59, 59, 59),
+            ),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: const BorderSide(
+              width: 1,
+              color: Color.fromARGB(255, 59, 59, 59),
+            ),
+          ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
-            borderSide: BorderSide(
+            borderSide: const BorderSide(
               width: 1,
               color: Color.fromARGB(255, 59, 59, 59),
             ),
           ),
           focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
             borderSide: BorderSide(
               width: 2,
               color: AppConstants().appDarkBlue,
@@ -96,7 +121,7 @@ class _AppTextFieldState extends State<AppTextField> {
           ),
           counter: widget.maxCharacters != null
               ? Text("${widget.counter}/${widget.maxCharacters}")
-              : SizedBox(),
+              : const SizedBox(),
           prefixIcon: Icon(
             widget.prefixIcon,
             size: 18,
@@ -108,15 +133,8 @@ class _AppTextFieldState extends State<AppTextField> {
               size: 18,
             ),
           ),
-          labelText: widget.labelText,
         ),
         validator: widget.validator,
-        //  (String? value) {
-        //   if (value == null || value.isEmpty) {
-        //     return widget.validationText;
-        //   }
-        //   return null;
-        // },
       ),
     );
   }

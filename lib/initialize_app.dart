@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:ambulance_dispatch_application/Routes/app_routes.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -18,6 +20,6 @@ class InitApp {
       await Firebase.initializeApp();
     }
 
-    Navigator.of(context).popAndPushNamed(AppLevelRouteManager.loginPage);
+    Navigator.of(context).popAndPushNamed(AppRouteManager.loginPage);
   }
 }
