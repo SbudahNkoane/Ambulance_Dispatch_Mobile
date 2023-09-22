@@ -60,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   Text(
                     "Sign In",
-                    style: GoogleFonts.lato(),
+                    style: GoogleFonts.moul(fontSize: 40),
                     // TextStyle(
                     //     letterSpacing: 1,
                     //     fontSize: 40,

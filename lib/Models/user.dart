@@ -5,8 +5,10 @@ class User {
   final String emailaddress;
   final String gender;
   final String cellphoneNumber;
+  final String accountStatus;
 
   User({
+    required this.accountStatus,
     required this.names,
     required this.surname,
     required this.idNumber,
@@ -31,5 +33,6 @@ class User {
         idNumber: json['ID number'] as String,
         names: json['Names'] as String,
         surname: json['Surname'] as String,
+        accountStatus: json['Account Status'] as String,
       );
 }

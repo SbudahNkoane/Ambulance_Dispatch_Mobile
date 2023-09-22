@@ -4,6 +4,7 @@ import 'package:ambulance_dispatch_application/Models/user.dart';
 import 'package:ambulance_dispatch_application/View_Models/User%20Management/Authentication/authentication.dart';
 import 'package:ambulance_dispatch_application/Views/app_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -70,7 +71,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
               height: 150,
               width: 150,
             ),
-            const Text("Sign Up"),
+            Text(
+              "Sign Up",
+              style: GoogleFonts.moul(fontSize: 40),
+            ),
           ],
         ),
       ),
@@ -276,6 +280,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               gender: genderController.text.trim(),
                               cellphoneNumber:
                                   phoneNumberController.text.trim(),
+                              accountStatus: 'Not Verified',
                             );
 
                             if (_registerFormKey.currentState!.validate()) {

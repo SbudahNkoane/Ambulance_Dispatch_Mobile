@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppConstants {
   String logoWithBlueBackground = "assets/images/logo_blue_background.png";
@@ -10,6 +11,7 @@ class AppConstants {
   Color appYellow = const Color(0xFFC1B900);
   Color appWhite = const Color(0xFFFFFFFF);
   Color appDarkWhite = const Color(0xFFF5F5F5);
+  Color appGrey = const Color(0xFFEAEAEA);
 }
 
 class AppBlueButton extends StatefulWidget {
@@ -89,7 +91,8 @@ class _AppTextFieldState extends State<AppTextField> {
         maxLength: widget.maxCharacters,
         decoration: InputDecoration(
           label: Text(widget.labelText),
-          fillColor: const Color(0xFFEAEAEA),
+          labelStyle: GoogleFonts.orelegaOne(),
+          fillColor: AppConstants().appGrey,
           filled: true,
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),

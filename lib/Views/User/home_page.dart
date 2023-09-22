@@ -26,74 +26,92 @@ class _UserHomePageState extends State<UserHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: const [
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: CircleAvatar(
-              foregroundImage: AssetImage('assets/images/logo.png'),
-              backgroundColor: Colors.transparent,
-              radius: 25,
-            ),
-          ),
-        ],
-        toolbarHeight: 100,
-        centerTitle: true,
-        title: Text(_bottomNavIndex == 0
-            ? 'Home'
-            : _bottomNavIndex == 1
-                ? 'Tickets'
-                : _bottomNavIndex == 3
-                    ? 'Account'
-                    : 'Menu'),
-      ),
-      body: Center(
-        child: _pages[_bottomNavIndex],
-      ),
-      floatingActionButton: SizedBox(
-        width: 70,
-        height: 70,
-        child: FloatingActionButton(
-          shape: const CircleBorder(),
-          child: const Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.card_travel,
-                size: 13,
+        appBar: AppBar(
+          actions: const [
+            Padding(
+              padding: EdgeInsets.all(8.0),
+              child: CircleAvatar(
+                foregroundImage: AssetImage('assets/images/logo.png'),
+                backgroundColor: Colors.transparent,
+                radius: 25,
               ),
-              Text(
-                "Request",
-                style: TextStyle(
-                  fontSize: 10,
-                ),
-              )
-            ],
-          ),
-          onPressed: () {
-            Navigator.of(context)
-                .pushNamed(AppRouteManager.userRequestFormPage);
-          },
+            ),
+          ],
+          toolbarHeight: 100,
+          centerTitle: true,
+          title: Text(_bottomNavIndex == 0
+              ? 'Home'
+              : _bottomNavIndex == 1
+                  ? 'Tickets'
+                  : _bottomNavIndex == 3
+                      ? 'Account'
+                      : 'Menu'),
         ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: AnimatedBottomNavigationBar(
-        inactiveColor: Colors.grey,
-        activeColor: AppConstants().appDarkBlue,
-        notchSmoothness: NotchSmoothness.sharpEdge,
-        height: 70,
-        onTap: (index) => setState(() => _bottomNavIndex = index),
-        icons: const [
-          Icons.home_filled,
-          Icons.access_time,
-          Icons.holiday_village,
-          Icons.account_box,
-        ],
-        activeIndex: _bottomNavIndex,
-        gapLocation: GapLocation.center,
-        elevation: 50,
-      ),
-    );
+        body: Center(
+          child: _pages[_bottomNavIndex],
+        ),
+        floatingActionButton: SizedBox(
+          width: 70,
+          height: 70,
+          child: Selector<UserManager, User>(
+            selector: (context, user) => user.userData!,
+            builder: (context, value, child) {
+              return value.accountStatus == 'Verified'
+                  ? FloatingActionButton(
+                      shape: const CircleBorder(),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.card_travel,
+                            size: 13,
+                          ),
+                          Text(
+                            "Request",
+                            style: TextStyle(
+                              fontSize: 10,
+                            ),
+                          )
+                        ],
+                      ),
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pushNamed(AppRouteManager.userRequestFormPage);
+                      },
+                    )
+                  : SizedBox();
+            },
+          ),
+        ),
+        floatingActionButtonLocation:
+            context.read<UserManager>().userData!.accountStatus == 'Verified'
+                ? FloatingActionButtonLocation.centerDocked
+                : FloatingActionButtonLocation.centerFloat,
+        bottomNavigationBar: Selector<UserManager, User>(
+          selector: (p0, p1) => p1.userData!,
+          builder: (context, value, child) {
+            return AnimatedBottomNavigationBar(
+              inactiveColor: Colors.grey,
+              activeColor: AppConstants().appDarkBlue,
+              notchSmoothness: value.accountStatus == 'Verified'
+                  ? NotchSmoothness.sharpEdge
+                  : NotchSmoothness.defaultEdge,
+              height: 70,
+              onTap: (index) => setState(() => _bottomNavIndex = index),
+              icons: const [
+                Icons.home_filled,
+                Icons.access_time,
+                Icons.holiday_village,
+                Icons.account_box,
+              ],
+              activeIndex: _bottomNavIndex,
+              gapLocation: value.accountStatus == 'Verified'
+                  ? GapLocation.center
+                  : GapLocation.none,
+              elevation: 50,
+            );
+          },
+        ));
   }
 }
 
@@ -123,8 +141,19 @@ class _HomeState extends State<Home> {
                 ],
               ),
               SizedBox(
-                height: MediaQuery.of(context).size.height / 4,
+                height: userData.accountStatus == 'Verified'
+                    ? MediaQuery.of(context).size.height / 4
+                    : MediaQuery.of(context).size.height / 6.5,
               ),
+              userData.accountStatus == 'Verified'
+                  ? Text(
+                      'You are one step away!!',
+                    )
+                  : userData.accountStatus == 'Verified'
+                      ? Text(
+                          'An Administrator will verify your Account Shortly',
+                        )
+                      : SizedBox(),
               Image.asset(
                 'assets/images/med.png',
                 height: MediaQuery.of(context).size.height / 2.8,
