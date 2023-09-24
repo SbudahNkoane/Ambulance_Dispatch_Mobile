@@ -3,7 +3,7 @@
 import 'package:ambulance_dispatch_application/Routes/app_routes.dart';
 import 'package:ambulance_dispatch_application/View_Models/User%20Management/Authentication/authentication.dart';
 import 'package:ambulance_dispatch_application/View_Models/User%20Management/user_management.dart';
-import 'package:ambulance_dispatch_application/Views/User/home_page.dart';
+import 'package:ambulance_dispatch_application/Views/User/user_home_page.dart';
 import 'package:ambulance_dispatch_application/Views/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -124,13 +124,16 @@ class _LoginScreenState extends State<LoginScreen> {
                             text: 'Sign In',
                             onPressed: () async {
                               if (_loginFormKey.currentState!.validate()) {
-                                final user = await context
+                                final result = await context
                                     .read<Authentication>()
                                     .loginUser(
                                       usernameController.text.trim(),
                                       passwordController.text.trim(),
                                     );
-                                if (user == null) {
+                                if (context
+                                        .read<Authentication>()
+                                        .currentUser ==
+                                    null) {
                                   print('Verify email first');
                                 } else {
                                   await context

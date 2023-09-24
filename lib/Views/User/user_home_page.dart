@@ -1,8 +1,9 @@
 import 'package:ambulance_dispatch_application/Models/user.dart';
 import 'package:ambulance_dispatch_application/Routes/app_routes.dart';
 import 'package:ambulance_dispatch_application/View_Models/User%20Management/user_management.dart';
-import 'package:ambulance_dispatch_application/Views/User/account_page.dart';
-import 'package:ambulance_dispatch_application/Views/User/tickets_page.dart';
+import 'package:ambulance_dispatch_application/Views/User/user_menu_page.dart';
+import 'package:ambulance_dispatch_application/Views/User/user_tickets_page.dart';
+import 'package:ambulance_dispatch_application/Views/User/user_account_page.dart';
 import 'package:ambulance_dispatch_application/Views/app_constants.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -20,8 +21,8 @@ class _UserHomePageState extends State<UserHomePage> {
   final List<Widget> _pages = [
     const Home(),
     const UserTicketsPage(),
-    const UserTicketsPage(),
-    const UserAccountPage()
+    const UserAccountPage(),
+    const UserMenuPage(),
   ];
   @override
   Widget build(BuildContext context) {
@@ -44,8 +45,8 @@ class _UserHomePageState extends State<UserHomePage> {
               : _bottomNavIndex == 1
                   ? 'Tickets'
                   : _bottomNavIndex == 3
-                      ? 'Account'
-                      : 'Menu'),
+                      ? 'Menu'
+                      : 'Account'),
         ),
         body: Center(
           child: _pages[_bottomNavIndex],
@@ -58,6 +59,8 @@ class _UserHomePageState extends State<UserHomePage> {
             builder: (context, value, child) {
               return value.accountStatus == 'Verified'
                   ? FloatingActionButton(
+                      backgroundColor: AppConstants().appRed,
+                      foregroundColor: const Color.fromARGB(255, 232, 231, 228),
                       shape: const CircleBorder(),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -101,8 +104,8 @@ class _UserHomePageState extends State<UserHomePage> {
               icons: const [
                 Icons.home_filled,
                 Icons.access_time,
-                Icons.holiday_village,
                 Icons.account_box,
+                Icons.menu,
               ],
               activeIndex: _bottomNavIndex,
               gapLocation: value.accountStatus == 'Verified'
@@ -141,19 +144,20 @@ class _HomeState extends State<Home> {
                 ],
               ),
               SizedBox(
-                height: userData.accountStatus == 'Verified'
+                height: userData.accountStatus == 'Not Verified'
                     ? MediaQuery.of(context).size.height / 4
                     : MediaQuery.of(context).size.height / 6.5,
               ),
-              userData.accountStatus == 'Verified'
+              userData.accountStatus == 'Not Verified'
                   ? Text(
                       'You are one step away!!',
                     )
-                  : userData.accountStatus == 'Verified'
-                      ? Text(
-                          'An Administrator will verify your Account Shortly',
-                        )
-                      : SizedBox(),
+                  : SizedBox(),
+              userData.accountStatus == 'Not Verified'
+                  ? Text(
+                      'An Administrator will verify your Account Shortly',
+                    )
+                  : SizedBox(),
               Image.asset(
                 'assets/images/med.png',
                 height: MediaQuery.of(context).size.height / 2.8,

@@ -29,31 +29,43 @@ class Authentication with ChangeNotifier {
 //====== Check if user exist ======
 
   //========= LOGIN USER ==========
-  Future<fireBaseAuth.User?> loginUser(String email, String password) async {
+  Future<String> loginUser(String email, String password) async {
+    String state = 'OK';
+    //  fireBaseAuth.UserCredential? credential;
     try {
-      fireBaseAuth.UserCredential userCredential =
-          await fireBaseAuth.FirebaseAuth.instance
-              .signInWithEmailAndPassword(
+      await fireBaseAuth.FirebaseAuth.instance
+          .signInWithEmailAndPassword(
         email: email,
         password: password,
       )
-              .then((value) {
-        _currentUser = value.user;
+          .then((value) {
+        if (value.user!.emailVerified != false) {
+          state = 'Confirm Your email to sign in';
+        } else {
+          _currentUser = value.user;
+        }
+
         return value;
       });
-      return userCredential.user;
     } on fireBaseAuth.FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        print('No user found for that email.');
+        state = 'No user found for that email.';
       } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
+        state = 'Wrong password provided for that user.';
       }
     }
-    return null;
+    return state;
   }
 
 //========= LOG OUT USER ==========
-  void logoutUser() {
-    authentication.signOut();
+  Future<String> logoutUser() async {
+    String state = 'OK';
+    try {
+      authentication.signOut();
+      _currentUser = null;
+    } catch (e) {
+      state = e.toString();
+    }
+    return state;
   }
 }

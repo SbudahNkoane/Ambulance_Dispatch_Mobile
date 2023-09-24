@@ -2,11 +2,12 @@ import 'package:ambulance_dispatch_application/Views/App%20Level/login_page.dart
 import 'package:ambulance_dispatch_application/Views/App%20Level/password_reset_page.dart';
 import 'package:ambulance_dispatch_application/Views/App%20Level/register_page.dart';
 import 'package:ambulance_dispatch_application/Views/App%20Level/splash_page.dart';
-import 'package:ambulance_dispatch_application/Views/User/account_page.dart';
-import 'package:ambulance_dispatch_application/Views/User/home_page.dart';
-import 'package:ambulance_dispatch_application/Views/User/profile_page.dart';
-import 'package:ambulance_dispatch_application/Views/User/request_form_page.dart';
-import 'package:ambulance_dispatch_application/Views/User/tickets_page.dart';
+import 'package:ambulance_dispatch_application/Views/User/user_menu_page.dart';
+import 'package:ambulance_dispatch_application/Views/User/user_home_page.dart';
+import 'package:ambulance_dispatch_application/Views/User/user_profile_page.dart';
+import 'package:ambulance_dispatch_application/Views/User/user_request_form_page.dart';
+import 'package:ambulance_dispatch_application/Views/User/user_tickets_page.dart';
+import 'package:ambulance_dispatch_application/Views/User/user_account_page.dart';
 import 'package:flutter/material.dart';
 
 class AppRouteManager {
@@ -22,6 +23,7 @@ class AppRouteManager {
   static const String userAccountPage = '/UserAccountPage';
   static const String userRequestFormPage = '/UserRequestFormPage';
   static const String userProfilePage = '/UserProfilePage';
+  static const String userMenuPage = '/UserMenuPage';
 
 //========================== Admin Screens =================================================
   static const String adminHomePage = '/AdminHomePage';
@@ -63,6 +65,10 @@ class AppRouteManager {
       case userAccountPage:
         return MaterialPageRoute(
           builder: (context) => const UserAccountPage(),
+        );
+      case userMenuPage:
+        return MaterialPageRoute(
+          builder: (context) => const UserMenuPage(),
         );
       case userRequestFormPage:
         return MaterialPageRoute(

@@ -4,10 +4,19 @@ class User {
   final String idNumber;
   final String emailaddress;
   final String gender;
-  final String cellphoneNumber;
+  final int cellphoneNumber;
   final String accountStatus;
+  final String? verifiedBy;
+  final String? verificationPicture;
+  final String? idDocument;
+
+  final String? role;
 
   User({
+    this.idDocument,
+    this.verificationPicture,
+    this.role,
+    this.verifiedBy,
     required this.accountStatus,
     required this.names,
     required this.surname,
@@ -20,19 +29,25 @@ class User {
   Map<String, Object?> toJson() => {
         'Names': names,
         'Surname': surname,
-        'ID Number': idNumber,
-        'Email Address': emailaddress,
+        'ID_Number': idNumber,
+        'Email_Address': emailaddress,
         'Gender': gender,
-        'Phone Number': cellphoneNumber,
+        'Phone_Number': cellphoneNumber,
+        'Verification_Picture': verificationPicture,
+        'ID_Document': idDocument,
       };
 
   static User fromJson(Map<dynamic, dynamic>? json) => User(
-        cellphoneNumber: json!['Phone Number'] as String,
-        emailaddress: json['Email Address'] as String,
+        cellphoneNumber: json!['CellPhone_Number'] as int,
+        emailaddress: json['Email_Address'] as String,
         gender: json['Gender'] as String,
-        idNumber: json['ID number'] as String,
+        idNumber: json['ID_Number'] as String,
         names: json['Names'] as String,
         surname: json['Surname'] as String,
-        accountStatus: json['Account Status'] as String,
+        accountStatus: json['Account_Status'] as String,
+        verifiedBy: json['Verified_By'] as String?,
+        verificationPicture: json['Verification_Picture'] as String?,
+        idDocument: json['ID_Document'] as String?,
+        role: null,
       );
 }

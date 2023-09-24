@@ -199,6 +199,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           onChanged: (String? newValue) {
                             setState(() {
                               dropdownValue = newValue!;
+                              genderController.text = newValue;
                             });
                           },
                         ),
@@ -225,10 +226,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             if (password == null || password.isEmpty) {
                               return 'Enter your password';
                             }
-                            // else if (password.trim() !=
-                            //     emailController.text.trim()) {
-                            //   return 'Your Emails Don\'t match';
-                            // }
+
                             return null;
                           },
                         ),
@@ -248,27 +246,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             return null;
                           },
                         ),
-                        // AppTextField(
-                        //   labelText: 'Name',
-                        //   validationText: 'Enter Your Name',
-                        //   prefixIcon: Icons.person,
-                        //   keyboardType: TextInputType.name,
-                        //   controller: nameController,
-                        // ),
-                        // AppTextField(
-                        //   labelText: 'Name',
-                        //   validationText: 'Enter Your Name',
-                        //   prefixIcon: Icons.person,
-                        //   keyboardType: TextInputType.name,
-                        //   controller: nameController,
-                        // ),
-                        // AppTextField(
-                        //   labelText: 'Name',
-                        //   validationText: 'Enter Your Name',
-                        //   prefixIcon: Icons.person,
-                        //   keyboardType: TextInputType.name,
-                        //   controller: nameController,
-                        // ),
                         AppBlueButton(
                           text: 'Sign Up',
                           onPressed: () async {
@@ -279,7 +256,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               emailaddress: emailController.text.trim(),
                               gender: genderController.text.trim(),
                               cellphoneNumber:
-                                  phoneNumberController.text.trim(),
+                                  int.parse(phoneNumberController.text.trim()),
                               accountStatus: 'Not Verified',
                             );
 
@@ -304,7 +281,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             }
                           },
                         ),
-
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

@@ -7,8 +7,8 @@ class UserManager with ChangeNotifier {
   User? _userData;
   User? get userData => _userData;
 
-  Future<User?> getCurrentUserData(String email) async {
-    final docRef = db.collection("Users").doc(email);
+  Future<User?> getCurrentUserData(String userID) async {
+    final docRef = db.collection("Users").doc(userID);
     await docRef.get().then(
       (DocumentSnapshot doc) {
         _userData = User.fromJson(doc.data() as Map<String, dynamic>);
