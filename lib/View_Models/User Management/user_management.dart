@@ -8,13 +8,19 @@ class UserManager with ChangeNotifier {
   User? get userData => _userData;
 
   Future<User?> getCurrentUserData(String userID) async {
-    final docRef = db.collection("Users").doc(userID);
-    await docRef.get().then(
-      (DocumentSnapshot doc) {
-        _userData = User.fromJson(doc.data() as Map<String, dynamic>);
-      },
-      onError: (e) => print("Error getting document: $e"),
-    );
+    final docRef = db.collection("User").doc(userID);
+    await docRef.set(
+      {'User_ID': userID},
+      SetOptions(merge: true),
+    ).then((value) async {
+      await docRef.get().then(
+        (DocumentSnapshot doc) {
+          _userData = User.fromJson(doc.data() as Map<String, dynamic>);
+        },
+        onError: (e) => print("Error getting document: $e"),
+      );
+    }).onError((error, stackTrace) {});
+
     return _userData;
   }
 }

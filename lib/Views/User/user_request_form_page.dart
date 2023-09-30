@@ -35,16 +35,16 @@ class _UserRequestFromPageState extends State<UserRequestFromPage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Text('Your Are nearly done'),
-              SizedBox(
+              const Text('Your Are nearly done'),
+              const SizedBox(
                 height: 20,
               ),
               Form(
                 child: Column(
                   children: [
-                    Text(
+                    const Text(
                         'Give a short description of the Patient\'s condition'),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     Padding(
@@ -56,7 +56,7 @@ class _UserRequestFromPageState extends State<UserRequestFromPage> {
                         cursorColor: const Color.fromARGB(255, 0, 0, 0),
                         cursorHeight: 26,
                         decoration: InputDecoration(
-                          label: Text('Type here...'),
+                          label: const Text('Type here...'),
                           labelStyle: GoogleFonts.orelegaOne(),
                           fillColor: AppConstants().appGrey,
                           filled: true,
@@ -88,27 +88,27 @@ class _UserRequestFromPageState extends State<UserRequestFromPage> {
                               color: AppConstants().appDarkBlue,
                             ),
                           ),
-                          prefixIcon: Icon(
+                          prefixIcon: const Icon(
                             Icons.view_timeline_sharp,
                             size: 18,
                           ),
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
-                    Text('Pick Up Location'),
+                    const Text('Pick Up Location'),
                     SizedBox(
                       height: 600,
                       width: MediaQuery.of(context).size.width / 1.05,
                       child: Card(
-                        color: Color.fromARGB(255, 196, 196, 196),
+                        color: const Color.fromARGB(255, 196, 196, 196),
                         child: Padding(
                           padding: const EdgeInsets.all(15),
                           child: Column(
                             children: [
-                              Text('Use My Device Location'),
+                              const Text('Use My Device Location'),
                               Checkbox(
                                 value: false,
                                 onChanged: (value) {
@@ -118,15 +118,15 @@ class _UserRequestFromPageState extends State<UserRequestFromPage> {
                                   });
                                 },
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 20,
                               ),
-                              Text('OR'),
-                              SizedBox(
+                              const Text('OR'),
+                              const SizedBox(
                                 height: 20,
                               ),
-                              Text('Street Address'),
-                              SizedBox(
+                              const Text('Street Address'),
+                              const SizedBox(
                                 height: 20,
                               ),
                               TextFormField(
@@ -134,7 +134,7 @@ class _UserRequestFromPageState extends State<UserRequestFromPage> {
                                 cursorColor: const Color.fromARGB(255, 0, 0, 0),
                                 cursorHeight: 24,
                                 decoration: InputDecoration(
-                                  label: Text('Type here...'),
+                                  label: const Text('Type here...'),
                                   labelStyle: GoogleFonts.orelegaOne(),
                                   fillColor: AppConstants().appGrey,
                                   filled: true,
@@ -166,16 +166,16 @@ class _UserRequestFromPageState extends State<UserRequestFromPage> {
                                       color: AppConstants().appDarkBlue,
                                     ),
                                   ),
-                                  prefixIcon: Icon(
+                                  prefixIcon: const Icon(
                                     Icons.pin_drop,
                                     size: 18,
                                   ),
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 20,
                               ),
-                              Row(
+                              const Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
@@ -183,7 +183,7 @@ class _UserRequestFromPageState extends State<UserRequestFromPage> {
                                   Text('State/Province')
                                 ],
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 20,
                               ),
                               Row(
@@ -196,7 +196,7 @@ class _UserRequestFromPageState extends State<UserRequestFromPage> {
                                           const Color.fromARGB(255, 0, 0, 0),
                                       cursorHeight: 26,
                                       decoration: InputDecoration(
-                                        label: Text('Type here...'),
+                                        label: const Text('Type here...'),
                                         labelStyle: GoogleFonts.orelegaOne(),
                                         fillColor: AppConstants().appGrey,
                                         filled: true,
@@ -235,14 +235,14 @@ class _UserRequestFromPageState extends State<UserRequestFromPage> {
                                             color: AppConstants().appDarkBlue,
                                           ),
                                         ),
-                                        prefixIcon: Icon(
+                                        prefixIcon: const Icon(
                                           Icons.view_timeline_sharp,
                                           size: 18,
                                         ),
                                       ),
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 20,
                                   ),
                                   Flexible(
@@ -254,7 +254,7 @@ class _UserRequestFromPageState extends State<UserRequestFromPage> {
                                           const Color.fromARGB(255, 0, 0, 0),
                                       cursorHeight: 26,
                                       decoration: InputDecoration(
-                                        label: Text('Type here...'),
+                                        label: const Text('Type here...'),
                                         labelStyle: GoogleFonts.orelegaOne(),
                                         fillColor: AppConstants().appGrey,
                                         filled: true,
@@ -293,7 +293,7 @@ class _UserRequestFromPageState extends State<UserRequestFromPage> {
                                           //   color: AppConstants().appDarkBlue,
                                           // ),
                                         ),
-                                        prefixIcon: Icon(
+                                        prefixIcon: const Icon(
                                           Icons.view_timeline_sharp,
                                           size: 18,
                                         ),
@@ -302,11 +302,11 @@ class _UserRequestFromPageState extends State<UserRequestFromPage> {
                                   ),
                                 ],
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 20,
                               ),
-                              Text('Postal/Zip Code'),
-                              SizedBox(
+                              const Text('Postal/Zip Code'),
+                              const SizedBox(
                                 height: 20,
                               ),
                               Padding(
@@ -320,7 +320,7 @@ class _UserRequestFromPageState extends State<UserRequestFromPage> {
                                         const Color.fromARGB(255, 0, 0, 0),
                                     cursorHeight: 24,
                                     decoration: InputDecoration(
-                                      prefixIcon: Icon(
+                                      prefixIcon: const Icon(
                                         Icons.pin_drop,
                                         size: 18,
                                       ),
@@ -369,7 +369,7 @@ class _UserRequestFromPageState extends State<UserRequestFromPage> {
                       ),
                     ),
                     AppBlueButton(onPressed: () {}, text: 'Request Now'),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                   ],

@@ -125,13 +125,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             onPressed: () async {
                               if (_loginFormKey.currentState!.validate()) {
                                 final result = await context
-                                    .read<Authentication>()
+                                    .read<UserAuthentication>()
                                     .loginUser(
                                       usernameController.text.trim(),
                                       passwordController.text.trim(),
                                     );
                                 if (context
-                                        .read<Authentication>()
+                                        .read<UserAuthentication>()
                                         .currentUser ==
                                     null) {
                                   print('Verify email first');
@@ -139,7 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   await context
                                       .read<UserManager>()
                                       .getCurrentUserData(context
-                                          .read<Authentication>()
+                                          .read<UserAuthentication>()
                                           .currentUser!
                                           .email!);
                                   Navigator.of(context).pushAndRemoveUntil(

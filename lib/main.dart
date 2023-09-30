@@ -1,4 +1,6 @@
 import 'package:ambulance_dispatch_application/Routes/app_routes.dart';
+import 'package:ambulance_dispatch_application/View_Models/Admin%20Management/admin_management.dart';
+import 'package:ambulance_dispatch_application/View_Models/Paramedic%20Management/paramedic_management.dart';
 import 'package:ambulance_dispatch_application/View_Models/User%20Management/Authentication/authentication.dart';
 import 'package:ambulance_dispatch_application/View_Models/User%20Management/user_management.dart';
 import 'package:flutter/material.dart';
@@ -17,11 +19,17 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => Authentication(),
+          create: (context) => UserAuthentication(),
         ),
         ChangeNotifierProvider(
           create: (context) => UserManager(),
-        )
+        ),
+        ChangeNotifierProvider(
+          create: (context) => AdminManager(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ParamedicManager(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

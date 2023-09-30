@@ -21,29 +21,29 @@ class _DashBoardState extends State<DashBoard> {
                 padding: const EdgeInsets.only(top: 30),
                 // ignore: prefer_const_constructors
                 child: Column(
-                  children: [
-                    const CircleAvatar(
+                  children: const [
+                    CircleAvatar(
                       radius: 50,
                     ),
-                    const SizedBox(
+                    SizedBox(
                       height: 20,
                     ),
-                    const Text("Nkoane Sibusiso"),
-                    const Divider(),
-                    const ListTile(
+                    Text("Nkoane Sibusiso"),
+                    Divider(),
+                    ListTile(
                       leading: Icon(Icons.home),
                       // ignore: prefer_const_constructors
                       title: Text("Home"),
                     ),
-                    const ListTile(
+                    ListTile(
                       leading: Icon(Icons.person),
                       title: Text("Manage Users"),
                     ),
-                    const ListTile(
+                    ListTile(
                       leading: Icon(Icons.file_open),
                       title: Text("Manage Tickets"),
                     ),
-                    const ListTile(
+                    ListTile(
                       leading: Icon(Icons.card_membership),
                       title: Text("Manage Ambulances"),
                     ),

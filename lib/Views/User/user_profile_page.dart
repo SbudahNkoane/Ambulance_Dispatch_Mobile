@@ -19,7 +19,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
         child: SingleChildScrollView(
           child: FutureBuilder(
             future: context.read<UserManager>().getCurrentUserData(
-                context.read<Authentication>().currentUser!.email!),
+                context.read<UserAuthentication>().currentUser!.email!),
             builder: (context, snapshot) {
               return snapshot.hasData
                   ? Padding(
@@ -34,7 +34,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                         children: [
                           Stack(
                             children: [
-                              Row(
+                              const Row(
                                 children: [
                                   CircleAvatar(
                                     radius: 80,
@@ -49,7 +49,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                 left: 100,
                                 child: InkWell(
                                   onTap: () {},
-                                  child: CircleAvatar(
+                                  child: const CircleAvatar(
                                     child: Center(
                                       child: Icon(Icons.camera_enhance),
                                     ),
@@ -65,7 +65,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                             children: [
                               Text(
                                   '${snapshot.data!.names} ${snapshot.data?.surname}'),
-                              SizedBox(
+                              const SizedBox(
                                 width: 3,
                               ),
                               CircleAvatar(
@@ -81,7 +81,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                             Icons.check,
                                             size: 8,
                                           )
-                                        : SizedBox()),
+                                        : const SizedBox()),
                               ),
                             ],
                           ),

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fireBaseAuth;
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class UserAuthentication with ChangeNotifier {
+class ParamedicAuthentication with ChangeNotifier {
   fireBaseAuth.User? _currentUser;
   fireBaseAuth.User? get currentUser => _currentUser;
 
@@ -13,25 +13,8 @@ class UserAuthentication with ChangeNotifier {
 
 //========REGISTER USER ===============
   Future<fireBaseAuth.User?> registerNewUser(
-      String email, String password, User userInfo) async {
-    try {
-      await authentication
-          .createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      )
-          .then((registeredUser) async {
-        await db
-            .collection('User')
-            .doc(registeredUser.user!.uid)
-            .set(userInfo.toJson())
-            .then((value) {
-          registeredUser.user!.sendEmailVerification();
-        }).onError((error, stackTrace) {
-          print(error);
-        });
-      });
-    } on fireBaseAuth.FirebaseAuthException catch (e) {
+      String email, String password, User newUser) async {
+    try {} on fireBaseAuth.FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {

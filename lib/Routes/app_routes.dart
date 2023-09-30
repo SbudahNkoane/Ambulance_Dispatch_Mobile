@@ -80,7 +80,7 @@ class AppRouteManager {
         );
       //========================== Admin Screens ===========================================
 
-      //========================== Ambulance Personnel Screens =============================
+      //========================== Paramedic Screens =============================
 
       default:
         throw const FormatException('This Page does not exist!!');

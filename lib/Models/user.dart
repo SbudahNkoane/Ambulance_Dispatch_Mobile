@@ -1,4 +1,5 @@
 class User {
+  final String? userID;
   final String names;
   final String surname;
   final String idNumber;
@@ -9,10 +10,13 @@ class User {
   final String? verifiedBy;
   final String? verificationPicture;
   final String? idDocument;
+  final String? profilePicture;
 
   final String? role;
 
   User({
+    this.userID,
+    this.profilePicture,
     this.idDocument,
     this.verificationPicture,
     this.role,
@@ -35,10 +39,12 @@ class User {
         'Phone_Number': cellphoneNumber,
         'Verification_Picture': verificationPicture,
         'ID_Document': idDocument,
+        'Profile_Picture': profilePicture,
+        'Role': role,
       };
 
   static User fromJson(Map<dynamic, dynamic>? json) => User(
-        cellphoneNumber: json!['CellPhone_Number'] as int,
+        cellphoneNumber: json!['Phone_Number'] as int,
         emailaddress: json['Email_Address'] as String,
         gender: json['Gender'] as String,
         idNumber: json['ID_Number'] as String,
@@ -48,6 +54,8 @@ class User {
         verifiedBy: json['Verified_By'] as String?,
         verificationPicture: json['Verification_Picture'] as String?,
         idDocument: json['ID_Document'] as String?,
-        role: null,
+        role: json['Role'] as String,
+        profilePicture: json['Profile_Picture'] as String?,
+        userID: json['User_ID'] as String?,
       );
 }

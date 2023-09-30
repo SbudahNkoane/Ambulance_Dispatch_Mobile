@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import '../../View_Models/User Management/user_management.dart';
+
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
@@ -262,12 +264,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                             if (_registerFormKey.currentState!.validate()) {
                               await context
-                                  .read<Authentication>()
-                                  .registerNewUser(
-                                    emailController.text.trim(),
-                                    passwordController.text.trim(),
-                                    user,
-                                  );
+                                  .read<UserAuthentication>()
+                                  .registerNewUser(emailController.text.trim(),
+                                      passwordController.text.trim(), user);
+
                               Navigator.of(context).pop();
                               //  if(context
                               //       .read<Authentication>()

@@ -1,3 +1,5 @@
+// ignore_for_file: library_prefixes, use_build_context_synchronously
+
 import 'package:ambulance_dispatch_application/Routes/app_routes.dart';
 import 'package:ambulance_dispatch_application/View_Models/User%20Management/Authentication/authentication.dart';
 import 'package:ambulance_dispatch_application/Views/App%20Level/login_page.dart';
@@ -34,7 +36,7 @@ class _UserMenuPageState extends State<UserMenuPage> {
               },
               title: const Text('Profile'),
               subtitle: const Text('Sibusiso Nkoane'),
-              leading: Selector<Authentication, fireAuth.User>(
+              leading: Selector<UserAuthentication, fireAuth.User>(
                 selector: (p0, p1) => p1.currentUser!,
                 builder: (context, value, child) {
                   return CircleAvatar(
@@ -59,9 +61,9 @@ class _UserMenuPageState extends State<UserMenuPage> {
           Card(
             child: ListTile(
               onTap: () {},
-              subtitle: Text('for verification'),
-              title: Text('Apply'),
-              leading: Icon(Icons.check),
+              subtitle: const Text('for verification'),
+              title: const Text('Apply'),
+              leading: const Icon(Icons.check),
             ),
           ),
           SizedBox(
@@ -78,11 +80,11 @@ class _UserMenuPageState extends State<UserMenuPage> {
                       child: AlertDialog(
                         backgroundColor:
                             const Color.fromARGB(255, 247, 248, 249),
-                        shape: RoundedRectangleBorder(),
-                        title: Text('Log Out'),
-                        content: SingleChildScrollView(
+                        shape: const RoundedRectangleBorder(),
+                        title: const Text('Log Out'),
+                        content: const SingleChildScrollView(
                           child: ListBody(
-                            children: const <Widget>[
+                            children: <Widget>[
                               Text('Are you sure want to logout??'),
                             ],
                           ),
@@ -98,7 +100,7 @@ class _UserMenuPageState extends State<UserMenuPage> {
                             child: const Text('Yes'),
                             onPressed: () async {
                               final result = await context
-                                  .read<Authentication>()
+                                  .read<UserAuthentication>()
                                   .logoutUser();
                               if (result == 'OK') {
                                 Navigator.of(context).pushAndRemoveUntil(
@@ -118,8 +120,8 @@ class _UserMenuPageState extends State<UserMenuPage> {
                   },
                 );
               },
-              title: Text('Logout'),
-              leading: Icon(Icons.logout),
+              title: const Text('Logout'),
+              leading: const Icon(Icons.logout),
             ),
           ),
         ],

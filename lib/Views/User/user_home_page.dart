@@ -62,7 +62,7 @@ class _UserHomePageState extends State<UserHomePage> {
                       backgroundColor: AppConstants().appRed,
                       foregroundColor: const Color.fromARGB(255, 232, 231, 228),
                       shape: const CircleBorder(),
-                      child: Column(
+                      child: const Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
@@ -82,7 +82,7 @@ class _UserHomePageState extends State<UserHomePage> {
                             .pushNamed(AppRouteManager.userRequestFormPage);
                       },
                     )
-                  : SizedBox();
+                  : const SizedBox();
             },
           ),
         ),
@@ -149,15 +149,15 @@ class _HomeState extends State<Home> {
                     : MediaQuery.of(context).size.height / 6.5,
               ),
               userData.accountStatus == 'Not Verified'
-                  ? Text(
+                  ? const Text(
                       'You are one step away!!',
                     )
-                  : SizedBox(),
+                  : const SizedBox(),
               userData.accountStatus == 'Not Verified'
-                  ? Text(
+                  ? const Text(
                       'An Administrator will verify your Account Shortly',
                     )
-                  : SizedBox(),
+                  : const SizedBox(),
               Image.asset(
                 'assets/images/med.png',
                 height: MediaQuery.of(context).size.height / 2.8,
