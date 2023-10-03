@@ -6,6 +6,7 @@ import 'package:ambulance_dispatch_application/Views/User/user_tickets_page.dart
 import 'package:ambulance_dispatch_application/Views/User/user_account_page.dart';
 import 'package:ambulance_dispatch_application/Views/app_constants.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -126,47 +127,61 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final Stream _usersStream =
+      FirebaseFirestore.instance.collection('User').snapshots();
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Selector<UserManager, User>(
-        selector: (context, user) => user.userData!,
-        builder: (context, userData, child) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
+    return StreamBuilder(
+      stream: context.read<UserManager>().userStream,
+      builder: (context, snapshot) {
+        return Padding(
+          padding: const EdgeInsets.all(10),
+          child: Selector<UserManager, User>(
+            selector: (context, user) => user.userData!,
+            builder: (context, userData, child) {
+              if (snapshot.hasError) {
+                return const Text('Something went wrong');
+              }
+
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Text("Loading");
+              }
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    'Hello ${userData.names}',
+                  Row(
+                    children: [
+                      Text(
+                        'Hello ${userData.names}',
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: userData.accountStatus == 'Not Verified'
+                        ? MediaQuery.of(context).size.height / 4
+                        : MediaQuery.of(context).size.height / 6.5,
+                  ),
+                  userData.accountStatus == 'Not Verified'
+                      ? const Text(
+                          'You are one step away!!',
+                        )
+                      : const SizedBox(),
+                  userData.accountStatus == 'Not Verified'
+                      ? const Text(
+                          'An Administrator will verify your Account Shortly',
+                        )
+                      : const SizedBox(),
+                  Image.asset(
+                    'assets/images/med.png',
+                    height: MediaQuery.of(context).size.height / 2.8,
+                    width: MediaQuery.of(context).size.width,
                   ),
                 ],
-              ),
-              SizedBox(
-                height: userData.accountStatus == 'Not Verified'
-                    ? MediaQuery.of(context).size.height / 4
-                    : MediaQuery.of(context).size.height / 6.5,
-              ),
-              userData.accountStatus == 'Not Verified'
-                  ? const Text(
-                      'You are one step away!!',
-                    )
-                  : const SizedBox(),
-              userData.accountStatus == 'Not Verified'
-                  ? const Text(
-                      'An Administrator will verify your Account Shortly',
-                    )
-                  : const SizedBox(),
-              Image.asset(
-                'assets/images/med.png',
-                height: MediaQuery.of(context).size.height / 2.8,
-                width: MediaQuery.of(context).size.width,
-              ),
-            ],
-          );
-        },
-      ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }

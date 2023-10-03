@@ -141,7 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       .getCurrentUserData(context
                                           .read<UserAuthentication>()
                                           .currentUser!
-                                          .email!);
+                                          .uid);
                                   Navigator.of(context).pushAndRemoveUntil(
                                       MaterialPageRoute<void>(
                                         builder: (BuildContext context) =>
@@ -156,7 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               const Text(
-                                "Don’t have an account yet?",
+                                "Don't have an account yet?",
                                 style: TextStyle(
                                     fontSize: 10, fontWeight: FontWeight.bold),
                               ),

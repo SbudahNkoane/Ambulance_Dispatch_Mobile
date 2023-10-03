@@ -25,9 +25,7 @@ class UserAuthentication with ChangeNotifier {
             .collection('User')
             .doc(registeredUser.user!.uid)
             .set(userInfo.toJson())
-            .then((value) {
-          registeredUser.user!.sendEmailVerification();
-        }).onError((error, stackTrace) {
+            .onError((error, stackTrace) {
           print(error);
         });
       });
