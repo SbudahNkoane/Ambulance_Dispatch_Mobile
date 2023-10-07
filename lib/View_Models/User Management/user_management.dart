@@ -13,7 +13,10 @@ import 'package:location/location.dart';
 
 class UserManager with ChangeNotifier {
   Location location = Location();
+  loc.Geolocator _geolocator = loc.Geolocator();
   late bool _serviceEnabled;
+  late loc.LocationPermission _permission;
+
   late PermissionStatus _permissionGranted;
   late LocationData _locationData;
 
@@ -26,29 +29,29 @@ class UserManager with ChangeNotifier {
       FirebaseFirestore.instance.collection('User').snapshots();
   Stream get userStream => _userStream;
 
-  Future<String> getUserLocation() async {
-    loc.Position position = await loc.Geolocator.getCurrentPosition(
-      desiredAccuracy: loc.LocationAccuracy.high,
-    );
+  Future<loc.Position> getUserLocation() async {
+    loc.Position? position;
+    _serviceEnabled = await loc.Geolocator.isLocationServiceEnabled();
+    if (!_serviceEnabled) {
+      return Future.error('Location services are disabled');
+    }
+    _permission = await loc.Geolocator.checkPermission();
+    if (_permission == loc.LocationPermission.denied) {
+      _permission = await loc.Geolocator.requestPermission();
+      if (_permission == loc.LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    }
+    if (_permission == loc.LocationPermission.always ||
+        _permission == loc.LocationPermission.whileInUse) {
+      position = await loc.Geolocator.getCurrentPosition(
+        desiredAccuracy: loc.LocationAccuracy.high,
+      );
+    }
 
     // List placemark = loc.Geolocator.
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
-        return '';
-      }
-    }
-    _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
-        _locationData = await location.getLocation();
-        return '';
-      }
-    }
 
-    return '';
+    return position!;
   }
 
   Future<User?> getCurrentUserData(String userID) async {
