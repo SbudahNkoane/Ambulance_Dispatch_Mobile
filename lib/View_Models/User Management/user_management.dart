@@ -1,7 +1,10 @@
 import 'dart:io';
 
+import 'dart:io';
+
 import 'package:ambulance_dispatch_application/Models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart' as loc;
@@ -57,6 +60,13 @@ class UserManager with ChangeNotifier {
       },
       onDone: () {},
     );
+    docRef.snapshots().listen(
+      (event) {
+        _userData = User.fromJson(event.data() as Map<String, dynamic>);
+        print(_userData);
+      },
+      onDone: () {},
+    );
     await docRef.set(
       {'User_ID': userID},
       SetOptions(merge: true),
@@ -68,6 +78,7 @@ class UserManager with ChangeNotifier {
         onError: (e) => print("Error getting document: $e"),
       );
     }).onError((error, stackTrace) {});
+    notifyListeners();
     notifyListeners();
     return _userData;
   }
