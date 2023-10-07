@@ -11,7 +11,6 @@ class User {
   final String? verificationPicture;
   final String? idDocument;
   final String? profilePicture;
-
   final String? role;
 
   User({

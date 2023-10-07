@@ -287,10 +287,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             const Text(
                               "Already have an account?",
                               style: TextStyle(
-                                  fontSize: 11, fontWeight: FontWeight.bold),
+                                  fontSize: 15, fontWeight: FontWeight.bold),
                             ),
                             const SizedBox(
-                              width: 110,
+                              width: 40,
                             ),
                             TextButton(
                               onPressed: () {
@@ -299,7 +299,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               child: const Text(
                                 "Sign In",
                                 style: TextStyle(
-                                    fontSize: 11, fontWeight: FontWeight.bold),
+                                    fontSize: 15, fontWeight: FontWeight.bold),
                               ),
                             )
                           ],

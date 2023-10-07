@@ -1,6 +1,11 @@
+import 'dart:async';
+
+import 'package:ambulance_dispatch_application/Routes/app_routes.dart';
+import 'package:ambulance_dispatch_application/View_Models/User%20Management/user_management.dart';
 import 'package:ambulance_dispatch_application/Views/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class UserRequestFromPage extends StatefulWidget {
   const UserRequestFromPage({super.key});
@@ -10,6 +15,7 @@ class UserRequestFromPage extends StatefulWidget {
 }
 
 class _UserRequestFromPageState extends State<UserRequestFromPage> {
+  bool _useCurrentLocation = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -110,12 +116,17 @@ class _UserRequestFromPageState extends State<UserRequestFromPage> {
                             children: [
                               const Text('Use My Device Location'),
                               Checkbox(
-                                value: false,
-                                onChanged: (value) {
+                                value: _useCurrentLocation,
+                                onChanged: (value) async {
                                   setState(() {
                                     print(value);
-                                    value = !value!;
+                                    _useCurrentLocation = value!;
                                   });
+                                  if (_useCurrentLocation == true) {
+                                    context
+                                        .read<UserManager>()
+                                        .getUserLocation();
+                                  }
                                 },
                               ),
                               const SizedBox(
@@ -125,6 +136,23 @@ class _UserRequestFromPageState extends State<UserRequestFromPage> {
                               const SizedBox(
                                 height: 20,
                               ),
+                              ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .pushNamed(AppRouteManager.userMapPage);
+                                  },
+                                  child: Text('Choose')),
+                              // SizedBox(
+                              //   height: 90,
+                              //   width: 1000,
+                              //   child: GoogleMap(
+                              //     onMapCreated: _onMapCreated,
+                              //     initialCameraPosition: CameraPosition(
+                              //       target: _center,
+                              //       zoom: 11.0,
+                              //     ),
+                              //   ),
+                              // ),
                               const Text('Street Address'),
                               const SizedBox(
                                 height: 20,

@@ -114,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   "Forgot Password?",
                                   style: TextStyle(
                                       color: AppConstants().appRed,
-                                      fontSize: 10,
+                                      fontSize: 15,
                                       fontWeight: FontWeight.bold),
                                 ),
                               ),
@@ -141,7 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       .getCurrentUserData(context
                                           .read<UserAuthentication>()
                                           .currentUser!
-                                          .email!);
+                                          .uid);
                                   Navigator.of(context).pushAndRemoveUntil(
                                       MaterialPageRoute<void>(
                                         builder: (BuildContext context) =>
@@ -156,9 +156,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               const Text(
-                                "Don’t have an account yet?",
+                                "Don't have an account yet?",
                                 style: TextStyle(
-                                    fontSize: 10, fontWeight: FontWeight.bold),
+                                    fontSize: 15, fontWeight: FontWeight.bold),
                               ),
                               TextButton(
                                 onPressed: () {
@@ -170,7 +170,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 child: const Text(
                                   "Sign Up with Us",
                                   style: TextStyle(
-                                      fontSize: 10,
+                                      fontSize: 15,
                                       fontWeight: FontWeight.bold),
                                 ),
                               )

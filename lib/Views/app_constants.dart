@@ -81,7 +81,7 @@ class _AppTextFieldState extends State<AppTextField> {
       padding: const EdgeInsets.only(top: 10),
       child: TextFormField(
         keyboardType: widget.keyboardType,
-        style: const TextStyle(fontSize: 12),
+        style: const TextStyle(fontSize: 15),
         textAlign: TextAlign.left,
         textAlignVertical: TextAlignVertical.center,
         cursorColor: const Color.fromARGB(255, 0, 0, 0),

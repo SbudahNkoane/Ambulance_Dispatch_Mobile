@@ -2,6 +2,7 @@ import 'package:ambulance_dispatch_application/Views/App%20Level/login_page.dart
 import 'package:ambulance_dispatch_application/Views/App%20Level/password_reset_page.dart';
 import 'package:ambulance_dispatch_application/Views/App%20Level/register_page.dart';
 import 'package:ambulance_dispatch_application/Views/App%20Level/splash_page.dart';
+import 'package:ambulance_dispatch_application/Views/User/map.dart';
 import 'package:ambulance_dispatch_application/Views/User/user_menu_page.dart';
 import 'package:ambulance_dispatch_application/Views/User/user_home_page.dart';
 import 'package:ambulance_dispatch_application/Views/User/user_profile_page.dart';
@@ -24,6 +25,7 @@ class AppRouteManager {
   static const String userRequestFormPage = '/UserRequestFormPage';
   static const String userProfilePage = '/UserProfilePage';
   static const String userMenuPage = '/UserMenuPage';
+  static const String userMapPage = '/UserMapPage';
 
 //========================== Admin Screens =================================================
   static const String adminHomePage = '/AdminHomePage';
@@ -57,6 +59,10 @@ class AppRouteManager {
       case userHomePage:
         return MaterialPageRoute(
           builder: (context) => const UserHomePage(),
+        );
+      case userMapPage:
+        return MaterialPageRoute(
+          builder: (context) => const MapScreen(),
         );
       case userTicketsPage:
         return MaterialPageRoute(
