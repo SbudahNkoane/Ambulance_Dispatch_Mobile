@@ -1,5 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+FirebaseFirestore database = FirebaseFirestore.instance;
+FirebaseAuth authentication = FirebaseAuth.instance;
+FirebaseStorage storage = FirebaseStorage.instance;
 
 class AppConstants {
   String logoWithBlueBackground = "assets/images/logo_blue_background.png";
@@ -59,10 +66,13 @@ class AppTextField extends StatefulWidget {
     required this.controller,
     this.suffixIcon,
     required this.validator,
+    this.onIconPressed,
+    required this.hasIconButton,
   });
   final String labelText;
-
+  final bool hasIconButton;
   final IconData prefixIcon;
+  final void Function()? onIconPressed;
   final IconData? suffixIcon;
   final int? counter;
   final int? maxCharacters;
@@ -129,13 +139,15 @@ class _AppTextFieldState extends State<AppTextField> {
             widget.prefixIcon,
             size: 18,
           ),
-          suffixIcon: IconButton(
-            onPressed: () {},
-            icon: Icon(
-              widget.suffixIcon,
-              size: 18,
-            ),
-          ),
+          suffixIcon: widget.hasIconButton == true
+              ? IconButton(
+                  onPressed: widget.onIconPressed,
+                  icon: Icon(
+                    widget.suffixIcon,
+                    size: 18,
+                  ),
+                )
+              : SizedBox(),
         ),
         validator: widget.validator,
       ),

@@ -1,8 +1,8 @@
 // ignore_for_file: library_prefixes, use_build_context_synchronously
 
 import 'package:ambulance_dispatch_application/Routes/app_routes.dart';
-import 'package:ambulance_dispatch_application/View_Models/User%20Management/Authentication/authentication.dart';
-import 'package:ambulance_dispatch_application/Views/App%20Level/login_page.dart';
+import 'package:ambulance_dispatch_application/View_Models/User_Management/Authentication/authentication.dart';
+import 'package:ambulance_dispatch_application/Views/App_Level/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fireAuth;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -60,7 +60,10 @@ class _UserMenuPageState extends State<UserMenuPage> {
           ),
           Card(
             child: ListTile(
-              onTap: () {},
+              onTap: () {
+                Navigator.of(context)
+                    .pushNamed(AppRouteManager.userAccountPage);
+              },
               subtitle: const Text('for verification'),
               title: const Text('Apply'),
               leading: const Icon(Icons.check),

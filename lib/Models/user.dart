@@ -5,11 +5,11 @@ class User {
   final String idNumber;
   final String emailaddress;
   final String gender;
-  final int cellphoneNumber;
+  final String cellphoneNumber;
   final String accountStatus;
   final String? verifiedBy;
   final String? verificationPicture;
-  final String? idDocument;
+  final Map? idDocument;
   final String? profilePicture;
   final String? role;
 
@@ -40,10 +40,12 @@ class User {
         'ID_Document': idDocument,
         'Profile_Picture': profilePicture,
         'Role': role,
+        'Verified_By': verifiedBy,
+        'Account_Status': accountStatus,
       };
 
   static User fromJson(Map<dynamic, dynamic>? json) => User(
-        cellphoneNumber: json!['Phone_Number'] as int,
+        cellphoneNumber: json!['Phone_Number'] as String,
         emailaddress: json['Email_Address'] as String,
         gender: json['Gender'] as String,
         idNumber: json['ID_Number'] as String,
@@ -52,7 +54,7 @@ class User {
         accountStatus: json['Account_Status'] as String,
         verifiedBy: json['Verified_By'] as String?,
         verificationPicture: json['Verification_Picture'] as String?,
-        idDocument: json['ID_Document'] as String?,
+        idDocument: json['ID_Document'] as Map?,
         role: json['Role'] as String,
         profilePicture: json['Profile_Picture'] as String?,
         userID: json['User_ID'] as String?,

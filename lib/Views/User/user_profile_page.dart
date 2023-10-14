@@ -1,13 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
-
-// ignore_for_file: use_build_context_synchronously
-
-import 'package:ambulance_dispatch_application/View_Models/User%20Management/Authentication/authentication.dart';
-import 'package:ambulance_dispatch_application/View_Models/User%20Management/user_management.dart';
+import 'package:ambulance_dispatch_application/View_Models/User_Management/Authentication/authentication.dart';
+import 'package:ambulance_dispatch_application/View_Models/User_Management/user_management.dart';
 import 'package:ambulance_dispatch_application/Views/app_constants.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -25,7 +20,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
       body: Center(
         child: SingleChildScrollView(
           child: StreamBuilder(
-              stream: context.read<UserManager>().userStream,
+              stream: context.read<UserManager>().userStreamer(),
               builder: (context, snapshot) {
                 return FutureBuilder(
                   future: context.read<UserManager>().getCurrentUserData(
@@ -49,7 +44,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                         CircleAvatar(
                                           radius: 80,
                                           foregroundImage:
-                                              info.data!.profilePicture == null
+                                              info.data!.profilePicture != null
                                                   ? Image.network(info.data!
                                                           .profilePicture!)
                                                       as ImageProvider<Object>

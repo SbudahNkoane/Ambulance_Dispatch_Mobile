@@ -1,19 +1,29 @@
-import 'package:ambulance_dispatch_application/Models/user.dart';
+import 'package:ambulance_dispatch_application/Models/user.dart' as user;
+import 'package:ambulance_dispatch_application/Views/app_constants.dart';
 import 'package:flutter/material.dart';
 // ignore: library_prefixes
-import 'package:firebase_auth/firebase_auth.dart' as fireBaseAuth;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 
 class UserAuthentication with ChangeNotifier {
-  fireBaseAuth.User? _currentUser;
-  fireBaseAuth.User? get currentUser => _currentUser;
+  User? _currentUser;
+  User? get currentUser => _currentUser;
 
-  fireBaseAuth.FirebaseAuth authentication = fireBaseAuth.FirebaseAuth.instance;
-  FirebaseFirestore db = FirebaseFirestore.instance;
+  bool _showprogress = false;
+  bool get showProgress => _showprogress;
+
+  String _userprogresstext = "";
+  String get userProgressText => _userprogresstext;
+
+  void setCurrentUser(User user) {
+    _currentUser = user;
+    notifyListeners();
+  }
 
 //========REGISTER USER ===============
-  Future<fireBaseAuth.User?> registerNewUser(
-      String email, String password, User userInfo) async {
+  Future<User?> registerNewUser(
+      String email, String password, user.User userInfo) async {
     try {
       await authentication
           .createUserWithEmailAndPassword(
@@ -21,7 +31,7 @@ class UserAuthentication with ChangeNotifier {
         password: password,
       )
           .then((registeredUser) async {
-        await db
+        await database
             .collection('User')
             .doc(registeredUser.user!.uid)
             .set(userInfo.toJson())
@@ -29,14 +39,12 @@ class UserAuthentication with ChangeNotifier {
           print(error);
         });
       });
-    } on fireBaseAuth.FirebaseAuthException catch (e) {
+    } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
         print('The account already exists for that email.');
       }
-    } catch (e) {
-      print(e);
     }
     return null;
   }
@@ -46,13 +54,19 @@ class UserAuthentication with ChangeNotifier {
   //========= LOGIN USER ==========
   Future<String> loginUser(String email, String password) async {
     String state = 'OK';
+    _showprogress = true;
+    _userprogresstext = 'Signing in...';
+    notifyListeners();
     try {
-      await fireBaseAuth.FirebaseAuth.instance
+      await authentication
           .signInWithEmailAndPassword(
         email: email,
         password: password,
       )
-          .then((value) {
+          .onError((error, stackTrace) {
+        state = error.toString();
+        return Future.error(error.toString());
+      }).then((value) {
         if (value.user!.emailVerified != false) {
           state = 'Confirm Your email to sign in';
         } else {
@@ -61,12 +75,17 @@ class UserAuthentication with ChangeNotifier {
 
         return value;
       });
-    } on fireBaseAuth.FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
+    } on FirebaseAuthException catch (error) {
+      if (error.code == 'user-not-found') {
         state = 'No user found for that email.';
-      } else if (e.code == 'wrong-password') {
+      } else if (error.code == 'wrong-password') {
         state = 'Wrong password provided for that user.';
       }
+    } catch (e) {
+      state = e.toString();
+    } finally {
+      _showprogress = false;
+      notifyListeners();
     }
     return state;
   }

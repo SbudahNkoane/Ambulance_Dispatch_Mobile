@@ -2,22 +2,18 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CLIENT_ID</key>
-	<string>465560543092-ce8b0rospj7o446mdoto083i25bgkhj2.apps.googleusercontent.com</string>
-	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.465560543092-ce8b0rospj7o446mdoto083i25bgkhj2</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDo0uqS4exTqlP3dYRqNzPQQiQuvxauCmE</string>
+	<string>AIzaSyBQAyuIHfBY_f4syUROi0lhJBcaunO11fw</string>
 	<key>GCM_SENDER_ID</key>
-	<string>465560543092</string>
+	<string>314167111153</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.example.ambulanceDispatchApplication</string>
 	<key>PROJECT_ID</key>
-	<string>ambulance-dispatch-syste-c3397</string>
+	<string>ambulance-dispatch-401323</string>
 	<key>STORAGE_BUCKET</key>
-	<string>ambulance-dispatch-syste-c3397.appspot.com</string>
+	<string>ambulance-dispatch-401323.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:465560543092:ios:f6161b25ea1f7e6bc15621</string>
+	<string>1:314167111153:ios:2066ae195d96200b54e850</string>
 </dict>
 </plist>

@@ -1,13 +1,13 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:ambulance_dispatch_application/Models/user.dart';
-import 'package:ambulance_dispatch_application/View_Models/User%20Management/Authentication/authentication.dart';
+import 'package:ambulance_dispatch_application/Services/locator_service.dart';
+import 'package:ambulance_dispatch_application/Services/navigation_and_dialog_service.dart';
+import 'package:ambulance_dispatch_application/View_Models/User_Management/Authentication/authentication.dart';
 import 'package:ambulance_dispatch_application/Views/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-
-import '../../View_Models/User Management/user_management.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -17,6 +17,7 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _registerFormKey = GlobalKey<FormState>();
   late TextEditingController namesController;
   late TextEditingController surnameController;
@@ -28,6 +29,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   late TextEditingController passwordController;
   late TextEditingController confirmPasswordController;
   String dropdownValue = 'Male';
+  bool _hideText = true;
   @override
   void initState() {
     namesController = TextEditingController();
@@ -36,6 +38,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     emailController = TextEditingController();
     confirmEmailController = TextEditingController();
     genderController = TextEditingController();
+    genderController.text = dropdownValue;
     phoneNumberController = TextEditingController();
     passwordController = TextEditingController();
     confirmPasswordController = TextEditingController();
@@ -53,12 +56,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
     phoneNumberController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: AppConstants().appDarkWhite,
       appBar: AppBar(
         scrolledUnderElevation: 0,
@@ -77,6 +82,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
               "Sign Up",
               style: GoogleFonts.moul(fontSize: 40),
             ),
+            Row(
+              children: [Text('As Paramedic')],
+            )
           ],
         ),
       ),
@@ -94,6 +102,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: Column(
                       children: [
                         AppTextField(
+                          hasIconButton: false,
                           labelText: 'Name(s)',
                           prefixIcon: Icons.person,
                           keyboardType: TextInputType.name,
@@ -106,6 +115,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           },
                         ),
                         AppTextField(
+                          hasIconButton: false,
                           labelText: 'Surname',
                           prefixIcon: Icons.person,
                           keyboardType: TextInputType.name,
@@ -118,6 +128,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           },
                         ),
                         AppTextField(
+                          hasIconButton: false,
                           labelText: 'ID Number',
                           prefixIcon: Icons.edit_document,
                           keyboardType: TextInputType.number,
@@ -135,6 +146,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           height: 10,
                         ),
                         AppTextField(
+                          hasIconButton: false,
                           labelText: 'Email Address',
                           prefixIcon: Icons.mail_outlined,
                           keyboardType: TextInputType.emailAddress,
@@ -147,6 +159,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           },
                         ),
                         AppTextField(
+                          hasIconButton: false,
                           labelText: 'Confirm Email Address',
                           prefixIcon: Icons.mail_outlined,
                           keyboardType: TextInputType.emailAddress,
@@ -206,6 +219,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           },
                         ),
                         AppTextField(
+                          hasIconButton: false,
                           labelText: 'Cell Phone Number',
                           prefixIcon: Icons.phone,
                           keyboardType: TextInputType.phone,
@@ -220,6 +234,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           },
                         ),
                         AppTextField(
+                          hideText: _hideText,
+                          suffixIcon: _hideText
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                          hasIconButton: true,
+                          onIconPressed: () {
+                            setState(() {
+                              _hideText = !_hideText;
+                            });
+                          },
                           labelText: 'Password',
                           prefixIcon: Icons.lock_sharp,
                           keyboardType: TextInputType.visiblePassword,
@@ -233,6 +257,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           },
                         ),
                         AppTextField(
+                          hideText: _hideText,
+                          suffixIcon: _hideText
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                          onIconPressed: () {
+                            setState(() {
+                              _hideText = !_hideText;
+                            });
+                          },
+                          hasIconButton: true,
                           labelText: 'Confirm Password',
                           prefixIcon: Icons.lock_open,
                           keyboardType: TextInputType.visiblePassword,
@@ -252,13 +286,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           text: 'Sign Up',
                           onPressed: () async {
                             User user = User(
+                              profilePicture: null,
+                              userID: null,
+                              idDocument: {
+                                'ID_Back': null,
+                                'ID_Front': null,
+                              },
+                              verificationPicture: null,
+                              verifiedBy: null,
+                              role: 'User',
                               names: namesController.text.trim(),
                               surname: surnameController.text.trim(),
                               idNumber: idNumberController.text.trim(),
                               emailaddress: emailController.text.trim(),
                               gender: genderController.text.trim(),
                               cellphoneNumber:
-                                  int.parse(phoneNumberController.text.trim()),
+                                  phoneNumberController.text.trim(),
                               accountStatus: 'Not Verified',
                             );
 
@@ -269,15 +312,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       passwordController.text.trim(), user);
 
                               Navigator.of(context).pop();
-                              //  if(context
-                              //       .read<Authentication>()
-                              //       .currentUser!.emailVerified){
-
-                              //  }Navigator.of(context).pushAndRemoveUntil(
-                              //       MaterialPageRoute<void>(
-                              //           builder: (BuildContext context) =>
-                              //               const UserHomePage()),
-                              //       (route) => false);
+                              locator
+                                  .get<NavigationAndDialogService>()
+                                  .showSnackBar(
+                                      context: context,
+                                      message:
+                                          'You Have been Successfully Registered',
+                                      title: 'Registration');
                             }
                           },
                         ),

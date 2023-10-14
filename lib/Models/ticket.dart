@@ -1,10 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:location/location.dart';
 
 class Ticket {
-  final String ticketId;
+  final String? ticketId;
   final String userId;
-  final Location pickUpLocation;
-  final int? noOfPatients;
+  final GeoPoint pickUpLocation;
   final String description;
   final int? emergencyLevel;
   final String? dispatchedAmbulance;
@@ -14,10 +14,9 @@ class Ticket {
   final String? managedBy;
 
   Ticket({
-    required this.ticketId,
+    this.ticketId,
     required this.userId,
     required this.pickUpLocation,
-    this.noOfPatients,
     required this.description,
     this.emergencyLevel,
     this.dispatchedAmbulance,
@@ -31,7 +30,6 @@ class Ticket {
         'Ticket_Id': ticketId,
         'User_Id': userId,
         'PickUp_Location': pickUpLocation,
-        'No_Of_Patients': noOfPatients,
         'Description': description,
         'Dispatched_Ambulance': dispatchedAmbulance,
         'Booked_At': bookedAt,
@@ -41,10 +39,9 @@ class Ticket {
       };
 
   static Ticket fromJson(Map<dynamic, dynamic>? json) => Ticket(
-        noOfPatients: json!['No_Of_Patients'] as int?,
-        bookedAt: json['Booked_At'] as DateTime,
+        bookedAt: json!['Booked_At'] as DateTime,
         description: json['Description'] as String,
-        pickUpLocation: json['PickUp_Location'] as Location,
+        pickUpLocation: json['PickUp_Location'] as GeoPoint,
         status: json['Status'] as String,
         ticketId: json['Ticket_Id'] as String,
         userId: json['User_Id'] as String,

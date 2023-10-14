@@ -72,6 +72,7 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
                             }
                             return null;
                           },
+                          hasIconButton: false,
                         ),
                         const SizedBox(
                           height: 10,

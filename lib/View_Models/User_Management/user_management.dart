@@ -1,18 +1,18 @@
 import 'dart:io';
 
-import 'dart:io';
-
 import 'package:ambulance_dispatch_application/Models/user.dart';
+import 'package:ambulance_dispatch_application/Views/app_constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart' as loc;
 import 'package:image_picker/image_picker.dart';
 import 'package:location/location.dart';
 
 class UserManager with ChangeNotifier {
-  Location location = Location();
+  Placemark? _addressName;
+  Placemark? get currentAddress => _addressName;
   loc.Geolocator _geolocator = loc.Geolocator();
   late bool _serviceEnabled;
   late loc.LocationPermission _permission;
@@ -20,16 +20,29 @@ class UserManager with ChangeNotifier {
   late PermissionStatus _permissionGranted;
   late LocationData _locationData;
 
-  final storage = FirebaseStorage.instance;
-  FirebaseFirestore db = FirebaseFirestore.instance;
+  bool _showprogress = false;
+  bool get showProgress => _showprogress;
+
+  String _userprogresstext = "";
+  String get userProgressText => _userprogresstext;
+
   User? _userData;
   User? get userData => _userData;
 
-  final Stream _userStream =
-      FirebaseFirestore.instance.collection('User').snapshots();
-  Stream get userStream => _userStream;
+  Stream? _userStream;
+  Stream? get userStream => _userStream;
+  loc.Position? _currentLocation;
+  loc.Position? get currentLocation => _currentLocation;
+  Stream userStreamer() {
+    _userStream =
+        database.collection('User').doc(_userData!.userID).snapshots();
+    return _userStream!;
+  }
 
   Future<loc.Position> getUserLocation() async {
+    _showprogress = true;
+    _userprogresstext = 'Setting location...';
+    notifyListeners();
     loc.Position? position;
     _serviceEnabled = await loc.Geolocator.isLocationServiceEnabled();
     if (!_serviceEnabled) {
@@ -44,53 +57,104 @@ class UserManager with ChangeNotifier {
     }
     if (_permission == loc.LocationPermission.always ||
         _permission == loc.LocationPermission.whileInUse) {
-      position = await loc.Geolocator.getCurrentPosition(
+      _currentLocation = await loc.Geolocator.getCurrentPosition(
         desiredAccuracy: loc.LocationAccuracy.high,
       );
+      List<Placemark> placemark =
+          await placemarkFromCoordinates(-29.1214761, 26.2065606);
+      //  _currentLocation!.latitude, _currentLocation!.longitude);
+      _addressName = placemark[0];
     }
-
+    _showprogress = false;
+    notifyListeners();
     // List placemark = loc.Geolocator.
 
-    return position!;
+    return _currentLocation!;
   }
 
   Future<User?> getCurrentUserData(String userID) async {
-    final docRef = db.collection("User").doc(userID);
+    _showprogress = true;
+    _userprogresstext = 'Setting up profile...';
+    notifyListeners();
+    final docRef = database.collection("User").doc(userID);
     docRef.snapshots().listen(
       (event) {
         _userData = User.fromJson(event.data() as Map<String, dynamic>);
-        print(_userData);
+        notifyListeners();
       },
-      onDone: () {},
+      onDone: () async {},
     );
-    docRef.snapshots().listen(
-      (event) {
-        _userData = User.fromJson(event.data() as Map<String, dynamic>);
-        print(_userData);
-      },
-      onDone: () {},
-    );
-    await docRef.set(
-      {'User_ID': userID},
-      SetOptions(merge: true),
-    ).then((value) async {
+    try {
       await docRef.get().then(
         (DocumentSnapshot doc) {
           _userData = User.fromJson(doc.data() as Map<String, dynamic>);
         },
-        onError: (e) => print("Error getting document: $e"),
       );
-    }).onError((error, stackTrace) {});
-    notifyListeners();
-    notifyListeners();
+      if (_userData!.userID == null) {
+        await docRef.set(
+          {'User_ID': userID},
+          SetOptions(merge: true),
+        ).onError((error, stackTrace) {});
+      }
+    } catch (e) {
+    } finally {
+      _showprogress = false;
+      notifyListeners();
+    }
+
     return _userData;
+  }
+
+  Future<String> applyForVerification(
+      {required File selfie,
+      required String userID,
+      required File idFront,
+      required File idBack}) async {
+    TaskSnapshot? uploadedSelfie;
+    TaskSnapshot? uploadedIDBack;
+    TaskSnapshot? uploadedIDFront;
+    final userInfo = database.collection("User").doc(userID);
+    final storageRef = FirebaseStorage.instance.ref();
+    final selfiePath =
+        storageRef.child('$userID/Images/Verification/Selfie.jpg');
+    final idFrontPath =
+        storageRef.child('$userID/Images/Verification/ID-Front.jpg');
+    final idBackPath =
+        storageRef.child('$userID/Images/Verification/ID-Back.jpg');
+    try {
+      await selfiePath.putFile(selfie).then((uploaded) async {
+        uploadedSelfie = uploaded;
+      }).onError((error, stackTrace) {});
+      await idBackPath.putFile(idBack).then((uploaded) {
+        uploadedIDBack = uploaded;
+      }).onError((error, stackTrace) {});
+      await idFrontPath.putFile(idFront).then((uploaded) {
+        uploadedIDFront = uploaded;
+      }).onError((error, stackTrace) {});
+      await userInfo.set(
+        {
+          'Verification_Picture': await uploadedSelfie!.ref.getDownloadURL(),
+          'ID_Document': {
+            'ID_Front': await uploadedIDFront!.ref.getDownloadURL(),
+            'ID_Back': await uploadedIDBack!.ref.getDownloadURL(),
+          }
+        },
+        SetOptions(merge: true),
+      ).onError((error, stackTrace) {});
+    } catch (e) {
+      return e.toString();
+    } finally {
+      notifyListeners();
+    }
+
+    return '';
   }
 
   Future<String> updateProfilePicture(
       {required ImageSource source,
       required String userID,
       required bool remove}) async {
-    final docRef = db.collection("User").doc(userID);
+    final docRef = database.collection("User").doc(userID);
     final storageRef = FirebaseStorage.instance.ref();
     final path =
         storageRef.child('$userID/Images/Profile Picture/profilePicture.jpg');
@@ -105,7 +169,7 @@ class UserManager with ChangeNotifier {
         await path.putFile(imageFile).then((p) async {
           if (p.state == TaskState.success) {
             String uploaded = await p.ref.getDownloadURL();
-            print(uploaded);
+
             await docRef.set(
               {'Profile_Picture': uploaded},
               SetOptions(merge: true),

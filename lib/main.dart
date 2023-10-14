@@ -1,12 +1,18 @@
 import 'package:ambulance_dispatch_application/Routes/app_routes.dart';
-import 'package:ambulance_dispatch_application/View_Models/Admin%20Management/admin_management.dart';
-import 'package:ambulance_dispatch_application/View_Models/Paramedic%20Management/paramedic_management.dart';
-import 'package:ambulance_dispatch_application/View_Models/User%20Management/Authentication/authentication.dart';
-import 'package:ambulance_dispatch_application/View_Models/User%20Management/user_management.dart';
+import 'package:ambulance_dispatch_application/Services/locator_service.dart';
+
+import 'package:ambulance_dispatch_application/View_Models/Admin_Management/admin_management.dart';
+
+import 'package:ambulance_dispatch_application/View_Models/Paramedic_Management/paramedic_management.dart';
+import 'package:ambulance_dispatch_application/View_Models/Ticket_Management/ticket_management.dart';
+
+import 'package:ambulance_dispatch_application/View_Models/User_Management/Authentication/authentication.dart';
+import 'package:ambulance_dispatch_application/View_Models/User_Management/user_management.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 Future main() async {
+  setupLocator();
   runApp(const MyApp());
 }
 
@@ -20,6 +26,9 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (context) => UserAuthentication(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => TicketManager(),
         ),
         ChangeNotifierProvider(
           create: (context) => UserManager(),

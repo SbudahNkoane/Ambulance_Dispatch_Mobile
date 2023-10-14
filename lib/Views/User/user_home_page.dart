@@ -1,12 +1,15 @@
 import 'package:ambulance_dispatch_application/Models/user.dart';
 import 'package:ambulance_dispatch_application/Routes/app_routes.dart';
-import 'package:ambulance_dispatch_application/View_Models/User%20Management/user_management.dart';
+import 'package:ambulance_dispatch_application/Services/locator_service.dart';
+import 'package:ambulance_dispatch_application/Services/navigation_and_dialog_service.dart';
+import 'package:ambulance_dispatch_application/View_Models/User_Management/user_management.dart';
+import 'package:ambulance_dispatch_application/Views/User/user_account_view.dart';
 import 'package:ambulance_dispatch_application/Views/User/user_menu_page.dart';
 import 'package:ambulance_dispatch_application/Views/User/user_tickets_page.dart';
-import 'package:ambulance_dispatch_application/Views/User/user_account_page.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ambulance_dispatch_application/Views/app_constants.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,104 +21,131 @@ class UserHomePage extends StatefulWidget {
 }
 
 class _UserHomePageState extends State<UserHomePage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _bottomNavIndex = 0;
   final List<Widget> _pages = [
-    const Home(),
-    const UserTicketsPage(),
-    const UserAccountPage(),
-    const UserMenuPage(),
+    const Home(), //0
+    const UserTicketsPage(), //1
+    SizedBox(), //2
+    const UserAccountView(), //3
+    const UserMenuPage(), //4
   ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          actions: const [
-            Padding(
-              padding: EdgeInsets.all(8.0),
-              child: CircleAvatar(
-                foregroundImage: AssetImage('assets/images/logo.png'),
-                backgroundColor: Colors.transparent,
-                radius: 25,
-              ),
+      key: _scaffoldKey,
+      appBar: AppBar(
+        actions: const [
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: CircleAvatar(
+              foregroundImage: AssetImage('assets/images/logo.png'),
+              backgroundColor: Colors.transparent,
+              radius: 25,
             ),
-          ],
-          toolbarHeight: 100,
-          centerTitle: true,
-          title: Text(_bottomNavIndex == 0
-              ? 'Home'
-              : _bottomNavIndex == 1
-                  ? 'Tickets'
-                  : _bottomNavIndex == 3
-                      ? 'Menu'
-                      : 'Account'),
-        ),
-        body: Center(
-          child: _pages[_bottomNavIndex],
-        ),
-        floatingActionButton: SizedBox(
-          width: 70,
-          height: 70,
-          child: Selector<UserManager, User>(
-            selector: (context, user) => user.userData!,
-            builder: (context, value, child) {
-              return value.accountStatus == 'Verified'
-                  ? FloatingActionButton(
-                      backgroundColor: AppConstants().appRed,
-                      foregroundColor: const Color.fromARGB(255, 232, 231, 228),
-                      shape: const CircleBorder(),
-                      child: const Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.card_travel,
-                            size: 13,
-                          ),
-                          Text(
-                            "Request",
-                            style: TextStyle(
-                              fontSize: 10,
-                            ),
-                          )
-                        ],
-                      ),
-                      onPressed: () {
-                        Navigator.of(context)
-                            .pushNamed(AppRouteManager.userRequestFormPage);
-                      },
-                    )
-                  : const SizedBox();
-            },
           ),
-        ),
-        floatingActionButtonLocation:
-            context.read<UserManager>().userData!.accountStatus == 'Verified'
-                ? FloatingActionButtonLocation.centerDocked
-                : FloatingActionButtonLocation.centerFloat,
-        bottomNavigationBar: Selector<UserManager, User>(
-          selector: (p0, p1) => p1.userData!,
-          builder: (context, value, child) {
-            return AnimatedBottomNavigationBar(
-              inactiveColor: Colors.grey,
-              activeColor: AppConstants().appDarkBlue,
-              notchSmoothness: value.accountStatus == 'Verified'
-                  ? NotchSmoothness.sharpEdge
-                  : NotchSmoothness.defaultEdge,
-              height: 70,
-              onTap: (index) => setState(() => _bottomNavIndex = index),
-              icons: const [
-                Icons.home_filled,
-                Icons.access_time,
-                Icons.account_box,
-                Icons.menu,
-              ],
-              activeIndex: _bottomNavIndex,
-              gapLocation: value.accountStatus == 'Verified'
-                  ? GapLocation.center
-                  : GapLocation.none,
-              elevation: 50,
-            );
-          },
-        ));
+        ],
+        toolbarHeight: 100,
+        centerTitle: true,
+        title: Text(_bottomNavIndex == 0
+            ? 'Home'
+            : _bottomNavIndex == 1
+                ? 'Tickets'
+                : _bottomNavIndex == 4
+                    ? 'Menu'
+                    : 'Account'),
+      ),
+      body: Center(
+        child: _pages[_bottomNavIndex],
+      ),
+      bottomNavigationBar: StreamBuilder(
+        stream: context.read<UserManager>().userStreamer(),
+        builder: (context, snapshot) {
+          return Selector<UserManager, User>(
+            selector: (p0, p1) => p1.userData!,
+            builder: (context, value, child) {
+              return BottomNavigationBar(
+                selectedItemColor: Color.fromARGB(255, 54, 128, 247),
+                //showUnselectedLabels: true,
+                onTap: (index) {
+                  setState(() {
+                    if (index == 2) {
+                      Navigator.of(context)
+                          .pushNamed(AppRouteManager.userRequestFormPage);
+                    }
+                    _bottomNavIndex = index;
+                  });
+                },
+                unselectedItemColor: Color.fromARGB(255, 109, 109, 109),
+
+                type: BottomNavigationBarType.fixed,
+                currentIndex: _bottomNavIndex,
+                //  iconSize: 10,
+                items: List.from([
+                  const BottomNavigationBarItem(
+                    label: 'Home',
+                    icon: Icon(Icons.home_filled),
+                  ),
+                  const BottomNavigationBarItem(
+                      label: 'Tickets', icon: Icon(Icons.home_filled)),
+                  BottomNavigationBarItem(
+                      label: '',
+                      icon: Container(
+                        height: 70,
+                        width: MediaQuery.of(context).size.width,
+                        decoration: ShapeDecoration(
+                            //   color: Color.fromARGB(255, 7, 114, 255),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25))),
+                        child: Center(
+                            child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            FaIcon(
+                              FontAwesomeIcons.carOn,
+                              size: 40,
+                              color: Color.fromARGB(255, 54, 128, 247),
+                            ),
+                            Text(
+                              'Request',
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            )
+                          ],
+                        )),
+                      )
+                      //  FloatingActionButton.extended(
+                      //   backgroundColor: Color.fromARGB(255, 54, 128, 247),
+                      //   foregroundColor: Colors.white,
+                      //   shape: RoundedRectangleBorder(
+                      //       borderRadius: BorderRadius.circular(30)),
+                      //   label: Column(
+                      //     children: [Icon(Icons.save), Text('Request')],
+                      //   ),
+                      //   onPressed: () {
+                      //     setState(() {
+                      //       _bottomNavIndex = 2;
+                      //     });
+                      //   },
+                      // ),
+                      ),
+                  const BottomNavigationBarItem(
+                      label: 'Account',
+                      icon: Icon(
+                        Icons.account_box,
+                      )),
+                  const BottomNavigationBarItem(
+                      label: 'Menu',
+                      icon: Icon(
+                        Icons.menu,
+                      )),
+                ]),
+              );
+            },
+          );
+        },
+      ),
+    );
   }
 }
 
@@ -127,12 +157,10 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final Stream _usersStream =
-      FirebaseFirestore.instance.collection('User').snapshots();
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: context.read<UserManager>().userStream,
+      stream: context.read<UserManager>().userStreamer(),
       builder: (context, snapshot) {
         return Padding(
           padding: const EdgeInsets.all(10),
@@ -158,17 +186,14 @@ class _HomeState extends State<Home> {
                   ),
                   SizedBox(
                     height: userData.accountStatus == 'Not Verified'
-                        ? MediaQuery.of(context).size.height / 4
+                        ? MediaQuery.of(context).size.height / 5.3
                         : MediaQuery.of(context).size.height / 6.5,
                   ),
                   userData.accountStatus == 'Not Verified'
-                      ? const Text(
-                          'You are one step away!!',
-                        )
-                      : const SizedBox(),
-                  userData.accountStatus == 'Not Verified'
-                      ? const Text(
-                          'An Administrator will verify your Account Shortly',
+                      ? Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: const Text(
+                              'You are one step away!!\nMake sure to upload required verification pictures \nTo upload go to acount page.'),
                         )
                       : const SizedBox(),
                   Image.asset(

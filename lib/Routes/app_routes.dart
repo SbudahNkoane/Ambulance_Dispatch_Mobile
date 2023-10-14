@@ -1,7 +1,9 @@
-import 'package:ambulance_dispatch_application/Views/App%20Level/login_page.dart';
-import 'package:ambulance_dispatch_application/Views/App%20Level/password_reset_page.dart';
-import 'package:ambulance_dispatch_application/Views/App%20Level/register_page.dart';
-import 'package:ambulance_dispatch_application/Views/App%20Level/splash_page.dart';
+import 'package:ambulance_dispatch_application/Views/App_Level/login_page.dart';
+import 'package:ambulance_dispatch_application/Views/App_Level/password_reset_page.dart';
+
+import 'package:ambulance_dispatch_application/Views/App_Level/register_page.dart';
+import 'package:ambulance_dispatch_application/Views/App_Level/splash_page.dart';
+
 import 'package:ambulance_dispatch_application/Views/User/map.dart';
 import 'package:ambulance_dispatch_application/Views/User/user_menu_page.dart';
 import 'package:ambulance_dispatch_application/Views/User/user_home_page.dart';
@@ -84,6 +86,7 @@ class AppRouteManager {
         return MaterialPageRoute(
           builder: (context) => const UserProfilePage(),
         );
+
       //========================== Admin Screens ===========================================
 
       //========================== Paramedic Screens =============================
