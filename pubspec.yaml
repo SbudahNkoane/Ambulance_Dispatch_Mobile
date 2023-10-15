@@ -53,6 +53,7 @@ dependencies:
   another_flushbar: ^1.10.29
   loading_animation_widget: ^1.2.0+3
   tuple: ^2.0.1
+  lottie: ^2.6.0
   
  
 
@@ -80,6 +81,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/animations/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -2,6 +2,8 @@ import 'package:ambulance_dispatch_application/Models/user.dart';
 import 'package:ambulance_dispatch_application/Routes/app_routes.dart';
 import 'package:ambulance_dispatch_application/Services/locator_service.dart';
 import 'package:ambulance_dispatch_application/Services/navigation_and_dialog_service.dart';
+import 'package:ambulance_dispatch_application/View_Models/Ticket_Management/ticket_management.dart';
+import 'package:ambulance_dispatch_application/View_Models/User_Management/Authentication/authentication.dart';
 import 'package:ambulance_dispatch_application/View_Models/User_Management/user_management.dart';
 import 'package:ambulance_dispatch_application/Views/User/user_account_view.dart';
 import 'package:ambulance_dispatch_application/Views/User/user_menu_page.dart';
@@ -11,6 +13,7 @@ import 'package:ambulance_dispatch_application/Views/app_constants.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class UserHomePage extends StatefulWidget {
@@ -26,7 +29,7 @@ class _UserHomePageState extends State<UserHomePage> {
   final List<Widget> _pages = [
     const Home(), //0
     const UserTicketsPage(), //1
-    SizedBox(), //2
+    const UserTicketsPage(), //2
     const UserAccountView(), //3
     const UserMenuPage(), //4
   ];
@@ -66,21 +69,27 @@ class _UserHomePageState extends State<UserHomePage> {
             builder: (context, value, child) {
               return BottomNavigationBar(
                 selectedItemColor: Color.fromARGB(255, 54, 128, 247),
-                //showUnselectedLabels: true,
-                onTap: (index) {
-                  setState(() {
-                    if (index == 2) {
-                      Navigator.of(context)
-                          .pushNamed(AppRouteManager.userRequestFormPage);
+                onTap: (index) async {
+                  if (index == 2) {
+                    Navigator.of(context)
+                        .pushNamed(AppRouteManager.userRequestFormPage);
+                    _bottomNavIndex = 1;
+                  } else if (index == 1) {
+                    if (context.read<TicketManager>().userTickets.isEmpty) {
+                      await context.read<TicketManager>().getTickets(
+                          context.read<UserAuthentication>().currentUser!.uid);
                     }
+
+                    _bottomNavIndex = 1;
+                  } else {
                     _bottomNavIndex = index;
-                  });
+                  }
+
+                  setState(() {});
                 },
                 unselectedItemColor: Color.fromARGB(255, 109, 109, 109),
-
                 type: BottomNavigationBarType.fixed,
                 currentIndex: _bottomNavIndex,
-                //  iconSize: 10,
                 items: List.from([
                   const BottomNavigationBarItem(
                     label: 'Home',
@@ -94,7 +103,6 @@ class _UserHomePageState extends State<UserHomePage> {
                         height: 70,
                         width: MediaQuery.of(context).size.width,
                         decoration: ShapeDecoration(
-                            //   color: Color.fromARGB(255, 7, 114, 255),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(25))),
                         child: Center(
@@ -113,22 +121,7 @@ class _UserHomePageState extends State<UserHomePage> {
                             )
                           ],
                         )),
-                      )
-                      //  FloatingActionButton.extended(
-                      //   backgroundColor: Color.fromARGB(255, 54, 128, 247),
-                      //   foregroundColor: Colors.white,
-                      //   shape: RoundedRectangleBorder(
-                      //       borderRadius: BorderRadius.circular(30)),
-                      //   label: Column(
-                      //     children: [Icon(Icons.save), Text('Request')],
-                      //   ),
-                      //   onPressed: () {
-                      //     setState(() {
-                      //       _bottomNavIndex = 2;
-                      //     });
-                      //   },
-                      // ),
-                      ),
+                      )),
                   const BottomNavigationBarItem(
                       label: 'Account',
                       icon: Icon(
@@ -192,8 +185,12 @@ class _HomeState extends State<Home> {
                   userData.accountStatus == 'Not Verified'
                       ? Container(
                           width: MediaQuery.of(context).size.width,
-                          child: const Text(
-                              'You are one step away!!\nMake sure to upload required verification pictures \nTo upload go to acount page.'),
+                          child: Text(
+                            'You are one step away!!\nMake sure to upload required verification pictures \nTo upload go to acount page.',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.inter(
+                                fontWeight: FontWeight.bold, fontSize: 18),
+                          ),
                         )
                       : const SizedBox(),
                   Image.asset(

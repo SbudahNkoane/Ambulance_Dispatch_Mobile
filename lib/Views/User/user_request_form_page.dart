@@ -120,109 +120,116 @@ class _UserRequestFromPageState extends State<UserRequestFromPage> {
                                 fontWeight: FontWeight.bold, fontSize: 20),
                           ),
                           SizedBox(
-                            height: 200,
+                            height: 220,
                             width: MediaQuery.of(context).size.width / 1.05,
                             child: Card(
                               color: Color.fromARGB(255, 223, 223, 223),
                               child: Padding(
                                 padding: const EdgeInsets.all(15),
-                                child: SingleChildScrollView(
-                                  child: Column(
-                                    children: [
-                                      const Text('Use My Device Location'),
-                                      Checkbox(
-                                        value: _useCurrentLocation,
-                                        onChanged: (value) async {
-                                          setState(() {
-                                            print(value);
-                                            _useCurrentLocation = value!;
-                                          });
-                                          if (_useCurrentLocation == true) {
-                                            final location = await context
+                                child: Column(
+                                  children: [
+                                    const Text('Use My Device Location'),
+                                    Checkbox(
+                                      value: _useCurrentLocation,
+                                      onChanged: (value) async {
+                                        setState(() {
+                                          print(value);
+                                          _useCurrentLocation = value!;
+                                        });
+                                        if (_useCurrentLocation == true) {
+                                          final location = await context
+                                              .read<UserManager>()
+                                              .getUserLocation();
+                                          setState(() {});
+                                        }
+                                      },
+                                    ),
+                                    context
                                                 .read<UserManager>()
-                                                .getUserLocation();
-                                            setState(() {});
-                                          }
-                                        },
-                                      ),
-                                      context
-                                                  .read<UserManager>()
-                                                  .currentAddress !=
-                                              null
-                                          ? Selector<UserManager, Placemark>(
-                                              selector: (p0, p1) =>
-                                                  p1.currentAddress!,
-                                              builder: (context, value, child) {
-                                                return Column(
-                                                  children: [
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Text('City:'),
-                                                        Text(
-                                                            '${value.locality}'),
-                                                      ],
-                                                    ),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Text('Street:'),
-                                                        Text(
-                                                            '${value.subLocality}'),
-                                                      ],
-                                                    ),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Text('Suburb:'),
-                                                        Text(
-                                                            '${value.administrativeArea}'),
-                                                      ],
-                                                    ),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Text('Postal Code:'),
-                                                        Text(
-                                                            '${value.postalCode}'),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                );
-                                              },
-                                            )
-                                          : SizedBox(),
-                                      const SizedBox(
-                                        height: 20,
-                                      ),
+                                                .currentAddress !=
+                                            null
+                                        ? Selector<UserManager, Placemark>(
+                                            selector: (p0, p1) =>
+                                                p1.currentAddress!,
+                                            builder: (context, value, child) {
+                                              return Column(
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text('City:'),
+                                                      Text('${value.locality}'),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text('Street:'),
+                                                      Text(
+                                                          '${value.subLocality}'),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text('Suburb:'),
+                                                      Text(
+                                                          '${value.administrativeArea}'),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text('Postal Code:'),
+                                                      Text(
+                                                          '${value.postalCode}'),
+                                                    ],
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          )
+                                        : SizedBox(),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
 
-                                      // SizedBox(
-                                      //   height: 90,
-                                      //   width: 1000,
-                                      //   child: GoogleMap(
-                                      //     onMapCreated: _onMapCreated,
-                                      //     initialCameraPosition: CameraPosition(
-                                      //       target: _center,
-                                      //       zoom: 11.0,
-                                      //     ),
-                                      //   ),
-                                      // ),
-                                    ],
-                                  ),
+                                    // SizedBox(
+                                    //   height: 90,
+                                    //   width: 1000,
+                                    //   child: GoogleMap(
+                                    //     onMapCreated: _onMapCreated,
+                                    //     initialCameraPosition: CameraPosition(
+                                    //       target: _center,
+                                    //       zoom: 11.0,
+                                    //     ),
+                                    //   ),
+                                    // ),
+                                  ],
                                 ),
                               ),
                             ),
                           ),
                           AppBlueButton(
                               onPressed: () async {
+                                final List<Placemark> pickUpLocation =
+                                    await placemarkFromCoordinates(
+                                        context
+                                            .read<UserManager>()
+                                            .currentLocation!
+                                            .latitude,
+                                        context
+                                            .read<UserManager>()
+                                            .currentLocation!
+                                            .longitude);
                                 Ticket newTicket = Ticket(
                                   emergencyLevel: null,
                                   dispatchedAmbulance: null,
@@ -245,10 +252,10 @@ class _UserRequestFromPageState extends State<UserRequestFromPage> {
                                   ),
                                   description:
                                       descriptionController.text.trim(),
-                                  bookedAt: DateTime.now(),
+                                  bookedAt: Timestamp.now(),
                                   status: "Searching for an Ambulance",
                                 );
-                                await context
+                                final request = await context
                                     .read<TicketManager>()
                                     .submitTicket(
                                       context
@@ -257,12 +264,8 @@ class _UserRequestFromPageState extends State<UserRequestFromPage> {
                                           .uid,
                                       newTicket,
                                     );
-                                context.read<TicketManager>().getTickets(
-                                      context
-                                          .read<UserAuthentication>()
-                                          .currentUser!
-                                          .uid,
-                                    );
+                                Navigator.of(context).popAndPushNamed(
+                                    AppRouteManager.userTicketTrackingPage);
                               },
                               text: 'Request Now'),
                           const SizedBox(

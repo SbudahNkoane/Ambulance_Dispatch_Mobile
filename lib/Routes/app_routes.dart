@@ -1,3 +1,5 @@
+import 'package:ambulance_dispatch_application/Models/ticket.dart';
+import 'package:ambulance_dispatch_application/View_Models/Ticket_Management/ticket_management.dart';
 import 'package:ambulance_dispatch_application/Views/App_Level/login_page.dart';
 import 'package:ambulance_dispatch_application/Views/App_Level/password_reset_page.dart';
 
@@ -5,13 +7,16 @@ import 'package:ambulance_dispatch_application/Views/App_Level/register_page.dar
 import 'package:ambulance_dispatch_application/Views/App_Level/splash_page.dart';
 
 import 'package:ambulance_dispatch_application/Views/User/map.dart';
+import 'package:ambulance_dispatch_application/Views/User/user_ambulance_track_page.dart';
 import 'package:ambulance_dispatch_application/Views/User/user_menu_page.dart';
 import 'package:ambulance_dispatch_application/Views/User/user_home_page.dart';
 import 'package:ambulance_dispatch_application/Views/User/user_profile_page.dart';
 import 'package:ambulance_dispatch_application/Views/User/user_request_form_page.dart';
+import 'package:ambulance_dispatch_application/Views/User/user_ticket_tracking_page.dart';
 import 'package:ambulance_dispatch_application/Views/User/user_tickets_page.dart';
 import 'package:ambulance_dispatch_application/Views/User/user_account_page.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AppRouteManager {
   // ===========================App Level Screens==================================================
@@ -28,6 +33,8 @@ class AppRouteManager {
   static const String userProfilePage = '/UserProfilePage';
   static const String userMenuPage = '/UserMenuPage';
   static const String userMapPage = '/UserMapPage';
+  static const String userTicketTrackingPage = '/UserTicketTrackingPage';
+  static const String userAmbulanceTrackingPage = '/UserAmbulanceTrackingPage';
 
 //========================== Admin Screens =================================================
   static const String adminHomePage = '/AdminHomePage';
@@ -61,6 +68,16 @@ class AppRouteManager {
       case userHomePage:
         return MaterialPageRoute(
           builder: (context) => const UserHomePage(),
+        );
+      case userTicketTrackingPage:
+        return MaterialPageRoute(
+          builder: (context) => UserTicketTrackingPage(
+            ticket: context.read<TicketManager>().bookedTicket!,
+          ),
+        );
+      case userAmbulanceTrackingPage:
+        return MaterialPageRoute(
+          builder: (context) => const AmbulanceTrackingPage(),
         );
       case userMapPage:
         return MaterialPageRoute(
