@@ -5,6 +5,7 @@ import 'package:ambulance_dispatch_application/Views/app_constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart' as loc;
 import 'package:image_picker/image_picker.dart';
@@ -39,37 +40,61 @@ class UserManager with ChangeNotifier {
     return _userStream!;
   }
 
-  Future<loc.Position> getUserLocation() async {
+  Future<String> getUserLocation() async {
+    String state = 'OK';
     _showprogress = true;
     _userprogresstext = 'Setting location...';
     notifyListeners();
-    loc.Position? position;
-    _serviceEnabled = await loc.Geolocator.isLocationServiceEnabled();
-    if (!_serviceEnabled) {
-      return Future.error('Location services are disabled');
-    }
-    _permission = await loc.Geolocator.checkPermission();
-    if (_permission == loc.LocationPermission.denied) {
-      _permission = await loc.Geolocator.requestPermission();
-      if (_permission == loc.LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
-      }
-    }
-    if (_permission == loc.LocationPermission.always ||
-        _permission == loc.LocationPermission.whileInUse) {
-      _currentLocation = await loc.Geolocator.getCurrentPosition(
-        desiredAccuracy: loc.LocationAccuracy.high,
-      );
-      List<Placemark> placemark =
-          await placemarkFromCoordinates(-29.1214761, 26.2065606);
-      //  _currentLocation!.latitude, _currentLocation!.longitude);
-      _addressName = placemark[0];
-    }
-    _showprogress = false;
-    notifyListeners();
-    // List placemark = loc.Geolocator.
 
-    return _currentLocation!;
+    try {
+      _serviceEnabled = await loc.Geolocator.isLocationServiceEnabled();
+      if (!_serviceEnabled) {
+        return Future.error('Location services are disabled');
+      } else {
+        _permission = await loc.Geolocator.checkPermission();
+        if (_permission == loc.LocationPermission.denied) {
+          _permission = await loc.Geolocator.requestPermission();
+          if (_permission == loc.LocationPermission.denied ||
+              _permission == loc.LocationPermission.deniedForever) {
+            _showprogress = false;
+            notifyListeners();
+            return 'You have denied permissions to access your location';
+          } else if (_permission == loc.LocationPermission.always ||
+              _permission == loc.LocationPermission.whileInUse) {
+            _currentLocation = await loc.Geolocator.getCurrentPosition(
+              desiredAccuracy: loc.LocationAccuracy.high,
+            );
+            List<Placemark> placemark = await placemarkFromCoordinates(
+                    _currentLocation!.latitude, _currentLocation!.longitude)
+                .onError((error, stackTrace) {
+              throw state = error.toString();
+            });
+
+            _addressName = placemark[0];
+          }
+        } else {
+          _currentLocation = await loc.Geolocator.getCurrentPosition(
+            desiredAccuracy: loc.LocationAccuracy.high,
+          );
+          List<Placemark> placemark = await placemarkFromCoordinates(
+                  _currentLocation!.latitude, _currentLocation!.longitude)
+              .onError((error, stackTrace) {
+            throw state = error.toString();
+          });
+
+          _addressName = placemark[0];
+        }
+      }
+    } on PlatformException catch (e) {
+      state = e.message.toString();
+    } catch (e) {
+      state = e.toString();
+    } finally {
+      _showprogress = false;
+      notifyListeners();
+    }
+
+    return state;
   }
 
   Future<User?> getCurrentUserData(String userID) async {
@@ -77,18 +102,19 @@ class UserManager with ChangeNotifier {
     _userprogresstext = 'Setting up profile...';
     notifyListeners();
     final docRef = database.collection("User").doc(userID);
-    docRef.snapshots().listen(
-      (event) {
-        _userData = User.fromJson(event.data() as Map<String, dynamic>);
-        notifyListeners();
-      },
-      onDone: () async {},
-    );
+
     try {
       await docRef.get().then(
         (DocumentSnapshot doc) {
           _userData = User.fromJson(doc.data() as Map<String, dynamic>);
         },
+      );
+      docRef.snapshots().listen(
+        (event) {
+          _userData = User.fromJson(event.data() as Map<String, dynamic>);
+          notifyListeners();
+        },
+        onDone: () async {},
       );
       if (_userData!.userID == null) {
         await docRef.set(
@@ -110,6 +136,10 @@ class UserManager with ChangeNotifier {
       required String userID,
       required File idFront,
       required File idBack}) async {
+    String state = 'OK';
+    _showprogress = true;
+    _userprogresstext = 'Sending application...';
+    notifyListeners();
     TaskSnapshot? uploadedSelfie;
     TaskSnapshot? uploadedIDBack;
     TaskSnapshot? uploadedIDFront;
@@ -141,13 +171,16 @@ class UserManager with ChangeNotifier {
         },
         SetOptions(merge: true),
       ).onError((error, stackTrace) {});
+    } on FirebaseException catch (error) {
+      state = error.message.toString();
     } catch (e) {
-      return e.toString();
+      state = e.toString();
     } finally {
+      _showprogress = false;
       notifyListeners();
     }
 
-    return '';
+    return state;
   }
 
   Future<String> updateProfilePicture(

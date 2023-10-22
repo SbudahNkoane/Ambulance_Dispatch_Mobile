@@ -1,7 +1,10 @@
 import 'dart:io';
 
+import 'package:ambulance_dispatch_application/Services/locator_service.dart';
+import 'package:ambulance_dispatch_application/Services/navigation_and_dialog_service.dart';
 import 'package:ambulance_dispatch_application/View_Models/User_Management/Authentication/authentication.dart';
 import 'package:ambulance_dispatch_application/View_Models/User_Management/user_management.dart';
+import 'package:ambulance_dispatch_application/Views/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -115,24 +118,49 @@ class _UserAccountPageState extends State<UserAccountPage> {
                   ),
                 ),
                 const Divider(),
-                ElevatedButton(
-                  onPressed: () {
-                    if (selfie != null && idBack != null && idFront != null) {
-                      context.read<UserManager>().applyForVerification(
-                            selfie: selfie!,
-                            idFront: idFront!,
-                            idBack: idBack!,
-                            userID: context
-                                .read<UserAuthentication>()
-                                .currentUser!
-                                .uid,
-                          );
-                    } else {
-                      print('All required');
-                    }
-                  },
-                  child: const Text('Submit'),
-                ),
+                AppBlueButton(
+                    onPressed: () async {
+                      if (selfie != null && idBack != null && idFront != null) {
+                        final result = await context
+                            .read<UserManager>()
+                            .applyForVerification(
+                              selfie: selfie!,
+                              idFront: idFront!,
+                              idBack: idBack!,
+                              userID: context
+                                  .read<UserAuthentication>()
+                                  .currentUser!
+                                  .uid,
+                            );
+                        if (result == 'OK') {
+                          Navigator.of(context).pop();
+                          locator
+                              .get<NavigationAndDialogService>()
+                              .showSnackBar(
+                                context: context,
+                                message:
+                                    'Your application has been sent through.',
+                                title: 'Success',
+                              );
+                        } else {
+                          locator
+                              .get<NavigationAndDialogService>()
+                              .showSnackBar(
+                                context: context,
+                                message: result,
+                                title: 'Oops',
+                              );
+                        }
+                      } else {
+                        locator.get<NavigationAndDialogService>().showSnackBar(
+                              context: context,
+                              message:
+                                  'All the photos are required for application',
+                              title: 'Required',
+                            );
+                      }
+                    },
+                    text: 'Send Application'),
                 const SizedBox(
                   height: 40,
                 )

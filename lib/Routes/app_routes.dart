@@ -5,6 +5,8 @@ import 'package:ambulance_dispatch_application/Views/App_Level/password_reset_pa
 
 import 'package:ambulance_dispatch_application/Views/App_Level/register_page.dart';
 import 'package:ambulance_dispatch_application/Views/App_Level/splash_page.dart';
+import 'package:ambulance_dispatch_application/Views/Paramedic/paramedic_home_page.dart';
+import 'package:ambulance_dispatch_application/Views/Paramedic/ticket_dispatch_page.dart';
 
 import 'package:ambulance_dispatch_application/Views/User/map.dart';
 import 'package:ambulance_dispatch_application/Views/User/user_ambulance_track_page.dart';
@@ -39,9 +41,10 @@ class AppRouteManager {
 //========================== Admin Screens =================================================
   static const String adminHomePage = '/AdminHomePage';
 
-//========================== Ambulance Personnel Screens ===================================
-  static const String ambulancePersonnelHomePage =
-      '/AmbulancePersonnelHomePage';
+//========================== Paramedic Screens ===================================
+  static const String paramedicHomePage = '/AmbulancePersonnelHomePage';
+  static const String paramedicTicketDispatchPage =
+      '/paramedicTicketDispatchHomePage';
 
   AppRouteManager._();
 
@@ -107,7 +110,14 @@ class AppRouteManager {
       //========================== Admin Screens ===========================================
 
       //========================== Paramedic Screens =============================
-
+      case paramedicHomePage:
+        return MaterialPageRoute(
+          builder: (context) => const ParamedicHomePage(),
+        );
+      case paramedicTicketDispatchPage:
+        return MaterialPageRoute(
+          builder: (context) => const TicketDispatchPage(),
+        );
       default:
         throw const FormatException('This Page does not exist!!');
     }

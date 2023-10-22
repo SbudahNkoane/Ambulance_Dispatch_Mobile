@@ -1,7 +1,7 @@
 import 'package:ambulance_dispatch_application/Routes/app_routes.dart';
 import 'package:ambulance_dispatch_application/Services/locator_service.dart';
 
-import 'package:ambulance_dispatch_application/View_Models/Admin_Management/admin_management.dart';
+import 'package:ambulance_dispatch_application/View_Models/Ambulance_Management/ambulance_management.dart';
 
 import 'package:ambulance_dispatch_application/View_Models/Paramedic_Management/paramedic_management.dart';
 import 'package:ambulance_dispatch_application/View_Models/Ticket_Management/ticket_management.dart';
@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
           create: (context) => UserManager(),
         ),
         ChangeNotifierProvider(
-          create: (context) => AdminManager(),
+          create: (context) => AmbulanceManager(),
         ),
         ChangeNotifierProvider(
           create: (context) => ParamedicManager(),

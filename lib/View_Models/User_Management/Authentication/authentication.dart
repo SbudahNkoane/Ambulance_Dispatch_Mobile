@@ -22,8 +22,12 @@ class UserAuthentication with ChangeNotifier {
   }
 
 //========REGISTER USER ===============
-  Future<User?> registerNewUser(
+  Future<String> registerNewUser(
       String email, String password, user.User userInfo) async {
+    String state = 'OK';
+    _showprogress = true;
+    _userprogresstext = 'Creating account...';
+    notifyListeners();
     try {
       await authentication
           .createUserWithEmailAndPassword(
@@ -35,21 +39,33 @@ class UserAuthentication with ChangeNotifier {
             .collection('User')
             .doc(registeredUser.user!.uid)
             .set(userInfo.toJson())
-            .onError((error, stackTrace) {
+            .then((value) {
+          _userprogresstext = 'Saving data...';
+          notifyListeners();
+          database
+              .collection('User')
+              .doc(registeredUser.user!.uid)
+              .update({'User_ID': registeredUser.user!.uid});
+        }).onError((error, stackTrace) {
           print(error);
         });
       });
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
+        state = 'The password provided is too weak.';
       } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+        state = 'The account already exists for that email.';
+      } else {
+        state = e.message.toString();
       }
+    } catch (e) {
+      state = e.toString();
+    } finally {
+      _showprogress = false;
+      notifyListeners();
     }
-    return null;
+    return state;
   }
-
-//====== Check if user exist ======
 
   //========= LOGIN USER ==========
   Future<String> loginUser(String email, String password) async {
@@ -80,6 +96,8 @@ class UserAuthentication with ChangeNotifier {
         state = 'No user found for that email.';
       } else if (error.code == 'wrong-password') {
         state = 'Wrong password provided for that user.';
+      } else {
+        state = error.message.toString();
       }
     } catch (e) {
       state = e.toString();

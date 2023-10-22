@@ -21,7 +21,10 @@ class NavigationAndDialogService {
     return navigatorKey.currentState!.pop();
   } //goBack
 
-  void showSnackBar1(BuildContext context, String message) {
+  void showSnackBar1(
+      {required BuildContext context,
+      required String message,
+      required String title}) {
     final snackBar = SnackBar(
       duration: const Duration(milliseconds: 2500),
       elevation: 10,
@@ -32,7 +35,7 @@ class NavigationAndDialogService {
       )),
       backgroundColor: Color.fromARGB(255, 89, 125, 245),
       content: ListTile(
-        title: Text('data'),
+        title: Text(title),
         subtitle: Text(message),
       ),
     );
@@ -55,7 +58,25 @@ class NavigationAndDialogService {
     ).show(context!);
   }
 
-  void showErrorSnackBar({required String message, required String title}) {
+  void showErrorSnackBar(
+      {required BuildContext context,
+      required String message,
+      required String title}) {
+    final snackBar = SnackBar(
+      duration: const Duration(milliseconds: 2500),
+      elevation: 10,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(5),
+        topRight: Radius.circular(5),
+      )),
+      backgroundColor: Color.fromARGB(255, 89, 125, 245),
+      content: ListTile(
+        title: Text('data'),
+        subtitle: Text(message),
+      ),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
     Flushbar(
       borderRadius: BorderRadius.circular(10),
       backgroundColor: const Color.fromARGB(255, 167, 218, 248),

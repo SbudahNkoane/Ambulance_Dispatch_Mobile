@@ -5,6 +5,7 @@ import 'package:ambulance_dispatch_application/Services/navigation_and_dialog_se
 import 'package:ambulance_dispatch_application/View_Models/Ticket_Management/ticket_management.dart';
 import 'package:ambulance_dispatch_application/View_Models/User_Management/Authentication/authentication.dart';
 import 'package:ambulance_dispatch_application/View_Models/User_Management/user_management.dart';
+import 'package:ambulance_dispatch_application/Views/App_Level/app_progress_indicator.dart';
 import 'package:ambulance_dispatch_application/Views/User/user_account_view.dart';
 import 'package:ambulance_dispatch_application/Views/User/user_menu_page.dart';
 import 'package:ambulance_dispatch_application/Views/User/user_tickets_page.dart';
@@ -14,7 +15,9 @@ import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.da
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
 
 class UserHomePage extends StatefulWidget {
   const UserHomePage({super.key});
@@ -58,8 +61,21 @@ class _UserHomePageState extends State<UserHomePage> {
                     ? 'Menu'
                     : 'Account'),
       ),
-      body: Center(
-        child: _pages[_bottomNavIndex],
+      body: Stack(
+        children: [
+          Center(
+            child: _pages[_bottomNavIndex],
+          ),
+          Selector<TicketManager, Tuple2>(
+            selector: (context, value) =>
+                Tuple2(value.showProgress, value.userProgressText),
+            builder: (context, value, child) {
+              return value.item1
+                  ? AppProgressIndicator(text: "${value.item2}")
+                  : Container();
+            },
+          ),
+        ],
       ),
       bottomNavigationBar: StreamBuilder(
         stream: context.read<UserManager>().userStreamer(),
@@ -71,9 +87,16 @@ class _UserHomePageState extends State<UserHomePage> {
                 selectedItemColor: Color.fromARGB(255, 54, 128, 247),
                 onTap: (index) async {
                   if (index == 2) {
-                    Navigator.of(context)
-                        .pushNamed(AppRouteManager.userRequestFormPage);
-                    _bottomNavIndex = 1;
+                    if (context.read<UserManager>().userData!.accountStatus !=
+                        'Verified') {
+                      await Navigator.of(context)
+                          .pushNamed(AppRouteManager.userAccountPage);
+                      _bottomNavIndex = 0;
+                    } else {
+                      Navigator.of(context)
+                          .pushNamed(AppRouteManager.userRequestFormPage);
+                      _bottomNavIndex = 1;
+                    }
                   } else if (index == 1) {
                     if (context.read<TicketManager>().userTickets.isEmpty) {
                       await context.read<TicketManager>().getTickets(
@@ -97,31 +120,38 @@ class _UserHomePageState extends State<UserHomePage> {
                   ),
                   const BottomNavigationBarItem(
                       label: 'Tickets', icon: Icon(Icons.home_filled)),
-                  BottomNavigationBarItem(
-                      label: '',
-                      icon: Container(
-                        height: 70,
-                        width: MediaQuery.of(context).size.width,
-                        decoration: ShapeDecoration(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(25))),
-                        child: Center(
-                            child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            FaIcon(
-                              FontAwesomeIcons.carOn,
-                              size: 40,
-                              color: Color.fromARGB(255, 54, 128, 247),
-                            ),
-                            Text(
-                              'Request',
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
-                            )
-                          ],
-                        )),
-                      )),
+                  context.read<UserManager>().userData!.accountStatus ==
+                          "Verified"
+                      ? BottomNavigationBarItem(
+                          label: '',
+                          icon: Container(
+                            height: 70,
+                            width: MediaQuery.of(context).size.width,
+                            decoration: ShapeDecoration(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(25))),
+                            child: Center(
+                                child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                FaIcon(
+                                  FontAwesomeIcons.carOn,
+                                  size: 40,
+                                  color: Color.fromARGB(255, 54, 128, 247),
+                                ),
+                                Text(
+                                  'Request',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                )
+                              ],
+                            )),
+                          ))
+                      : const BottomNavigationBarItem(
+                          label: 'Apply',
+                          icon: Icon(Icons.verified_user),
+                        ),
                   const BottomNavigationBarItem(
                       label: 'Account',
                       icon: Icon(
@@ -165,7 +195,7 @@ class _HomeState extends State<Home> {
               }
 
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Text("Loading");
+                return const Text("Loading...");
               }
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -179,20 +209,27 @@ class _HomeState extends State<Home> {
                   ),
                   SizedBox(
                     height: userData.accountStatus == 'Not Verified'
-                        ? MediaQuery.of(context).size.height / 5.3
+                        ? MediaQuery.of(context).size.height / 5.6
                         : MediaQuery.of(context).size.height / 6.5,
                   ),
                   userData.accountStatus == 'Not Verified'
                       ? Container(
                           width: MediaQuery.of(context).size.width,
                           child: Text(
-                            'You are one step away!!\nMake sure to upload required verification pictures \nTo upload go to acount page.',
+                            'You are one step away!!\nMake sure to apply for verification by clicking the Apply button.',
                             textAlign: TextAlign.center,
                             style: GoogleFonts.inter(
                                 fontWeight: FontWeight.bold, fontSize: 18),
                           ),
                         )
-                      : const SizedBox(),
+                      : Text(
+                          'Welcome',
+                          style: GoogleFonts.inter(
+                              fontWeight: FontWeight.bold, fontSize: 18),
+                        ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 20,
+                  ),
                   Image.asset(
                     'assets/images/med.png',
                     height: MediaQuery.of(context).size.height / 2.8,

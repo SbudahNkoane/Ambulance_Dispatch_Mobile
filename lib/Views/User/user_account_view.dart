@@ -2,6 +2,7 @@ import 'package:ambulance_dispatch_application/Models/user.dart';
 import 'package:ambulance_dispatch_application/Routes/app_routes.dart';
 import 'package:ambulance_dispatch_application/View_Models/User_Management/user_management.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 class UserAccountView extends StatefulWidget {
@@ -23,11 +24,6 @@ class _UserAccountViewState extends State<UserAccountView> {
             return const Center(child: Text('Something went wrong'));
           }
 
-          // if (snapshot.connectionState == ConnectionState.active) {
-          //   return const Center(
-          //     child: CircularProgressIndicator(),
-          //   );
-          // }
           return Selector<UserManager, User>(
             builder: (context, value, child) {
               return Padding(
@@ -136,11 +132,12 @@ class _UserAccountViewState extends State<UserAccountView> {
                               ],
                             ),
                           )
-                        : Image.asset(
-                            'assets/images/med.png',
-                            height: MediaQuery.of(context).size.height / 2.8,
-                            width: MediaQuery.of(context).size.width,
-                          ),
+                        : Lottie.asset('assets/animations/account.json'),
+                    // Image.asset(
+                    //     'assets/images/med.png',
+                    //     height: MediaQuery.of(context).size.height / 2.8,
+                    //     width: MediaQuery.of(context).size.width,
+                    //   ),
                     Divider(),
                     value.verificationPicture != null &&
                             value.verificationPicture != ''

@@ -57,6 +57,6 @@ class User {
         idDocument: json['ID_Document'] as Map?,
         role: json['Role'] as String,
         profilePicture: json['Profile_Picture'] as String?,
-        userID: json['User_ID'] as String?,
+        userID: json['User_ID'] as String,
       );
 }

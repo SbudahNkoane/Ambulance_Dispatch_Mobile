@@ -2,9 +2,11 @@
 
 import 'package:ambulance_dispatch_application/Routes/app_routes.dart';
 import 'package:ambulance_dispatch_application/View_Models/User_Management/Authentication/authentication.dart';
+import 'package:ambulance_dispatch_application/View_Models/User_Management/user_management.dart';
 import 'package:ambulance_dispatch_application/Views/App_Level/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fireAuth;
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 class UserMenuPage extends StatefulWidget {
@@ -69,9 +71,9 @@ class _UserMenuPageState extends State<UserMenuPage> {
               leading: const Icon(Icons.check),
             ),
           ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height / 3.5,
-          ),
+          context.read<UserManager>().userData!.gender == 'Female'
+              ? Lottie.asset('assets/animations/account_female.json')
+              : Lottie.asset('assets/animations/account_male.json'),
           Card(
             child: ListTile(
               onTap: () {

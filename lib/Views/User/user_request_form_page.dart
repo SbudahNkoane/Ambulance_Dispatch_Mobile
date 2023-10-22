@@ -1,5 +1,9 @@
+import 'dart:math';
+
 import 'package:ambulance_dispatch_application/Models/ticket.dart';
 import 'package:ambulance_dispatch_application/Routes/app_routes.dart';
+import 'package:ambulance_dispatch_application/Services/locator_service.dart';
+import 'package:ambulance_dispatch_application/Services/navigation_and_dialog_service.dart';
 import 'package:ambulance_dispatch_application/View_Models/Ticket_Management/ticket_management.dart';
 import 'package:ambulance_dispatch_application/View_Models/User_Management/Authentication/authentication.dart';
 import 'package:ambulance_dispatch_application/View_Models/User_Management/user_management.dart';
@@ -120,7 +124,7 @@ class _UserRequestFromPageState extends State<UserRequestFromPage> {
                                 fontWeight: FontWeight.bold, fontSize: 20),
                           ),
                           SizedBox(
-                            height: 220,
+                            height: 250,
                             width: MediaQuery.of(context).size.width / 1.05,
                             child: Card(
                               color: Color.fromARGB(255, 223, 223, 223),
@@ -132,16 +136,23 @@ class _UserRequestFromPageState extends State<UserRequestFromPage> {
                                     Checkbox(
                                       value: _useCurrentLocation,
                                       onChanged: (value) async {
-                                        setState(() {
-                                          print(value);
+                                        final location = await context
+                                            .read<UserManager>()
+                                            .getUserLocation();
+
+                                        if (location == null) {
+                                          locator
+                                              .get<NavigationAndDialogService>()
+                                              .showSnackBar1(
+                                                  message:
+                                                      'We cannot access your location without your permission',
+                                                  title:
+                                                      'Your Location is required',
+                                                  context: context);
+                                        } else {
                                           _useCurrentLocation = value!;
-                                        });
-                                        if (_useCurrentLocation == true) {
-                                          final location = await context
-                                              .read<UserManager>()
-                                              .getUserLocation();
-                                          setState(() {});
                                         }
+                                        setState(() {});
                                       },
                                     ),
                                     context
@@ -169,8 +180,7 @@ class _UserRequestFromPageState extends State<UserRequestFromPage> {
                                                             .spaceBetween,
                                                     children: [
                                                       Text('Street:'),
-                                                      Text(
-                                                          '${value.subLocality}'),
+                                                      Text('${value.street}'),
                                                     ],
                                                   ),
                                                   Row(
@@ -180,7 +190,7 @@ class _UserRequestFromPageState extends State<UserRequestFromPage> {
                                                     children: [
                                                       Text('Suburb:'),
                                                       Text(
-                                                          '${value.administrativeArea}'),
+                                                          '${value.subLocality}'),
                                                     ],
                                                   ),
                                                   Row(
@@ -220,22 +230,12 @@ class _UserRequestFromPageState extends State<UserRequestFromPage> {
                           ),
                           AppBlueButton(
                               onPressed: () async {
-                                final List<Placemark> pickUpLocation =
-                                    await placemarkFromCoordinates(
-                                        context
-                                            .read<UserManager>()
-                                            .currentLocation!
-                                            .latitude,
-                                        context
-                                            .read<UserManager>()
-                                            .currentLocation!
-                                            .longitude);
                                 Ticket newTicket = Ticket(
                                   emergencyLevel: null,
                                   dispatchedAmbulance: null,
                                   closedAt: null,
                                   managedBy: null,
-                                  ticketId: null,
+                                  ticketId: '',
                                   userId: context
                                       .read<UserAuthentication>()
                                       .currentUser!
@@ -264,8 +264,16 @@ class _UserRequestFromPageState extends State<UserRequestFromPage> {
                                           .uid,
                                       newTicket,
                                     );
-                                Navigator.of(context).popAndPushNamed(
-                                    AppRouteManager.userTicketTrackingPage);
+                                if (request != 'OK') {
+                                  locator
+                                      .get<NavigationAndDialogService>()
+                                      .showSnackBar(
+                                          message: request,
+                                          title: 'Oops. An error occured!');
+                                } else {
+                                  Navigator.of(context).popAndPushNamed(
+                                      AppRouteManager.userTicketTrackingPage);
+                                }
                               },
                               text: 'Request Now'),
                           const SizedBox(
@@ -278,6 +286,15 @@ class _UserRequestFromPageState extends State<UserRequestFromPage> {
                 ),
               ),
               Selector<UserManager, Tuple2>(
+                selector: (context, value) =>
+                    Tuple2(value.showProgress, value.userProgressText),
+                builder: (context, value, child) {
+                  return value.item1
+                      ? AppProgressIndicator(text: "${value.item2}")
+                      : Container();
+                },
+              ),
+              Selector<TicketManager, Tuple2>(
                 selector: (context, value) =>
                     Tuple2(value.showProgress, value.userProgressText),
                 builder: (context, value, child) {

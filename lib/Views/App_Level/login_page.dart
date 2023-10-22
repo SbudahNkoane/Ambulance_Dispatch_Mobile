@@ -3,9 +3,11 @@
 import 'package:ambulance_dispatch_application/Routes/app_routes.dart';
 import 'package:ambulance_dispatch_application/Services/locator_service.dart';
 import 'package:ambulance_dispatch_application/Services/navigation_and_dialog_service.dart';
+import 'package:ambulance_dispatch_application/View_Models/Paramedic_Management/paramedic_management.dart';
 import 'package:ambulance_dispatch_application/View_Models/User_Management/Authentication/authentication.dart';
 import 'package:ambulance_dispatch_application/View_Models/User_Management/user_management.dart';
 import 'package:ambulance_dispatch_application/Views/App_Level/app_progress_indicator.dart';
+import 'package:ambulance_dispatch_application/Views/Paramedic/paramedic_home_page.dart';
 import 'package:ambulance_dispatch_application/Views/User/user_home_page.dart';
 import 'package:ambulance_dispatch_application/Views/app_constants.dart';
 import 'package:flutter/material.dart';
@@ -144,40 +146,105 @@ class _LoginScreenState extends State<LoginScreen> {
                               onPressed: () async {
                                 if (_loginFormKey.currentState!.validate()) {
                                   FocusManager.instance.primaryFocus?.unfocus();
-                                  final result = await context
-                                      .read<UserAuthentication>()
-                                      .loginUser(
-                                        usernameController.text.trim(),
-                                        passwordController.text.trim(),
-                                      );
-                                  if (result != 'OK') {
-                                    return locator
+                                  if (usernameController.text
+                                      .contains('@para.com')) {
+                                    locator
                                         .get<NavigationAndDialogService>()
                                         .showSnackBar(
-                                          context: context,
-                                          message: result,
-                                          title: 'Oops',
-                                        );
-                                  }
-                                  if (context
-                                          .read<UserAuthentication>()
-                                          .currentUser ==
-                                      null) {
-                                    print('Verify email first');
+                                            context: context,
+                                            message:
+                                                'You cannot sign in as a normal user with this account.Sign in as Paramedic',
+                                            title: 'Account Type');
                                   } else {
-                                    await context
-                                        .read<UserManager>()
-                                        .getCurrentUserData(context
+                                    final result = await context
+                                        .read<UserAuthentication>()
+                                        .loginUser(
+                                          usernameController.text.trim(),
+                                          passwordController.text.trim(),
+                                        );
+                                    if (result != 'OK') {
+                                      return locator
+                                          .get<NavigationAndDialogService>()
+                                          .showSnackBar(
+                                            context: context,
+                                            message: result,
+                                            title: 'Oops',
+                                          );
+                                    }
+                                    if (context
                                             .read<UserAuthentication>()
-                                            .currentUser!
-                                            .uid);
+                                            .currentUser ==
+                                        null) {
+                                      print('Verify email first');
+                                    } else {
+                                      await context
+                                          .read<UserManager>()
+                                          .getCurrentUserData(context
+                                              .read<UserAuthentication>()
+                                              .currentUser!
+                                              .uid);
 
-                                    Navigator.of(context).pushAndRemoveUntil(
-                                        MaterialPageRoute<void>(
-                                          builder: (BuildContext context) =>
-                                              const UserHomePage(),
-                                        ),
-                                        (route) => false);
+                                      Navigator.of(context).pushAndRemoveUntil(
+                                          MaterialPageRoute<void>(
+                                            builder: (BuildContext context) =>
+                                                const UserHomePage(),
+                                          ),
+                                          (route) => false);
+                                    }
+                                  }
+                                }
+                              },
+                            ),
+                            AppBlueButton(
+                              text: 'Sign In as Paramedic',
+                              onPressed: () async {
+                                if (_loginFormKey.currentState!.validate()) {
+                                  FocusManager.instance.primaryFocus?.unfocus();
+                                  if (usernameController.text
+                                      .contains('@para.com')) {
+                                    final result = await context
+                                        .read<UserAuthentication>()
+                                        .loginUser(
+                                          usernameController.text.trim(),
+                                          passwordController.text.trim(),
+                                        );
+                                    if (result != 'OK') {
+                                      locator
+                                          .get<NavigationAndDialogService>()
+                                          .showSnackBar(
+                                            context: context,
+                                            message: result,
+                                            title: 'Oops',
+                                          );
+                                    }
+                                    if (context
+                                            .read<UserAuthentication>()
+                                            .currentUser ==
+                                        null) {
+                                      print('Verify email first');
+                                    } else {
+                                      await context
+                                          .read<ParamedicManager>()
+                                          .getCurrentParamedicData(context
+                                              .read<UserAuthentication>()
+                                              .currentUser!
+                                              .uid);
+
+                                      Navigator.of(context).pushAndRemoveUntil(
+                                          MaterialPageRoute<void>(
+                                            builder: (BuildContext context) =>
+                                                const ParamedicHomePage(),
+                                          ),
+                                          (route) => false);
+                                    }
+                                  } else {
+                                    locator
+                                        .get<NavigationAndDialogService>()
+                                        .showSnackBar(
+                                            context: context,
+                                            message:
+                                                'You cannot sign in as a Paramedic with this account.Sign in',
+                                            title: 'Account Type');
                                   }
                                 }
                               },
@@ -185,10 +252,12 @@ class _LoginScreenState extends State<LoginScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Text(
+                                Text(
                                   "Don't have an account yet?",
                                   style: TextStyle(
-                                      fontSize: 15,
+                                      fontSize:
+                                          MediaQuery.of(context).size.width /
+                                              30,
                                       fontWeight: FontWeight.bold),
                                 ),
                                 TextButton(
@@ -198,18 +267,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
                                     Navigator.of(context).pushNamed(
                                         AppRouteManager.registerPage);
-                                    locator
-                                        .get<NavigationAndDialogService>()
-                                        .showSnackBar(
-                                          context: context,
-                                          message: 'Registration',
-                                          title: 'You are rgistered',
-                                        );
                                   },
-                                  child: const Text(
+                                  child: Text(
                                     "Sign Up with Us",
                                     style: TextStyle(
-                                        fontSize: 15,
+                                        fontSize:
+                                            MediaQuery.of(context).size.width /
+                                                30,
                                         fontWeight: FontWeight.bold),
                                   ),
                                 )
@@ -233,6 +297,15 @@ class _LoginScreenState extends State<LoginScreen> {
               },
             ),
             Selector<UserManager, Tuple2>(
+              selector: (context, value) =>
+                  Tuple2(value.showProgress, value.userProgressText),
+              builder: (context, value, child) {
+                return value.item1
+                    ? AppProgressIndicator(text: "${value.item2}")
+                    : Container();
+              },
+            ),
+            Selector<ParamedicManager, Tuple2>(
               selector: (context, value) =>
                   Tuple2(value.showProgress, value.userProgressText),
               builder: (context, value, child) {

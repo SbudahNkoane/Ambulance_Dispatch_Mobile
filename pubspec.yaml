@@ -54,6 +54,8 @@ dependencies:
   loading_animation_widget: ^1.2.0+3
   tuple: ^2.0.1
   lottie: ^2.6.0
+  sliding_up_panel: ^2.0.0+1
+  flutter_polyline_points: ^2.0.0
   
  
 
