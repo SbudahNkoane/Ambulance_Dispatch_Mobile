@@ -3,7 +3,7 @@ import 'package:ambulance_dispatch_application/Models/paramedic.dart';
 import 'package:ambulance_dispatch_application/Models/ticket.dart';
 import 'package:ambulance_dispatch_application/Views/app_constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart' as geo;
 import 'package:location/location.dart';
 
@@ -105,8 +105,10 @@ class ParamedicManager with ChangeNotifier {
         });
       } else {
         for (var paramedic in paramedics) {
-          print(paramedics
-              .contains(paramedic['User_ID'] = _paramedicData!.userID));
+          if (kDebugMode) {
+            print(paramedics
+                .contains(paramedic['User_ID'] = _paramedicData!.userID));
+          }
           if (paramedics
               .contains(paramedic['User_ID'] == _paramedicData!.userID)) {
             await database
@@ -139,6 +141,36 @@ class ParamedicManager with ChangeNotifier {
       //   }
       // });
     });
+  }
+
+  Future<String> closeTicket(int level) async {
+    String state = 'OK';
+    _showprogress = true;
+    _userprogresstext = "Finalising ticket...";
+    notifyListeners();
+    try {
+      await database
+          .collection('Ambulance')
+          .doc(_paramedicData!.inAmbulance!.ambulanceId!)
+          .update({'Status': 'Available'}).then((value) async {
+        await database
+            .collection('Ticket')
+            .doc(_dispatchTicket!.ticketId)
+            .update({
+          'Status': 'Closed',
+          'Emergency_Level': level,
+          'Closed_At': Timestamp.now(),
+        });
+      }).then((value) {
+        _dispatchTicket = null;
+      });
+    } catch (e) {
+      state = e.toString();
+    } finally {
+      _showprogress = false;
+      notifyListeners();
+    }
+    return state;
   }
 
   Future<String> leaveAmbulance() async {
@@ -284,7 +316,6 @@ class ParamedicManager with ChangeNotifier {
           SetOptions(merge: true),
         ).onError((error, stackTrace) {});
       }
-    } catch (e) {
     } finally {
       _showprogress = false;
       notifyListeners();

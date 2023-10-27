@@ -1,7 +1,5 @@
 import 'package:ambulance_dispatch_application/Models/user.dart';
 import 'package:ambulance_dispatch_application/Routes/app_routes.dart';
-import 'package:ambulance_dispatch_application/Services/locator_service.dart';
-import 'package:ambulance_dispatch_application/Services/navigation_and_dialog_service.dart';
 import 'package:ambulance_dispatch_application/View_Models/Ticket_Management/ticket_management.dart';
 import 'package:ambulance_dispatch_application/View_Models/User_Management/Authentication/authentication.dart';
 import 'package:ambulance_dispatch_application/View_Models/User_Management/user_management.dart';
@@ -10,12 +8,9 @@ import 'package:ambulance_dispatch_application/Views/User/user_account_view.dart
 import 'package:ambulance_dispatch_application/Views/User/user_menu_page.dart';
 import 'package:ambulance_dispatch_application/Views/User/user_tickets_page.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:ambulance_dispatch_application/Views/app_constants.dart';
-import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
@@ -84,7 +79,7 @@ class _UserHomePageState extends State<UserHomePage> {
             selector: (p0, p1) => p1.userData!,
             builder: (context, value, child) {
               return BottomNavigationBar(
-                selectedItemColor: Color.fromARGB(255, 54, 128, 247),
+                selectedItemColor: const Color.fromARGB(255, 54, 128, 247),
                 onTap: (index) async {
                   if (index == 2) {
                     if (context.read<UserManager>().userData!.accountStatus !=
@@ -110,7 +105,7 @@ class _UserHomePageState extends State<UserHomePage> {
 
                   setState(() {});
                 },
-                unselectedItemColor: Color.fromARGB(255, 109, 109, 109),
+                unselectedItemColor: const Color.fromARGB(255, 109, 109, 109),
                 type: BottomNavigationBarType.fixed,
                 currentIndex: _bottomNavIndex,
                 items: List.from([
@@ -130,7 +125,7 @@ class _UserHomePageState extends State<UserHomePage> {
                             decoration: ShapeDecoration(
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(25))),
-                            child: Center(
+                            child: const Center(
                                 child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -209,11 +204,11 @@ class _HomeState extends State<Home> {
                   ),
                   SizedBox(
                     height: userData.accountStatus == 'Not Verified'
-                        ? MediaQuery.of(context).size.height / 5.6
+                        ? MediaQuery.of(context).size.height / 7
                         : MediaQuery.of(context).size.height / 6.5,
                   ),
                   userData.accountStatus == 'Not Verified'
-                      ? Container(
+                      ? SizedBox(
                           width: MediaQuery.of(context).size.width,
                           child: Text(
                             'You are one step away!!\nMake sure to apply for verification by clicking the Apply button.',

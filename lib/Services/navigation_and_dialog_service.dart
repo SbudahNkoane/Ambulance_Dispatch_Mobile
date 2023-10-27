@@ -33,7 +33,7 @@ class NavigationAndDialogService {
         topLeft: Radius.circular(5),
         topRight: Radius.circular(5),
       )),
-      backgroundColor: Color.fromARGB(255, 89, 125, 245),
+      backgroundColor: const Color.fromARGB(255, 89, 125, 245),
       content: ListTile(
         title: Text(title),
         subtitle: Text(message),
@@ -70,9 +70,9 @@ class NavigationAndDialogService {
         topLeft: Radius.circular(5),
         topRight: Radius.circular(5),
       )),
-      backgroundColor: Color.fromARGB(255, 89, 125, 245),
+      backgroundColor: const Color.fromARGB(255, 89, 125, 245),
       content: ListTile(
-        title: Text('data'),
+        title: const Text('data'),
         subtitle: Text(message),
       ),
     );
@@ -100,16 +100,16 @@ class NavigationAndDialogService {
           return AlertDialog(
             contentPadding:
                 const EdgeInsets.only(bottom: 50, left: 40, right: 50, top: 30),
-            title: Row(
+            title: const Row(
               children: [
-                const Text(
+                Text(
                   'Register as:',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(
+                SizedBox(
                   width: 10,
                 ),
               ],
@@ -118,9 +118,9 @@ class NavigationAndDialogService {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(50)),
-                    color: const Color.fromARGB(255, 167, 218, 248),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(50)),
+                    color: Color.fromARGB(255, 167, 218, 248),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -132,18 +132,18 @@ class NavigationAndDialogService {
                         onPressed: () {
                           setState(() {});
                         },
-                        child: Row(
+                        child: const Row(
                           children: [
-                            const Text(
+                            Text(
                               'Student',
                               style: TextStyle(
                                 color: Color.fromARGB(255, 102, 102, 102),
                               ),
                             ),
-                            const SizedBox(width: 80),
+                            SizedBox(width: 80),
                             Icon(
                               Icons.check_circle_outline,
-                              color: const Color.fromARGB(255, 102, 102, 102),
+                              color: Color.fromARGB(255, 102, 102, 102),
                             ),
                           ],
                         ),
@@ -155,9 +155,9 @@ class NavigationAndDialogService {
                   height: 20,
                 ),
                 Container(
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 167, 218, 248),
-                    borderRadius: const BorderRadius.all(Radius.circular(50)),
+                  decoration: const BoxDecoration(
+                    color: Color.fromARGB(255, 167, 218, 248),
+                    borderRadius: BorderRadius.all(Radius.circular(50)),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -171,18 +171,18 @@ class NavigationAndDialogService {
                             () {},
                           );
                         },
-                        child: Row(
+                        child: const Row(
                           children: [
-                            const Text(
+                            Text(
                               'Landlord',
                               style: TextStyle(
                                 color: Color.fromARGB(255, 102, 102, 102),
                               ),
                             ),
-                            const SizedBox(width: 80),
+                            SizedBox(width: 80),
                             Icon(
                               Icons.check_circle_outline,
-                              color: const Color.fromARGB(255, 102, 102, 102),
+                              color: Color.fromARGB(255, 102, 102, 102),
                             ),
                           ],
                         ),

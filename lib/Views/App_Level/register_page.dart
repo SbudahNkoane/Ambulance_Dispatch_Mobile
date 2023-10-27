@@ -84,9 +84,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
               "Sign Up",
               style: GoogleFonts.moul(fontSize: 40),
             ),
-            Row(
-              children: [Text('As Paramedic')],
-            )
           ],
         ),
       ),

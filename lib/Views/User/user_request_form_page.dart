@@ -1,4 +1,4 @@
-import 'dart:math';
+// ignore_for_file: use_build_context_synchronously
 
 import 'package:ambulance_dispatch_application/Models/ticket.dart';
 import 'package:ambulance_dispatch_application/Routes/app_routes.dart';
@@ -12,7 +12,6 @@ import 'package:ambulance_dispatch_application/Views/app_constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
@@ -127,7 +126,7 @@ class _UserRequestFromPageState extends State<UserRequestFromPage> {
                             height: 250,
                             width: MediaQuery.of(context).size.width / 1.05,
                             child: Card(
-                              color: Color.fromARGB(255, 223, 223, 223),
+                              color: const Color.fromARGB(255, 223, 223, 223),
                               child: Padding(
                                 padding: const EdgeInsets.all(15),
                                 child: Column(
@@ -170,7 +169,7 @@ class _UserRequestFromPageState extends State<UserRequestFromPage> {
                                                         MainAxisAlignment
                                                             .spaceBetween,
                                                     children: [
-                                                      Text('City:'),
+                                                      const Text('City:'),
                                                       Text('${value.locality}'),
                                                     ],
                                                   ),
@@ -179,7 +178,7 @@ class _UserRequestFromPageState extends State<UserRequestFromPage> {
                                                         MainAxisAlignment
                                                             .spaceBetween,
                                                     children: [
-                                                      Text('Street:'),
+                                                      const Text('Street:'),
                                                       Text('${value.street}'),
                                                     ],
                                                   ),
@@ -188,7 +187,7 @@ class _UserRequestFromPageState extends State<UserRequestFromPage> {
                                                         MainAxisAlignment
                                                             .spaceBetween,
                                                     children: [
-                                                      Text('Suburb:'),
+                                                      const Text('Suburb:'),
                                                       Text(
                                                           '${value.subLocality}'),
                                                     ],
@@ -198,7 +197,8 @@ class _UserRequestFromPageState extends State<UserRequestFromPage> {
                                                         MainAxisAlignment
                                                             .spaceBetween,
                                                     children: [
-                                                      Text('Postal Code:'),
+                                                      const Text(
+                                                          'Postal Code:'),
                                                       Text(
                                                           '${value.postalCode}'),
                                                     ],
@@ -207,7 +207,7 @@ class _UserRequestFromPageState extends State<UserRequestFromPage> {
                                               );
                                             },
                                           )
-                                        : SizedBox(),
+                                        : const SizedBox(),
                                     const SizedBox(
                                       height: 20,
                                     ),

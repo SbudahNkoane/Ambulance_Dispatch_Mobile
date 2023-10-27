@@ -11,7 +11,7 @@ class AppProgressIndicator extends StatelessWidget {
     return Center(
       child: Container(
         width: double.infinity,
-        color: Color.fromARGB(209, 117, 117, 117),
+        color: const Color.fromARGB(209, 117, 117, 117),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

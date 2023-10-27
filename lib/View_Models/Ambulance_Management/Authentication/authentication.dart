@@ -1,5 +1,5 @@
 import 'package:ambulance_dispatch_application/Models/user.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 // ignore: library_prefixes
 import 'package:firebase_auth/firebase_auth.dart' as fireBaseAuth;
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -16,12 +16,18 @@ class AdminAuthentication with ChangeNotifier {
       String email, String password, User newUser) async {
     try {} on fireBaseAuth.FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
+        if (kDebugMode) {
+          print('The password provided is too weak.');
+        }
       } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+        if (kDebugMode) {
+          print('The account already exists for that email.');
+        }
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
     return null;
   }

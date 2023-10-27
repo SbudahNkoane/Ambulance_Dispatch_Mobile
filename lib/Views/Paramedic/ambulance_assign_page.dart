@@ -39,7 +39,7 @@ class _AssignAmbulancePageState extends State<AssignAmbulancePage> {
 
   _init() async {
     //  _location = Location();
-    _cameraPosition = CameraPosition(
+    _cameraPosition = const CameraPosition(
         target: LatLng(-29.0852,
             26.1596), // this is just the example lat and lng for initializing
         zoom: 12);
@@ -133,7 +133,7 @@ class _AssignAmbulancePageState extends State<AssignAmbulancePage> {
                       builder: (context, value, child) {
                         return Column(
                           children: [
-                            Container(
+                            SizedBox(
                               height: MediaQuery.of(context).size.height / 4,
                               child: GoogleMap(
                                 myLocationEnabled: true,
@@ -149,7 +149,8 @@ class _AssignAmbulancePageState extends State<AssignAmbulancePage> {
                             ),
                             Container(
                               height: MediaQuery.of(context).size.height / 2.4,
-                              padding: EdgeInsets.only(left: 15, right: 15),
+                              padding:
+                                  const EdgeInsets.only(left: 15, right: 15),
                               child: SingleChildScrollView(
                                 child: Column(
                                   children: [
@@ -193,7 +194,7 @@ class _AssignAmbulancePageState extends State<AssignAmbulancePage> {
                                         ),
                                       ],
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 20,
                                     ),
                                     Text(
@@ -204,7 +205,7 @@ class _AssignAmbulancePageState extends State<AssignAmbulancePage> {
                                           fontWeight: FontWeight.bold,
                                           fontSize: 18),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 20,
                                     ),
                                     Lottie.asset(
@@ -234,16 +235,16 @@ class _AssignAmbulancePageState extends State<AssignAmbulancePage> {
                                                   AppRouteManager
                                                       .paramedicTicketDispatchPage);
                                             },
-                                            child: Text(
+                                            child: const Text(
                                               'Accept dispatch',
-                                              style: const TextStyle(
+                                              style: TextStyle(
                                                   letterSpacing: 1,
                                                   fontSize: 18,
                                                   fontWeight: FontWeight.bold),
                                             ),
                                           )
-                                        : SizedBox(),
-                                    SizedBox(
+                                        : const SizedBox(),
+                                    const SizedBox(
                                       height: 15,
                                     ),
                                     ElevatedButton(
@@ -261,9 +262,9 @@ class _AssignAmbulancePageState extends State<AssignAmbulancePage> {
                                             .read<ParamedicManager>()
                                             .leaveAmbulance();
                                       },
-                                      child: Text(
+                                      child: const Text(
                                         'Leave Ambulance',
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                             letterSpacing: 1,
                                             fontSize: 18,
                                             fontWeight: FontWeight.bold),
@@ -281,7 +282,7 @@ class _AssignAmbulancePageState extends State<AssignAmbulancePage> {
                       selector: (p0, p1) => p1.availableAmbulances,
                       builder: (context, value, child) {
                         return Container(
-                          padding: EdgeInsets.only(left: 10, right: 10),
+                          padding: const EdgeInsets.only(left: 10, right: 10),
                           height: MediaQuery.of(context).size.height,
                           child: ListView.builder(
                             itemCount: context
@@ -293,7 +294,7 @@ class _AssignAmbulancePageState extends State<AssignAmbulancePage> {
                                 child: ListTile(
                                   title: Text(
                                       'Ambulance Plate:${value[index].numberPlate}'),
-                                  subtitle: Container(
+                                  subtitle: SizedBox(
                                     height: 70,
                                     child: ListView.builder(
                                       itemCount:
@@ -306,10 +307,10 @@ class _AssignAmbulancePageState extends State<AssignAmbulancePage> {
                                   ),
                                   trailing: ElevatedButton(
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          Color.fromARGB(255, 20, 61, 241),
-                                      foregroundColor:
-                                          Color.fromARGB(255, 223, 223, 223),
+                                      backgroundColor: const Color.fromARGB(
+                                          255, 20, 61, 241),
+                                      foregroundColor: const Color.fromARGB(
+                                          255, 223, 223, 223),
                                     ),
                                     onPressed: () async {
                                       await context

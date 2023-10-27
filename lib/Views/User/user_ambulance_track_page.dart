@@ -3,14 +3,13 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:ambulance_dispatch_application/View_Models/Paramedic_Management/paramedic_management.dart';
 import 'package:ambulance_dispatch_application/View_Models/Ticket_Management/ticket_management.dart';
 import 'package:ambulance_dispatch_application/Views/app_constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
@@ -22,14 +21,13 @@ class AmbulanceTrackingPage extends StatefulWidget {
 }
 
 class _AmbulanceTrackingPageState extends State<AmbulanceTrackingPage> {
-  Completer<GoogleMapController> _googleMapController = Completer();
-  Location? _location;
-  LocationData? _currentLocation;
+  final Completer<GoogleMapController> _googleMapController = Completer();
+
   CameraPosition? _cameraPosition;
   GeoPoint? point;
   Marker? ambulance;
   Marker? requester;
-  Set<Polyline> _polyLines = Set<Polyline>();
+  final Set<Polyline> _polyLines = <Polyline>{};
   List<LatLng> polylineCoordinates = [];
   PolylinePoints polylinePoints = PolylinePoints();
   Uint8List? imageData;
@@ -43,18 +41,17 @@ class _AmbulanceTrackingPageState extends State<AmbulanceTrackingPage> {
     super.initState();
   }
 
-  // @override
-  // void dispose() {
-  //   subscriber!.cancel();
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    subscriber!.cancel();
+    super.dispose();
+  }
 
   _init() async {
-    _location = Location();
     point = context
         .read<TicketManager>()
         .bookedTicket!
-        .dispatchedAmbulance!['Ambulance']['RealTime_Location'] as GeoPoint;
+        .dispatchedAmbulance!['RealTime_Location'] as GeoPoint;
     _cameraPosition = CameraPosition(
         target: LatLng(
             point!.latitude,
@@ -71,7 +68,7 @@ class _AmbulanceTrackingPageState extends State<AmbulanceTrackingPage> {
 
   updateMarker(GeoPoint newLoc) async {
     ambulance = Marker(
-      markerId: MarkerId('ambulance'),
+      markerId: const MarkerId('ambulance'),
       position: LatLng(newLoc.latitude, newLoc.longitude),
       icon: ambulanceIcon,
     );
@@ -80,32 +77,34 @@ class _AmbulanceTrackingPageState extends State<AmbulanceTrackingPage> {
   }
 
   _initLocation() async {
-    subscriber = database
-        .collection('Ticket')
-        .doc(context.read<TicketManager>().bookedTicket!.ticketId)
-        .snapshots()
-        .listen((event) {
-      point = event.data()!['Dispatched_Ambulance']['Ambulance']
-          ['RealTime_Location'] as GeoPoint;
-      // updateMarker(point!, imageData!);
-      updateMarker(point!);
-      setPolylines();
-      moveToPosition(LatLng(point!.latitude, point!.longitude));
-    });
+    if (mounted) {
+      subscriber = database
+          .collection('Ticket')
+          .doc(context.read<TicketManager>().bookedTicket!.ticketId)
+          .snapshots()
+          .listen((event) {
+        point = event.data()!['Dispatched_Ambulance']['Ambulance']
+            ['RealTime_Location'] as GeoPoint;
+
+        updateMarker(point!);
+        setPolylines();
+        moveToPosition(LatLng(point!.latitude, point!.longitude));
+        setState(() {});
+      });
+    }
   }
 
-  setCustomMarkerIcon() {
+  setCustomMarkerIcon() async {
     BitmapDescriptor.fromAssetImage(
             const ImageConfiguration(
-              size: Size(5, 5),
+              size: Size(1, 1),
               platform: TargetPlatform.android,
             ),
             'assets/images/ambulance_top.png')
         .then((icon) {
       ambulanceIcon = icon;
     });
-    BitmapDescriptor.fromAssetImage(
-            const ImageConfiguration(size: Size(10, 10)),
+    BitmapDescriptor.fromAssetImage(const ImageConfiguration(size: Size(1, 1)),
             'assets/images/requester.png')
         .then((icon) {
       requesterIcon = icon;
@@ -114,7 +113,7 @@ class _AmbulanceTrackingPageState extends State<AmbulanceTrackingPage> {
 
   Future<Uint8List> getMarkerIcon() async {
     ByteData byteData = await DefaultAssetBundle.of(context)
-        .load("assets/images/healthcare.png");
+        .load("assets/images/ambulance_top.png");
     return byteData.buffer.asUint8List();
   }
 
@@ -135,7 +134,7 @@ class _AmbulanceTrackingPageState extends State<AmbulanceTrackingPage> {
     GoogleMapController mapController = await _googleMapController.future;
     mapController.animateCamera(
       CameraUpdate.newCameraPosition(
-        CameraPosition(target: latlng, zoom: 15),
+        CameraPosition(target: latlng, zoom: 18),
       ),
     );
   }
@@ -160,16 +159,16 @@ class _AmbulanceTrackingPageState extends State<AmbulanceTrackingPage> {
         for (var element in result.points) {
           polylineCoordinates.add(LatLng(element.latitude, element.longitude));
         }
-        setState(() {
-          _polyLines.add(
-            Polyline(
-              color: Colors.blue,
-              width: 7,
-              points: polylineCoordinates,
-              polylineId: PolylineId('polyline'),
-            ),
-          );
-        });
+        //    setState(() {
+        _polyLines.add(
+          Polyline(
+            color: Colors.blue,
+            width: 7,
+            points: polylineCoordinates,
+            polylineId: const PolylineId('polyline'),
+          ),
+        );
+        //  });
       }
     } catch (e) {}
   }
@@ -177,45 +176,102 @@ class _AmbulanceTrackingPageState extends State<AmbulanceTrackingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SlidingUpPanel(
-        panel: Center(
-          child: Text('data'),
-        ),
-        body: GoogleMap(
-          onMapCreated: (controller) {
-            if (!_googleMapController.isCompleted) {
-              _googleMapController.complete(controller);
-            }
-            setPolylines();
-          },
-          markers: {
-            Marker(
-              markerId: MarkerId('ambulance'),
-              icon: ambulanceIcon,
-              position: LatLng(point!.latitude, point!.longitude),
+      body: context.read<TicketManager>().bookedTicket!.status != 'Closed'
+          ? SlidingUpPanel(
+              panel: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(25),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Ambulance Number Plate:',
+                            style: GoogleFonts.inter(
+                                fontWeight: FontWeight.w400, fontSize: 14),
+                          ),
+                          Text(context
+                              .read<TicketManager>()
+                              .bookedTicket!
+                              .dispatchedAmbulance!['Number_Plate']),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Status:',
+                            style: GoogleFonts.inter(
+                                fontWeight: FontWeight.w400, fontSize: 14),
+                          ),
+                          Text(context
+                              .read<TicketManager>()
+                              .bookedTicket!
+                              .status),
+                        ],
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height / 6,
+                      ),
+                      context.read<TicketManager>().bookedTicket!.status !=
+                              'Closed'
+                          ? Text(
+                              'Keep calm, an Ambulance is on the way...',
+                              style: GoogleFonts.inter(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize:
+                                      MediaQuery.of(context).size.width / 30),
+                            )
+                          : Text(
+                              'Ticket Closed',
+                              style: GoogleFonts.inter(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize:
+                                      MediaQuery.of(context).size.width / 30),
+                            ),
+                    ],
+                  ),
+                ),
+              ),
+              body: GoogleMap(
+                onMapCreated: (controller) {
+                  if (!_googleMapController.isCompleted) {
+                    _googleMapController.complete(controller);
+                  }
+                  setPolylines();
+                },
+                markers: {
+                  Marker(
+                    markerId: const MarkerId('ambulance'),
+                    icon: ambulanceIcon,
+                    position: LatLng(point!.latitude, point!.longitude),
+                  ),
+                  Marker(
+                    markerId: const MarkerId('req'),
+                    icon: requesterIcon,
+                    position: LatLng(
+                        context
+                            .read<TicketManager>()
+                            .bookedTicket!
+                            .pickUpLocation
+                            .latitude,
+                        context
+                            .read<TicketManager>()
+                            .bookedTicket!
+                            .pickUpLocation
+                            .longitude),
+                  ),
+                },
+                polylines: _polyLines,
+                myLocationButtonEnabled: true,
+                myLocationEnabled: true,
+                initialCameraPosition: _cameraPosition!,
+              ),
+            )
+          : const Center(
+              child: Text('Ticket Closed'),
             ),
-            Marker(
-              markerId: MarkerId('req'),
-              icon: requesterIcon,
-              position: LatLng(
-                  context
-                      .read<TicketManager>()
-                      .bookedTicket!
-                      .pickUpLocation
-                      .latitude,
-                  context
-                      .read<TicketManager>()
-                      .bookedTicket!
-                      .pickUpLocation
-                      .longitude),
-            ),
-          },
-          polylines: _polyLines,
-          myLocationButtonEnabled: true,
-          myLocationEnabled: true,
-          initialCameraPosition: _cameraPosition!,
-        ),
-      ),
     );
   }
 }

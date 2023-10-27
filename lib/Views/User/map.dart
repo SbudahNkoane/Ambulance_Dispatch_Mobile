@@ -5,7 +5,6 @@ import 'package:ambulance_dispatch_application/Views/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -36,22 +35,6 @@ class _MapScreenState extends State<MapScreen> {
     });
   }
 
-  void _onAddMarkerPressed() {
-    setState(() {
-      _markers.add(
-        Marker(
-          position: _lastPosition,
-          infoWindow: InfoWindow(
-            title: 'Here',
-            snippet: 'You are',
-          ),
-          icon: BitmapDescriptor.defaultMarker,
-          markerId: MarkerId(_lastPosition.toString()),
-        ),
-      );
-    });
-  }
-
   LatLng getLocation(BuildContext context) {
     _initialPostion = LatLng(
         context.read<UserManager>().currentLocation!.latitude,
@@ -65,7 +48,7 @@ class _MapScreenState extends State<MapScreen> {
     _lastPosition = getLocation(context);
     _markers.add(Marker(
       position: _lastPosition,
-      infoWindow: InfoWindow(
+      infoWindow: const InfoWindow(
         title: 'You are here',
         snippet: 'your location',
       ),
@@ -82,7 +65,7 @@ class _MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Maps Sample App'),
+        title: const Text('Maps Sample App'),
         backgroundColor: Colors.green[700],
       ),
       body: Stack(
@@ -109,7 +92,7 @@ class _MapScreenState extends State<MapScreen> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(3),
                     boxShadow: [
-                      BoxShadow(
+                      const BoxShadow(
                           color: Colors.grey,
                           offset: Offset(
                             1,
@@ -123,10 +106,10 @@ class _MapScreenState extends State<MapScreen> {
                   controller: addressController,
                   decoration: InputDecoration(
                       icon: Container(
-                        margin: EdgeInsets.only(left: 20, top: 5),
+                        margin: const EdgeInsets.only(left: 20, top: 5),
                         width: 20,
                         height: 20,
-                        child: Center(
+                        child: const Center(
                           child: Icon(
                             Icons.location_on,
                             color: Colors.black,
@@ -135,7 +118,7 @@ class _MapScreenState extends State<MapScreen> {
                       ),
                       hintText: 'Address',
                       border: InputBorder.none,
-                      contentPadding: EdgeInsets.only(left: 15, top: 5)),
+                      contentPadding: const EdgeInsets.only(left: 15, top: 5)),
                 ),
               )
               //  Container(
@@ -205,7 +188,7 @@ class _MapScreenState extends State<MapScreen> {
     try {
       final place = await locationFromAddress(address);
       setState(() {
-        _lastPosition = LatLng(place![0].latitude, place[0].longitude);
+        _lastPosition = LatLng(place[0].latitude, place[0].longitude);
       });
     } on PlatformException catch (e) {
     } catch (err) {

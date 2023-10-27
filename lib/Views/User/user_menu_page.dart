@@ -37,7 +37,8 @@ class _UserMenuPageState extends State<UserMenuPage> {
                     .pushNamed(AppRouteManager.userProfilePage);
               },
               title: const Text('Profile'),
-              subtitle: const Text('Sibusiso Nkoane'),
+              subtitle: Text(
+                  '${context.read<UserManager>().userData!.names} ${context.read<UserManager>().userData!.surname}'),
               leading: Selector<UserAuthentication, fireAuth.User>(
                 selector: (p0, p1) => p1.currentUser!,
                 builder: (context, value, child) {
@@ -114,9 +115,7 @@ class _UserMenuPageState extends State<UserMenuPage> {
                                           const LoginScreen(),
                                     ),
                                     (route) => false);
-                              } else {
-                                print(result);
-                              }
+                              } else {}
                             },
                           ),
                         ],

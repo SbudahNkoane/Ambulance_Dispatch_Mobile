@@ -1,8 +1,6 @@
 import 'package:ambulance_dispatch_application/Models/ticket.dart';
 import 'package:ambulance_dispatch_application/Routes/app_routes.dart';
 import 'package:ambulance_dispatch_application/View_Models/Ticket_Management/ticket_management.dart';
-import 'package:ambulance_dispatch_application/Views/app_constants.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -62,7 +60,7 @@ class _UserTicketTrackingPageState extends State<UserTicketTrackingPage> {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text('Ticket Details'),
+          title: const Text('Ticket Details'),
         ),
         body: Center(
           child: Padding(
@@ -160,7 +158,7 @@ class _UserTicketTrackingPageState extends State<UserTicketTrackingPage> {
                                                   ),
                                                 ],
                                               )
-                                            : SizedBox(),
+                                            : const SizedBox(),
                                         Text(
                                           'Patient Condition',
                                           style: GoogleFonts.inter(
@@ -183,7 +181,7 @@ class _UserTicketTrackingPageState extends State<UserTicketTrackingPage> {
                           SizedBox(
                             height: MediaQuery.of(context).size.height / 30,
                           ),
-                          Divider(),
+                          const Divider(),
                           SizedBox(
                             height: MediaQuery.of(context).size.height / 30,
                           ),
@@ -195,7 +193,10 @@ class _UserTicketTrackingPageState extends State<UserTicketTrackingPage> {
                                       'On the way, keep calm...',
                                       style: GoogleFonts.moul(
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 25),
+                                          fontSize: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              20),
                                     ),
                                     Lottie.asset(
                                         'assets/animations/Ambulance_Dispatched.json'),
@@ -210,10 +211,14 @@ class _UserTicketTrackingPageState extends State<UserTicketTrackingPage> {
                                               'Track Ambulance location',
                                               style: GoogleFonts.moul(
                                                   fontWeight: FontWeight.bold,
-                                                  fontSize: 18),
+                                                  fontSize:
+                                                      MediaQuery.of(context)
+                                                              .size
+                                                              .width /
+                                                          25),
                                             ),
                                           )
-                                        : Center(
+                                        : const Center(
                                             child: CircularProgressIndicator(),
                                           )
                                   ],
@@ -257,26 +262,12 @@ class _UserTicketTrackingPageState extends State<UserTicketTrackingPage> {
                                           height: MediaQuery.of(context)
                                                   .size
                                                   .height /
-                                              5,
+                                              4,
                                         ),
                                       ],
                                     ),
                           SizedBox(
                             height: MediaQuery.of(context).size.height / 10,
-                          ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15)),
-                              fixedSize: const Size(350, 50),
-                              foregroundColor: AppConstants().appWhite,
-                              backgroundColor: AppConstants().appRed,
-                            ),
-                            onPressed: () {},
-                            child: Text('Cancel'),
-                          ),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height / 30,
                           ),
                         ],
                       );

@@ -1,6 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:location/location.dart';
 
 class Ticket {
   final String ticketId;
@@ -30,6 +28,7 @@ class Ticket {
   Map<String, Object?> toJson() {
     return {
       'Ticket_Id': ticketId,
+      'Emergency_Level': emergencyLevel,
       'User_Id': userId,
       'PickUp_Location': pickUpLocation,
       'Description': description,
@@ -45,13 +44,14 @@ class Ticket {
     return Ticket(
       bookedAt: json!['Booked_At'] as Timestamp,
       description: json['Description'] as String,
-      pickUpLocation: json!['PickUp_Location'] as GeoPoint,
+      pickUpLocation: json['PickUp_Location'] as GeoPoint,
       status: json['Status'] as String,
       ticketId: json['Ticket_Id'] as String,
       userId: json['User_Id'] as String,
       dispatchedAmbulance: json['Dispatched_Ambulance'] as Map?,
       closedAt: json['Closed_At'] as Timestamp?,
       managedBy: json['Managed_By'] as String?,
+      emergencyLevel: json['Emergency_Level'] as int?,
     );
   }
 }

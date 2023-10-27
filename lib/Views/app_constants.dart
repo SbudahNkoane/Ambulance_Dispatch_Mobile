@@ -147,7 +147,7 @@ class _AppTextFieldState extends State<AppTextField> {
                     size: 18,
                   ),
                 )
-              : SizedBox(),
+              : const SizedBox(),
         ),
         validator: widget.validator,
       ),

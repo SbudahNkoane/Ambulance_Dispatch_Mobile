@@ -1,10 +1,8 @@
 import 'package:ambulance_dispatch_application/Models/user.dart' as user;
 import 'package:ambulance_dispatch_application/Views/app_constants.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 // ignore: library_prefixes
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/services.dart';
 
 class UserAuthentication with ChangeNotifier {
   User? _currentUser;
@@ -47,7 +45,9 @@ class UserAuthentication with ChangeNotifier {
               .doc(registeredUser.user!.uid)
               .update({'User_ID': registeredUser.user!.uid});
         }).onError((error, stackTrace) {
-          print(error);
+          if (kDebugMode) {
+            print(error);
+          }
         });
       });
     } on FirebaseAuthException catch (e) {
@@ -99,6 +99,25 @@ class UserAuthentication with ChangeNotifier {
       } else {
         state = error.message.toString();
       }
+    } catch (e) {
+      state = e.toString();
+    } finally {
+      _showprogress = false;
+      notifyListeners();
+    }
+    return state;
+  }
+
+  Future<String> resetPassword(String email) async {
+    String state = 'OK';
+    _showprogress = true;
+    _userprogresstext = 'Sending link..';
+    notifyListeners();
+
+    try {
+      authentication.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      state = e.message.toString();
     } catch (e) {
       state = e.toString();
     } finally {

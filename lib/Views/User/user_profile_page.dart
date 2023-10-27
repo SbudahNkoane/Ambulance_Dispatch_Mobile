@@ -69,45 +69,45 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                           await showModalBottomSheet(
                                               context: context,
                                               builder: (BuildContext bc) {
-                                                return Container(
-                                                  child: Wrap(
-                                                    children: <Widget>[
-                                                      ListTile(
-                                                          leading: Icon(Icons
-                                                              .photo_size_select_actual_rounded),
-                                                          title:
-                                                              Text('Gallery'),
-                                                          onTap: () => {
-                                                                source =
-                                                                    ImageSource
-                                                                        .gallery,
-                                                                Navigator.of(
-                                                                        context)
-                                                                    .pop(),
-                                                              }),
-                                                      ListTile(
-                                                        leading:
-                                                            Icon(Icons.camera),
-                                                        title: Text('Camera'),
+                                                return Wrap(
+                                                  children: <Widget>[
+                                                    ListTile(
+                                                        leading: const Icon(Icons
+                                                            .photo_size_select_actual_rounded),
+                                                        title: const Text(
+                                                            'Gallery'),
                                                         onTap: () => {
-                                                          source = ImageSource
-                                                              .camera,
-                                                          Navigator.of(context)
-                                                              .pop(),
-                                                        },
-                                                      ),
-                                                      ListTile(
-                                                        leading:
-                                                            Icon(Icons.block),
-                                                        title: Text('Remove'),
-                                                        onTap: () => {
-                                                          remove = true,
-                                                          Navigator.of(context)
-                                                              .pop(),
-                                                        },
-                                                      ),
-                                                    ],
-                                                  ),
+                                                              source =
+                                                                  ImageSource
+                                                                      .gallery,
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop(),
+                                                            }),
+                                                    ListTile(
+                                                      leading: const Icon(
+                                                          Icons.camera),
+                                                      title:
+                                                          const Text('Camera'),
+                                                      onTap: () => {
+                                                        source =
+                                                            ImageSource.camera,
+                                                        Navigator.of(context)
+                                                            .pop(),
+                                                      },
+                                                    ),
+                                                    ListTile(
+                                                      leading: const Icon(
+                                                          Icons.block),
+                                                      title:
+                                                          const Text('Remove'),
+                                                      onTap: () => {
+                                                        remove = true,
+                                                        Navigator.of(context)
+                                                            .pop(),
+                                                      },
+                                                    ),
+                                                  ],
                                                 );
                                               });
                                           source != null || remove == true
@@ -118,7 +118,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                                     userID: info.data!.userID!,
                                                     remove: remove,
                                                   )
-                                              : SizedBox();
+                                              : const SizedBox();
                                         },
                                         child: const CircleAvatar(
                                           child: Center(
@@ -176,7 +176,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                       child: Icon(Icons.phone),
                                     ),
                                   ),
-                                  title: Text('0${info.data!.cellphoneNumber}'),
+                                  title: Text(info.data!.cellphoneNumber),
                                   subtitle: const Text('Mobile Number'),
                                 ),
                                 ListTile(
@@ -224,7 +224,10 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                     ),
                                   ),
                                   title: Text(info.data!.accountStatus),
-                                  subtitle: const Text('You are good to go!!'),
+                                  subtitle: Text(
+                                      info.data!.accountStatus == 'Verified?'
+                                          ? 'You are good to go!!'
+                                          : 'Make sure you are verified'),
                                 ),
                                 const SizedBox(
                                   height: 100,

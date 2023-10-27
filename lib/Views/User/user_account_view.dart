@@ -32,7 +32,7 @@ class _UserAccountViewState extends State<UserAccountView> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ListTile(
-                      leading: Icon(Icons.person_2_rounded),
+                      leading: const Icon(Icons.person_2_rounded),
                       trailing: value.accountStatus == "Not Verified" &&
                               value.idDocument!['ID_Back'] != null &&
                               value.idDocument!['ID_Back'] != '' &&
@@ -40,7 +40,7 @@ class _UserAccountViewState extends State<UserAccountView> {
                               value.idDocument!['ID_Front'] != '' &&
                               value.verificationPicture != null &&
                               value.verificationPicture != ''
-                          ? CircularProgressIndicator()
+                          ? const CircularProgressIndicator()
                           : value.accountStatus == "Not Verified" &&
                                       value.idDocument!['ID_Back'] == null ||
                                   value.idDocument!['ID_Back'] == '' &&
@@ -53,9 +53,9 @@ class _UserAccountViewState extends State<UserAccountView> {
                                     Navigator.of(context).pushNamed(
                                         AppRouteManager.userAccountPage);
                                   },
-                                  child: Text('Apply'),
+                                  child: const Text('Apply'),
                                 )
-                              : Icon(
+                              : const Icon(
                                   Icons.verified,
                                   color: Colors.green,
                                 ),
@@ -70,9 +70,9 @@ class _UserAccountViewState extends State<UserAccountView> {
                           : value.accountStatus == "Not Verified"
                               ? 'Not Verified'
                               : 'Verified'),
-                      subtitle: Text('Account Status'),
+                      subtitle: const Text('Account Status'),
                     ),
-                    Divider(),
+                    const Divider(),
                     value.idDocument!['ID_Front'] != null &&
                             value.idDocument!['ID_Back'] != null &&
                             value.idDocument!['ID_Back'] != '' &&
@@ -91,7 +91,7 @@ class _UserAccountViewState extends State<UserAccountView> {
                                       width: MediaQuery.of(context).size.width /
                                           1.9,
                                     ),
-                                    Positioned(
+                                    const Positioned(
                                       top: 10,
                                       left: 50,
                                       child: Text(
@@ -115,7 +115,7 @@ class _UserAccountViewState extends State<UserAccountView> {
                                       width: MediaQuery.of(context).size.width /
                                           1.9,
                                     ),
-                                    Positioned(
+                                    const Positioned(
                                       top: 10,
                                       left: 50,
                                       child: Text(
@@ -138,10 +138,10 @@ class _UserAccountViewState extends State<UserAccountView> {
                     //     height: MediaQuery.of(context).size.height / 2.8,
                     //     width: MediaQuery.of(context).size.width,
                     //   ),
-                    Divider(),
+                    const Divider(),
                     value.verificationPicture != null &&
                             value.verificationPicture != ''
-                        ? Text(
+                        ? const Text(
                             'Verification Selfie',
                             style: TextStyle(
                               // color: Colors.white,
@@ -149,11 +149,11 @@ class _UserAccountViewState extends State<UserAccountView> {
                               fontSize: 25,
                             ),
                           )
-                        : SizedBox(),
+                        : const SizedBox(),
                     value.verificationPicture != null &&
                             value.verificationPicture != ''
                         ? Image.network(value.verificationPicture!)
-                        : SizedBox(),
+                        : const SizedBox(),
                   ],
                 ),
               );

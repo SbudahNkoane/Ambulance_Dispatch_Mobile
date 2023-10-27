@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:async';
-import 'dart:math';
 
 import 'package:ambulance_dispatch_application/Services/locator_service.dart';
 import 'package:ambulance_dispatch_application/Services/navigation_and_dialog_service.dart';
@@ -24,14 +23,14 @@ class TicketDispatchPage extends StatefulWidget {
 
 class _TicketDispatchPageState extends State<TicketDispatchPage> {
   final Completer<GoogleMapController> _googleMapController = Completer();
-  Location? _location;
-  LocationData? _currentLocation;
   CameraPosition? _cameraPosition;
-  Set<Polyline> _polyLines = Set<Polyline>();
+  final Set<Polyline> _polyLines = <Polyline>{};
   Marker? ambulanceMarker;
   List<LatLng> polylineCoordinates = [];
   PolylinePoints polylinePoints = PolylinePoints();
   StreamSubscription<LocationData>? subscriber;
+  int dropdownValue = 1;
+  List<int> levels = [1, 2, 3, 4];
 
   BitmapDescriptor ambulanceIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor requesterIcon = BitmapDescriptor.defaultMarker;
@@ -45,13 +44,13 @@ class _TicketDispatchPageState extends State<TicketDispatchPage> {
 
   @override
   void dispose() {
-    subscriber!.cancel();
+    if (context.mounted == false) {
+      subscriber!.cancel();
+    }
     super.dispose();
   }
 
   _init() async {
-    _location = Location();
-
     _cameraPosition = const CameraPosition(
         target: LatLng(-29.0852,
             26.1596), // this is just the example lat and lng for initializing
@@ -62,7 +61,7 @@ class _TicketDispatchPageState extends State<TicketDispatchPage> {
 
   setCustomMarkerIcon() {
     BitmapDescriptor.fromAssetImage(
-            ImageConfiguration(size: Size.fromRadius(5)),
+            const ImageConfiguration(size: Size.fromRadius(2)),
             'assets/images/ambulance_top.png')
         .then((icon) {
       ambulanceIcon = icon;
@@ -75,57 +74,69 @@ class _TicketDispatchPageState extends State<TicketDispatchPage> {
   }
 
   _initLocation() async {
-    await moveToPosition(LatLng(
-        context.read<ParamedicManager>().currentParamedicLocation!.latitude!,
-        context.read<ParamedicManager>().currentParamedicLocation!.longitude!));
-    subscriber = context
-        .read<ParamedicManager>()
-        .loc
-        .onLocationChanged
-        .listen((newLocation) async {
-      context.read<ParamedicManager>().setParamedicLocation = newLocation;
-      if (context.read<ParamedicManager>().paramedicData!.inAmbulance!.status ==
-          "Dispatched") {
-        await database
-            .collection('Ticket')
-            .doc(context.read<ParamedicManager>().dispatchTicket!.ticketId)
-            .update({
-          'Dispatched_Ambulance.Ambulance.RealTime_Location':
-              GeoPoint(newLocation.latitude!, newLocation.longitude!),
-        });
-        await database
-            .collection('Dispatched Ambulance')
-            .doc(context.read<ParamedicManager>().dispatchTicket!.ticketId)
-            .update({
-          'Ambulance.RealTime_Location':
-              GeoPoint(newLocation.latitude!, newLocation.longitude!),
-        });
-      }
-      await database
-          .collection('Ambulance')
-          .doc(context
-              .read<ParamedicManager>()
-              .paramedicData!
-              .inAmbulance!
-              .ambulanceId!)
-          .update({
-        'RealTime_Location':
-            GeoPoint(newLocation.latitude!, newLocation.longitude!),
-      });
-      moveToPosition(LatLng(
+    if (mounted) {
+      await moveToPosition(LatLng(
           context.read<ParamedicManager>().currentParamedicLocation!.latitude!,
           context
               .read<ParamedicManager>()
               .currentParamedicLocation!
               .longitude!));
-      setPolylines();
-      updateMarker(newLocation);
-    });
+      subscriber = context
+          .read<ParamedicManager>()
+          .loc
+          .onLocationChanged
+          .listen((newLocation) async {
+        context.read<ParamedicManager>().setParamedicLocation = newLocation;
+        if (context
+                .read<ParamedicManager>()
+                .paramedicData!
+                .inAmbulance!
+                .status ==
+            "Dispatched") {
+          await database
+              .collection('Ticket')
+              .doc(context.read<ParamedicManager>().dispatchTicket!.ticketId)
+              .update({
+            'Dispatched_Ambulance.Ambulance.RealTime_Location':
+                GeoPoint(newLocation.latitude!, newLocation.longitude!),
+          });
+          await database
+              .collection('Dispatched Ambulance')
+              .doc(context.read<ParamedicManager>().dispatchTicket!.ticketId)
+              .update({
+            'Ambulance.RealTime_Location':
+                GeoPoint(newLocation.latitude!, newLocation.longitude!),
+          });
+        }
+        await database
+            .collection('Ambulance')
+            .doc(context
+                .read<ParamedicManager>()
+                .paramedicData!
+                .inAmbulance!
+                .ambulanceId!)
+            .update({
+          'RealTime_Location':
+              GeoPoint(newLocation.latitude!, newLocation.longitude!),
+        });
+        moveToPosition(LatLng(
+            context
+                .read<ParamedicManager>()
+                .currentParamedicLocation!
+                .latitude!,
+            context
+                .read<ParamedicManager>()
+                .currentParamedicLocation!
+                .longitude!));
+        setPolylines();
+        updateMarker(newLocation);
+      });
+    }
   }
 
   updateMarker(LocationData newLoc) async {
     ambulanceMarker = Marker(
-      markerId: MarkerId('ambulance'),
+      markerId: const MarkerId('ambulance'),
       position: LatLng(newLoc.latitude!, newLoc.longitude!),
       icon: ambulanceIcon,
     );
@@ -174,6 +185,7 @@ class _TicketDispatchPageState extends State<TicketDispatchPage> {
         setState(() {
           _polyLines.add(
             Polyline(
+              color: const Color.fromARGB(255, 245, 31, 31),
               points: polylineCoordinates,
               polylineId: const PolylineId('polyline'),
             ),
@@ -190,57 +202,124 @@ class _TicketDispatchPageState extends State<TicketDispatchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SlidingUpPanel(
-          panel: const Center(
-            child: Text('data'),
-          ),
-          body: SafeArea(
-            child: GoogleMap(
-              markers: {
-                Marker(
-                  icon: ambulanceIcon,
-                  markerId: const MarkerId('Loc'),
-                  position: LatLng(
-                    context
-                        .read<ParamedicManager>()
-                        .currentParamedicLocation!
-                        .latitude!,
-                    context
-                        .read<ParamedicManager>()
-                        .currentParamedicLocation!
-                        .longitude!,
+      body: Stack(
+        children: [
+          SlidingUpPanel(
+              panel: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(30),
+                  child: Column(
+                    children: [
+                      const Text('Set emergency level'),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height / 10,
+                      ),
+                      DropdownButtonFormField(
+                        alignment: Alignment.centerRight,
+                        value: dropdownValue,
+                        style:
+                            const TextStyle(fontSize: 12, color: Colors.black),
+                        dropdownColor: const Color(0xFFEAEAEA),
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(14),
+                            borderSide: const BorderSide(
+                              width: 1,
+                              color: Color.fromARGB(255, 59, 59, 59),
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(14),
+                            borderSide: BorderSide(
+                              width: 2,
+                              color: AppConstants().appDarkBlue,
+                            ),
+                          ),
+                          fillColor: const Color(0xFFEAEAEA),
+                          filled: true,
+                        ),
+                        items: levels.map<DropdownMenuItem<int>>((int value) {
+                          return DropdownMenuItem<int>(
+                            alignment: Alignment.center,
+                            value: value,
+                            child: Text(
+                              '$value',
+                              style: const TextStyle(fontSize: 18),
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (int? newValue) {
+                          setState(() {
+                            dropdownValue = newValue!;
+                          });
+                        },
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height / 6,
+                      ),
+                      ElevatedButton(
+                          onPressed: () async {
+                            final result = await context
+                                .read<ParamedicManager>()
+                                .closeTicket(dropdownValue);
+                            if (result == 'OK') {
+                              Navigator.of(context).pop();
+                            }
+                          },
+                          child: const Text('Close Ticket')),
+                    ],
                   ),
                 ),
-                Marker(
-                  icon: requesterIcon,
-                  markerId: const MarkerId('Des'),
-                  position: LatLng(
-                    context
-                        .read<ParamedicManager>()
-                        .dispatchTicket!
-                        .pickUpLocation
-                        .latitude,
-                    context
-                        .read<ParamedicManager>()
-                        .dispatchTicket!
-                        .pickUpLocation
-                        .longitude,
-                  ),
-                ),
-              },
-              trafficEnabled: true,
-              onMapCreated: (controller) {
-                if (!_googleMapController.isCompleted) {
-                  _googleMapController.complete(controller);
-                }
-                setPolylines();
-              },
-              polylines: _polyLines,
+              ),
+              body: SafeArea(
+                child: GoogleMap(
+                  markers: {
+                    Marker(
+                      icon: ambulanceIcon,
+                      markerId: const MarkerId('Loc'),
+                      position: LatLng(
+                        context
+                            .read<ParamedicManager>()
+                            .currentParamedicLocation!
+                            .latitude!,
+                        context
+                            .read<ParamedicManager>()
+                            .currentParamedicLocation!
+                            .longitude!,
+                      ),
+                    ),
+                    Marker(
+                      icon: requesterIcon,
+                      markerId: const MarkerId('Des'),
+                      position: LatLng(
+                        context
+                            .read<ParamedicManager>()
+                            .dispatchTicket!
+                            .pickUpLocation
+                            .latitude,
+                        context
+                            .read<ParamedicManager>()
+                            .dispatchTicket!
+                            .pickUpLocation
+                            .longitude,
+                      ),
+                    ),
+                  },
+                  trafficEnabled: true,
+                  onMapCreated: (controller) {
+                    if (!_googleMapController.isCompleted) {
+                      _googleMapController.complete(controller);
+                    }
+                    setPolylines();
+                  },
+                  polylines: _polyLines,
 
-              // myLocationEnabled: true,
-              initialCameraPosition: _cameraPosition!,
-            ),
-          )),
+                  // myLocationEnabled: true,
+                  initialCameraPosition: _cameraPosition!,
+                ),
+              )),
+        ],
+      ),
     );
   }
 }

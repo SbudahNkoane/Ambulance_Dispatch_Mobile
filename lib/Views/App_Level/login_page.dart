@@ -10,6 +10,7 @@ import 'package:ambulance_dispatch_application/Views/App_Level/app_progress_indi
 import 'package:ambulance_dispatch_application/Views/Paramedic/paramedic_home_page.dart';
 import 'package:ambulance_dispatch_application/Views/User/user_home_page.dart';
 import 'package:ambulance_dispatch_application/Views/app_constants.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -175,7 +176,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                             .read<UserAuthentication>()
                                             .currentUser ==
                                         null) {
-                                      print('Verify email first');
+                                      if (kDebugMode) {
+                                        print('Verify email first');
+                                      }
                                     } else {
                                       await context
                                           .read<UserManager>()
@@ -221,7 +224,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                             .read<UserAuthentication>()
                                             .currentUser ==
                                         null) {
-                                      print('Verify email first');
+                                      if (kDebugMode) {
+                                        print('Verify email first');
+                                      }
                                     } else {
                                       await context
                                           .read<ParamedicManager>()

@@ -9,17 +9,12 @@ import 'package:flutter/services.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart' as loc;
 import 'package:image_picker/image_picker.dart';
-import 'package:location/location.dart';
 
 class UserManager with ChangeNotifier {
   Placemark? _addressName;
   Placemark? get currentAddress => _addressName;
-  loc.Geolocator _geolocator = loc.Geolocator();
   late bool _serviceEnabled;
   late loc.LocationPermission _permission;
-
-  late PermissionStatus _permissionGranted;
-  late LocationData _locationData;
 
   bool _showprogress = false;
   bool get showProgress => _showprogress;

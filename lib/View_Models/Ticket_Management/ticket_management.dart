@@ -29,8 +29,6 @@ class TicketManager with ChangeNotifier {
   }
 
   Future<Ticket> updateBookedTicket() async {
-    String state = 'OK';
-
     try {
       database
           .collection('Ticket')
@@ -44,9 +42,7 @@ class TicketManager with ChangeNotifier {
           }
         },
       );
-    } catch (e) {
-      state = e.toString();
-    }
+    } catch (e) {}
     return _bookedTicket!;
   }
 

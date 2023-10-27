@@ -7,9 +7,9 @@ import 'package:ambulance_dispatch_application/View_Models/User_Management/Authe
 import 'package:ambulance_dispatch_application/Views/App_Level/app_progress_indicator.dart';
 import 'package:ambulance_dispatch_application/Views/App_Level/login_page.dart';
 import 'package:ambulance_dispatch_application/Views/Paramedic/ambulance_assign_page.dart';
-import 'package:ambulance_dispatch_application/Views/Paramedic/ticket_dispatch_page.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
@@ -78,7 +78,7 @@ class _ParamedicHomePageState extends State<ParamedicHomePage> {
             selector: (p0, p1) => p1.paramedicData!,
             builder: (context, value, child) {
               return BottomNavigationBar(
-                selectedItemColor: Color.fromARGB(255, 54, 128, 247),
+                selectedItemColor: const Color.fromARGB(255, 54, 128, 247),
                 onTap: (index) async {
                   if (index == 1) {
                     await context
@@ -126,9 +126,7 @@ class _ParamedicHomePageState extends State<ParamedicHomePage> {
                                               const LoginScreen(),
                                         ),
                                         (route) => false);
-                                  } else {
-                                    print(result);
-                                  }
+                                  } else {}
                                 },
                               ),
                             ],
@@ -142,7 +140,7 @@ class _ParamedicHomePageState extends State<ParamedicHomePage> {
 
                   setState(() {});
                 },
-                unselectedItemColor: Color.fromARGB(255, 109, 109, 109),
+                unselectedItemColor: const Color.fromARGB(255, 109, 109, 109),
                 type: BottomNavigationBarType.fixed,
                 currentIndex: _bottomNavIndex,
                 items: List.from([
@@ -158,7 +156,7 @@ class _ParamedicHomePageState extends State<ParamedicHomePage> {
                         decoration: ShapeDecoration(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(25))),
-                        child: Center(
+                        child: const Center(
                             child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -200,6 +198,63 @@ class ParamedicHome extends StatefulWidget {
 class _ParamedicHomeState extends State<ParamedicHome> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return StreamBuilder(
+      stream: context.read<ParamedicManager>().userStreamer(),
+      builder: (context, snapshot) {
+        return Padding(
+          padding: const EdgeInsets.all(10),
+          child: Selector<ParamedicManager, Paramedic>(
+            selector: (context, user) => user.paramedicData!,
+            builder: (context, userData, child) {
+              if (snapshot.hasError) {
+                return const Text('Something went wrong');
+              }
+
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Text("Loading...");
+              }
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        'Hello ${userData.names}',
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 6.5,
+                  ),
+                  // userData.accountStatus == 'Not Verified'
+                  //     ? Container(
+                  //         width: MediaQuery.of(context).size.width,
+                  //         child: Text(
+                  //           'You are one step away!!\nMake sure to apply for verification by clicking the Apply button.',
+                  //           textAlign: TextAlign.center,
+                  //           style: GoogleFonts.inter(
+                  //               fontWeight: FontWeight.bold, fontSize: 18),
+                  //         ),
+                  //       )
+                  Text(
+                    'Welcome',
+                    style: GoogleFonts.inter(
+                        fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 20,
+                  ),
+                  Image.asset(
+                    'assets/images/med.png',
+                    height: MediaQuery.of(context).size.height / 2.8,
+                    width: MediaQuery.of(context).size.width,
+                  ),
+                ],
+              );
+            },
+          ),
+        );
+      },
+    );
   }
 }

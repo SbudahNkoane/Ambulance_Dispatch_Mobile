@@ -4,7 +4,6 @@ import 'package:ambulance_dispatch_application/Routes/app_routes.dart';
 import 'package:ambulance_dispatch_application/View_Models/Paramedic_Management/paramedic_management.dart';
 import 'package:ambulance_dispatch_application/View_Models/User_Management/Authentication/authentication.dart';
 import 'package:ambulance_dispatch_application/View_Models/User_Management/user_management.dart';
-import 'package:ambulance_dispatch_application/Views/app_constants.dart';
 import 'package:ambulance_dispatch_application/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';

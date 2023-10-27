@@ -1,7 +1,7 @@
 import 'package:ambulance_dispatch_application/Models/ambulance.dart';
 import 'package:ambulance_dispatch_application/Views/app_constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 class AmbulanceManager with ChangeNotifier {
   List<Ambulance> _availableAmbulances = [];
@@ -31,7 +31,9 @@ class AmbulanceManager with ChangeNotifier {
         }
       });
     } catch (error) {
-      print(error);
+      if (kDebugMode) {
+        print(error);
+      }
     }
     notifyListeners();
     return _availableAmbulances;
