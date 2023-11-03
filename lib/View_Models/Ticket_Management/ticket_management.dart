@@ -11,6 +11,9 @@ class TicketManager with ChangeNotifier {
   Ticket? _bookedTicket;
   Ticket? get bookedTicket => _bookedTicket;
 
+  Ticket? _viewedTicket;
+  Ticket? get viewedTicket => _viewedTicket;
+
   bool _showprogress = false;
   bool get showProgress => _showprogress;
 
@@ -26,6 +29,12 @@ class TicketManager with ChangeNotifier {
         .collection('Ticket')
         .where('User_Id', isEqualTo: userID)
         .snapshots();
+  }
+
+  Ticket viewTicket(int index) {
+    _viewedTicket = _userTickets[index];
+    notifyListeners();
+    return _viewedTicket!;
   }
 
   Future<Ticket> updateBookedTicket() async {

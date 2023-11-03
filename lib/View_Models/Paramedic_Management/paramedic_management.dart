@@ -48,10 +48,6 @@ class ParamedicManager with ChangeNotifier {
     return _userStream!;
   }
 
-  Future<String> dispatchToLocation() async {
-    return '';
-  }
-
   void trackParamedicDataChanges() {
     database
         .collection('Paramedic')
@@ -122,24 +118,6 @@ class ParamedicManager with ChangeNotifier {
               .update({'In_Ambulance': event.data()});
         }
       }
-
-      // var inAmbulanceQuery = database
-      //     .collection('Ambulance')
-      //     .where(
-      //       'Ambulance_Id', isEqualTo: _paramedicData!.userID,
-      //       // 'In_Ambulance',
-      //       // isEqualTo: snapshot.docs[0].data(),
-      //     )
-      //     .get()
-      //     .then((paramedics) async {
-      //   for (var doc in paramedics.docs) {
-      //     await database.collection('Paramedic').doc(doc.id).update(
-      //       {
-      //         'In_Ambulance.Paramedics': event.data()!['Paramedics'],
-      //       },
-      //     );
-      //   }
-      // });
     });
   }
 
@@ -256,10 +234,6 @@ class ParamedicManager with ChangeNotifier {
     }
 
     return state;
-  }
-
-  Future<String> updateLocation() async {
-    return '';
   }
 
   Future<LocationData?> getParamedicLocation() async {

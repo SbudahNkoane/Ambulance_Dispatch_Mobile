@@ -129,6 +129,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               },
                             ),
                             AppTextField(
+                              onChanged: (text) {
+                                if (text[6] == '5') {
+                                  setState(() {
+                                    dropdownValue = 'Male';
+                                  });
+                                } else if (text[6] == '4') {
+                                  setState(() {
+                                    dropdownValue = 'Female';
+                                  });
+                                }
+                              },
                               hasIconButton: false,
                               labelText: 'ID Number',
                               prefixIcon: Icons.edit_document,

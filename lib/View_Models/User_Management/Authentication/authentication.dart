@@ -45,9 +45,7 @@ class UserAuthentication with ChangeNotifier {
               .doc(registeredUser.user!.uid)
               .update({'User_ID': registeredUser.user!.uid});
         }).onError((error, stackTrace) {
-          if (kDebugMode) {
-            print(error);
-          }
+          state = error.toString();
         });
       });
     } on FirebaseAuthException catch (e) {

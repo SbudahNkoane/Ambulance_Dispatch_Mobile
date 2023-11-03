@@ -92,6 +92,16 @@ class UserManager with ChangeNotifier {
     return state;
   }
 
+  void listenToUserUpdates(String id) {
+    database.collection("User").doc(id).snapshots().listen(
+      (event) {
+        _userData = User.fromJson(event.data() as Map<String, dynamic>);
+        notifyListeners();
+      },
+      onDone: () async {},
+    );
+  }
+
   Future<User?> getCurrentUserData(String userID) async {
     _showprogress = true;
     _userprogresstext = 'Setting up profile...';
@@ -104,13 +114,7 @@ class UserManager with ChangeNotifier {
           _userData = User.fromJson(doc.data() as Map<String, dynamic>);
         },
       );
-      docRef.snapshots().listen(
-        (event) {
-          _userData = User.fromJson(event.data() as Map<String, dynamic>);
-          notifyListeners();
-        },
-        onDone: () async {},
-      );
+      listenToUserUpdates(userID);
       if (_userData!.userID == null) {
         await docRef.set(
           {'User_ID': userID},
@@ -156,7 +160,7 @@ class UserManager with ChangeNotifier {
       await idFrontPath.putFile(idFront).then((uploaded) {
         uploadedIDFront = uploaded;
       }).onError((error, stackTrace) {});
-      await userInfo.set(
+      await userInfo.update(
         {
           'Verification_Picture': await uploadedSelfie!.ref.getDownloadURL(),
           'ID_Document': {
@@ -164,7 +168,6 @@ class UserManager with ChangeNotifier {
             'ID_Back': await uploadedIDBack!.ref.getDownloadURL(),
           }
         },
-        SetOptions(merge: true),
       ).onError((error, stackTrace) {});
     } on FirebaseException catch (error) {
       state = error.message.toString();
@@ -182,61 +185,67 @@ class UserManager with ChangeNotifier {
       {required ImageSource source,
       required String userID,
       required bool remove}) async {
+    String state = 'OK';
+
     final docRef = database.collection("User").doc(userID);
     final storageRef = FirebaseStorage.instance.ref();
     final path =
         storageRef.child('$userID/Images/Profile Picture/profilePicture.jpg');
-    XFile? pickedFile = await ImagePicker().pickImage(
-      source: source,
-      maxWidth: 1800,
-      maxHeight: 1800,
-    );
-    if (pickedFile != null) {
-      File imageFile = File(pickedFile.path);
+    if (remove == true) {
+      _showprogress = true;
+      _userprogresstext = 'Updating Profile....';
+      notifyListeners();
       try {
-        await path.putFile(imageFile).then((p) async {
-          if (p.state == TaskState.success) {
-            String uploaded = await p.ref.getDownloadURL();
-
-            await docRef.set(
-              {'Profile_Picture': uploaded},
-              SetOptions(merge: true),
-            ).then((value) async {
-              await docRef.get().then(
-                (DocumentSnapshot doc) {
-                  _userData = User.fromJson(doc.data() as Map<String, dynamic>);
-                },
-                onError: (e) => print("Error getting document: $e"),
-              );
-            }).onError((error, stackTrace) {});
-          }
+        await database.collection('User').doc(userID).update({
+          'Profile_Picture': null,
         });
-      } on FirebaseException catch (e) {}
-    } else if (remove == true) {
-      await path
-          .putFile(File(_userData!.gender == 'Male'
-              ? 'assets/images/profileMale'
-              : 'assets/images/profileFemale'))
-          .then((p0) async {
-        if (p0.state == TaskState.success) {
-          String uploaded = await p0.ref.getDownloadURL();
-          await docRef.set(
-            {
-              'Profile_Picture': uploaded,
-            },
-            SetOptions(merge: true),
-          ).then((value) async {
-            await docRef.get().then(
-              (DocumentSnapshot doc) {
-                _userData = User.fromJson(doc.data() as Map<String, dynamic>);
-              },
-              onError: (e) => print("Error getting document: $e"),
-            );
+      } on FirebaseException catch (error) {
+        state = error.message!;
+      } catch (e) {
+        state = e.toString();
+      } finally {
+        _showprogress = false;
+        notifyListeners();
+      }
+    } else {
+      XFile? pickedFile = await ImagePicker().pickImage(
+        source: source,
+        maxWidth: 1800,
+        maxHeight: 1800,
+      );
+      if (pickedFile != null) {
+        _showprogress = true;
+        _userprogresstext = 'Updating Profile....';
+        notifyListeners();
+        File imageFile = File(pickedFile.path);
+        try {
+          await path.putFile(imageFile).then((p) async {
+            if (p.state == TaskState.success) {
+              String uploaded = await p.ref.getDownloadURL();
+
+              await docRef.set(
+                {
+                  'Profile_Picture': uploaded,
+                },
+                SetOptions(merge: true),
+              )
+                  // .then((value) async {
+                  //   await docRef.get().then(
+                  //     (DocumentSnapshot doc) {
+                  //       _userData = User.fromJson(doc.data() as Map<String, dynamic>);
+                  //     },
+                  //     onError: (e) => print("Error getting document: $e"),
+                  //   );
+                  // })
+                  .onError((error, stackTrace) {});
+            }
           });
+        } on FirebaseException catch (e) {
+          state = e.message!;
         }
-      });
+      }
     }
-    notifyListeners();
-    return '';
+
+    return state;
   }
 }

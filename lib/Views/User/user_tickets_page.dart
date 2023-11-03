@@ -56,9 +56,15 @@ class _UserTicketsPageState extends State<UserTicketsPage> {
                                       .bookedTicket!
                                       .ticketId) {
                                 Navigator.of(context).pushNamed(
-                                    AppRouteManager.userTicketTrackingPage);
+                                  AppRouteManager.userTicketTrackingPage,
+                                );
                               }
-                            } else {}
+                            } else {
+                              context.read<TicketManager>().viewTicket(index);
+                              Navigator.of(context).pushNamed(
+                                AppRouteManager.userTicketViewPage,
+                              );
+                            }
                           },
                           child: Card(
                             child: Padding(

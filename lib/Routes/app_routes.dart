@@ -14,6 +14,7 @@ import 'package:ambulance_dispatch_application/Views/User/user_home_page.dart';
 import 'package:ambulance_dispatch_application/Views/User/user_profile_page.dart';
 import 'package:ambulance_dispatch_application/Views/User/user_request_form_page.dart';
 import 'package:ambulance_dispatch_application/Views/User/user_ticket_tracking_page.dart';
+import 'package:ambulance_dispatch_application/Views/User/user_ticket_view_page.dart';
 import 'package:ambulance_dispatch_application/Views/User/user_tickets_page.dart';
 import 'package:ambulance_dispatch_application/Views/User/user_account_page.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,7 @@ class AppRouteManager {
   static const String userMenuPage = '/UserMenuPage';
   static const String userMapPage = '/UserMapPage';
   static const String userTicketTrackingPage = '/UserTicketTrackingPage';
+  static const String userTicketViewPage = '/UserTicketViewPage';
   static const String userAmbulanceTrackingPage = '/UserAmbulanceTrackingPage';
 
 //========================== Admin Screens =================================================
@@ -76,6 +78,10 @@ class AppRouteManager {
           builder: (context) => UserTicketTrackingPage(
             ticket: context.read<TicketManager>().bookedTicket!,
           ),
+        );
+      case userTicketViewPage:
+        return MaterialPageRoute(
+          builder: (context) => const TicketViewPage(),
         );
       case userAmbulanceTrackingPage:
         return MaterialPageRoute(

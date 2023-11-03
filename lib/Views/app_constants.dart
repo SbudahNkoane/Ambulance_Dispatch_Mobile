@@ -68,6 +68,7 @@ class AppTextField extends StatefulWidget {
     required this.validator,
     this.onIconPressed,
     required this.hasIconButton,
+    this.onChanged,
   });
   final String labelText;
   final bool hasIconButton;
@@ -80,6 +81,7 @@ class AppTextField extends StatefulWidget {
   final TextInputType keyboardType;
   final bool hideText;
   final String? Function(String? text)? validator;
+  final void Function(String text)? onChanged;
   @override
   State<AppTextField> createState() => _AppTextFieldState();
 }
@@ -90,6 +92,7 @@ class _AppTextFieldState extends State<AppTextField> {
     return Padding(
       padding: const EdgeInsets.only(top: 10),
       child: TextFormField(
+        onChanged: widget.onChanged,
         keyboardType: widget.keyboardType,
         style: const TextStyle(fontSize: 15),
         textAlign: TextAlign.left,

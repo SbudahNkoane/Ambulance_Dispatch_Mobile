@@ -79,11 +79,6 @@ class _UserTicketTrackingPageState extends State<UserTicketTrackingPage> {
                     builder: (context, value, child) {
                       return Column(
                         children: [
-                          // Image.asset(
-                          //   'assets/images/med.png',
-                          //   height: MediaQuery.of(context).size.height / 2.8,
-                          //   width: MediaQuery.of(context).size.width,
-                          // ),
                           Text(
                             'Ticket Recieved',
                             textAlign: TextAlign.center,
@@ -185,7 +180,6 @@ class _UserTicketTrackingPageState extends State<UserTicketTrackingPage> {
                           SizedBox(
                             height: MediaQuery.of(context).size.height / 30,
                           ),
-
                           value.status == 'Dispatched'
                               ? Column(
                                   children: [

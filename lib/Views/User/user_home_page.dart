@@ -36,15 +36,36 @@ class _UserHomePageState extends State<UserHomePage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        actions: const [
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: CircleAvatar(
-              foregroundImage: AssetImage('assets/images/logo.png'),
-              backgroundColor: Colors.transparent,
-              radius: 25,
-            ),
-          ),
+        actions: [
+          StreamBuilder(
+            stream: context.read<UserManager>().userStreamer(),
+            builder: (context, snapshot) {
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: context.read<UserManager>().userData!.profilePicture !=
+                        null
+                    ? CircleAvatar(
+                        foregroundImage: NetworkImage(context
+                            .read<UserManager>()
+                            .userData!
+                            .profilePicture!),
+                        backgroundColor: Colors.transparent,
+                        radius: 25,
+                      )
+                    : CircleAvatar(
+                        foregroundImage: context
+                                    .read<UserManager>()
+                                    .userData!
+                                    .gender ==
+                                'Male'
+                            ? const AssetImage('assets/images/profileMale.png')
+                            : const AssetImage(
+                                'assets/images/profileFemale.png'),
+                        backgroundColor: Colors.transparent,
+                      ),
+              );
+            },
+          )
         ],
         toolbarHeight: 100,
         centerTitle: true,

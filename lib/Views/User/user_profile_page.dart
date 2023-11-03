@@ -41,22 +41,24 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                   children: [
                                     Row(
                                       children: [
-                                        CircleAvatar(
-                                          radius: 80,
-                                          foregroundImage:
-                                              info.data!.profilePicture != null
-                                                  ? Image.network(info.data!
-                                                          .profilePicture!)
-                                                      as ImageProvider<Object>
-                                                  : const AssetImage(
-                                                      'assets/images/logo.png'),
-                                          // ? NetworkImage(
-                                          //     info.data!.profilePicture!)
-                                          // : const AssetImage(
-                                          //         'assets/images/logo.png')
-                                          //     as ImageProvider,
-                                          backgroundColor: Colors.transparent,
-                                        ),
+                                        info.data!.profilePicture != null
+                                            ? CircleAvatar(
+                                                radius: 80,
+                                                foregroundImage: NetworkImage(
+                                                    info.data!.profilePicture!),
+                                              )
+                                            : CircleAvatar(
+                                                radius: 80,
+                                                foregroundImage: info
+                                                            .data!.gender ==
+                                                        'Male'
+                                                    ? const AssetImage(
+                                                        'assets/images/profileMale.png')
+                                                    : const AssetImage(
+                                                        'assets/images/profileFemale.png'),
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                              ),
                                       ],
                                     ),
                                     Positioned(
@@ -102,6 +104,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                                       title:
                                                           const Text('Remove'),
                                                       onTap: () => {
+                                                        source = null,
                                                         remove = true,
                                                         Navigator.of(context)
                                                             .pop(),
