@@ -151,7 +151,7 @@ class _UserTicketsPageState extends State<UserTicketsPage> {
                                         ),
                                         Text(
                                           value[index].closedAt != null
-                                              ? '${value[index].bookedAt.toDate().day} ${months[value[index].bookedAt.toDate().month - 1]} ${value[index].bookedAt.toDate().year}'
+                                              ? '${value[index].closedAt!.toDate().day} ${months[value[index].closedAt!.toDate().month - 1]} ${value[index].closedAt!.toDate().year}'
                                               : '.............',
                                           style: GoogleFonts.inter(),
                                         ),
@@ -166,26 +166,17 @@ class _UserTicketsPageState extends State<UserTicketsPage> {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          'Opened:',
+                                          '${value[index].bookedAt.toDate().hour}:${value[index].bookedAt.toDate().minute}',
                                           style: GoogleFonts.inter(
                                               fontWeight: FontWeight.bold),
                                         ),
                                         Text(
-                                          'Closed',
+                                          '${value[index].closedAt!.toDate().hour}:${value[index].closedAt!.toDate().minute}',
                                           style: GoogleFonts.inter(
                                               fontWeight: FontWeight.bold),
                                         ),
                                       ],
                                     ),
-                                  ),
-                                  Text(
-                                    'Opened:',
-                                    style: GoogleFonts.moul(fontSize: 20),
-                                  ),
-                                  Text(
-                                    'Closed',
-                                    style: GoogleFonts.inter(
-                                        fontWeight: FontWeight.bold),
                                   ),
                                 ],
                               ),

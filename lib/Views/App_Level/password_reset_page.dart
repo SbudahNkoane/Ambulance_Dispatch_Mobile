@@ -107,7 +107,7 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
                                   } else {
                                     locator
                                         .get<NavigationAndDialogService>()
-                                        .showSnackBar(
+                                        .showErrorSnackBar(
                                             message: result, title: 'Oops!!!');
                                   }
                                 }

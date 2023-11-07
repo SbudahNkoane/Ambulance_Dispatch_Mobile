@@ -130,14 +130,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                             AppTextField(
                               onChanged: (text) {
-                                if (text[6] == '5') {
-                                  setState(() {
-                                    dropdownValue = 'Male';
-                                  });
-                                } else if (text[6] == '4') {
-                                  setState(() {
-                                    dropdownValue = 'Female';
-                                  });
+                                if (text.length > 6) {
+                                  if (text[6] == '5') {
+                                    setState(() {
+                                      dropdownValue = 'Male';
+                                    });
+                                  } else if (text[6] == '4') {
+                                    setState(() {
+                                      dropdownValue = 'Female';
+                                    });
+                                  }
                                 }
                               },
                               hasIconButton: false,
@@ -338,7 +340,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   } else {
                                     locator
                                         .get<NavigationAndDialogService>()
-                                        .showSnackBar(
+                                        .showErrorSnackBar(
                                             context: context,
                                             message: result,
                                             title: 'Oops!');

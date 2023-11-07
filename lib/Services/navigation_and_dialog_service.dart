@@ -59,36 +59,19 @@ class NavigationAndDialogService {
   }
 
   void showErrorSnackBar(
-      {required BuildContext context,
-      required String message,
-      required String title}) {
-    final snackBar = SnackBar(
-      duration: const Duration(milliseconds: 2500),
-      elevation: 10,
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(5),
-        topRight: Radius.circular(5),
-      )),
-      backgroundColor: const Color.fromARGB(255, 89, 125, 245),
-      content: ListTile(
-        title: const Text('data'),
-        subtitle: Text(message),
-      ),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      {BuildContext? context, required String message, required String title}) {
     Flushbar(
       borderRadius: BorderRadius.circular(10),
-      backgroundColor: const Color.fromARGB(255, 167, 218, 248),
+      backgroundColor: Color.fromARGB(255, 248, 41, 4),
       title: title,
       message: message,
-      titleColor: const Color.fromARGB(255, 254, 2, 2),
-      messageColor: const Color.fromARGB(255, 250, 3, 3),
-      duration: const Duration(seconds: 5),
+      titleColor: Color.fromARGB(255, 218, 218, 218),
+      messageColor: Color.fromARGB(255, 226, 226, 226),
+      duration: const Duration(milliseconds: 3400),
       flushbarPosition: FlushbarPosition.BOTTOM,
       maxWidth: double.infinity,
       margin: const EdgeInsets.only(bottom: 2, left: 2, right: 2),
-    ).show(navigatorKey.currentState!.context);
+    ).show(context!);
   }
 
   Future showPopupDialog(BuildContext context) {

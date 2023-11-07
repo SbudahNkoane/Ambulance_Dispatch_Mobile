@@ -153,7 +153,7 @@ class _UserAccountPageState extends State<UserAccountPage> {
                             } else {
                               locator
                                   .get<NavigationAndDialogService>()
-                                  .showSnackBar(
+                                  .showErrorSnackBar(
                                     context: context,
                                     message: result,
                                     title: 'Oops',
@@ -162,7 +162,7 @@ class _UserAccountPageState extends State<UserAccountPage> {
                           } else {
                             locator
                                 .get<NavigationAndDialogService>()
-                                .showSnackBar(
+                                .showErrorSnackBar(
                                   context: context,
                                   message:
                                       'All the photos are required for application',

@@ -7,7 +7,6 @@ import 'package:ambulance_dispatch_application/Views/App_Level/splash_page.dart'
 import 'package:ambulance_dispatch_application/Views/Paramedic/paramedic_home_page.dart';
 import 'package:ambulance_dispatch_application/Views/Paramedic/ticket_dispatch_page.dart';
 
-import 'package:ambulance_dispatch_application/Views/User/map.dart';
 import 'package:ambulance_dispatch_application/Views/User/user_ambulance_track_page.dart';
 import 'package:ambulance_dispatch_application/Views/User/user_menu_page.dart';
 import 'package:ambulance_dispatch_application/Views/User/user_home_page.dart';
@@ -34,7 +33,6 @@ class AppRouteManager {
   static const String userRequestFormPage = '/UserRequestFormPage';
   static const String userProfilePage = '/UserProfilePage';
   static const String userMenuPage = '/UserMenuPage';
-  static const String userMapPage = '/UserMapPage';
   static const String userTicketTrackingPage = '/UserTicketTrackingPage';
   static const String userTicketViewPage = '/UserTicketViewPage';
   static const String userAmbulanceTrackingPage = '/UserAmbulanceTrackingPage';
@@ -87,10 +85,7 @@ class AppRouteManager {
         return MaterialPageRoute(
           builder: (context) => const AmbulanceTrackingPage(),
         );
-      case userMapPage:
-        return MaterialPageRoute(
-          builder: (context) => const MapScreen(),
-        );
+
       case userTicketsPage:
         return MaterialPageRoute(
           builder: (context) => const UserTicketsPage(),

@@ -139,14 +139,12 @@ class _UserRequestFromPageState extends State<UserRequestFromPage> {
                                             .read<UserManager>()
                                             .getUserLocation();
 
-                                        if (location == null) {
+                                        if (location != 'OK') {
                                           locator
                                               .get<NavigationAndDialogService>()
                                               .showSnackBar1(
-                                                  message:
-                                                      'We cannot access your location without your permission',
-                                                  title:
-                                                      'Your Location is required',
+                                                  message: location,
+                                                  title: 'Error!!',
                                                   context: context);
                                         } else {
                                           _useCurrentLocation = value!;
@@ -211,18 +209,6 @@ class _UserRequestFromPageState extends State<UserRequestFromPage> {
                                     const SizedBox(
                                       height: 20,
                                     ),
-
-                                    // SizedBox(
-                                    //   height: 90,
-                                    //   width: 1000,
-                                    //   child: GoogleMap(
-                                    //     onMapCreated: _onMapCreated,
-                                    //     initialCameraPosition: CameraPosition(
-                                    //       target: _center,
-                                    //       zoom: 11.0,
-                                    //     ),
-                                    //   ),
-                                    // ),
                                   ],
                                 ),
                               ),
@@ -267,7 +253,7 @@ class _UserRequestFromPageState extends State<UserRequestFromPage> {
                                 if (request != 'OK') {
                                   locator
                                       .get<NavigationAndDialogService>()
-                                      .showSnackBar(
+                                      .showErrorSnackBar(
                                           message: request,
                                           title: 'Oops. An error occured!');
                                 } else {
