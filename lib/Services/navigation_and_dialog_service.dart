@@ -62,11 +62,11 @@ class NavigationAndDialogService {
       {BuildContext? context, required String message, required String title}) {
     Flushbar(
       borderRadius: BorderRadius.circular(10),
-      backgroundColor: Color.fromARGB(255, 248, 41, 4),
+      backgroundColor: const Color.fromARGB(255, 248, 41, 4),
       title: title,
       message: message,
-      titleColor: Color.fromARGB(255, 218, 218, 218),
-      messageColor: Color.fromARGB(255, 226, 226, 226),
+      titleColor: const Color.fromARGB(255, 218, 218, 218),
+      messageColor: const Color.fromARGB(255, 226, 226, 226),
       duration: const Duration(milliseconds: 3400),
       flushbarPosition: FlushbarPosition.BOTTOM,
       maxWidth: double.infinity,

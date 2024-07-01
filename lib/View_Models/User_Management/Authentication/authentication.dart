@@ -34,14 +34,14 @@ class UserAuthentication with ChangeNotifier {
       )
           .then((registeredUser) async {
         await database
-            .collection('User')
+            .collection('Users')
             .doc(registeredUser.user!.uid)
             .set(userInfo.toJson())
             .then((value) {
           _userprogresstext = 'Saving data...';
           notifyListeners();
           database
-              .collection('User')
+              .collection('Users')
               .doc(registeredUser.user!.uid)
               .update({'User_ID': registeredUser.user!.uid});
         }).onError((error, stackTrace) {

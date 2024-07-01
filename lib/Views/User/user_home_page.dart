@@ -36,6 +36,7 @@ class _UserHomePageState extends State<UserHomePage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         actions: [
           StreamBuilder(
             stream: context.read<UserManager>().userStreamer(),
@@ -135,7 +136,7 @@ class _UserHomePageState extends State<UserHomePage> {
                     icon: Icon(Icons.home_filled),
                   ),
                   const BottomNavigationBarItem(
-                      label: 'Tickets', icon: Icon(Icons.home_filled)),
+                      label: 'Tickets', icon: Icon(Icons.schedule)),
                   context.read<UserManager>().userData!.accountStatus ==
                           "Verified"
                       ? BottomNavigationBarItem(
@@ -231,20 +232,24 @@ class _HomeState extends State<Home> {
                   userData.accountStatus == 'Not Verified'
                       ? SizedBox(
                           width: MediaQuery.of(context).size.width,
-                          child: Text(
-                            'You are one step away!!\nMake sure to apply for verification by clicking the Apply button.',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.inter(
-                                fontWeight: FontWeight.bold, fontSize: 18),
-                          ),
-                        )
+                          child: Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Text(
+                                'You are one step away!!\nMake sure to apply for verification by clicking the Apply button.',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.inter(
+                                    fontWeight: FontWeight.bold, fontSize: 18),
+                              ),
+                            ),
+                          ))
                       : Text(
                           'Welcome',
                           style: GoogleFonts.inter(
                               fontWeight: FontWeight.bold, fontSize: 18),
                         ),
                   SizedBox(
-                    height: MediaQuery.of(context).size.height / 20,
+                    height: MediaQuery.of(context).size.height / 30,
                   ),
                   Image.asset(
                     'assets/images/med.png',

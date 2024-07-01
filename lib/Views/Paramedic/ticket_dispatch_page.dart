@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:ambulance_dispatch_application/Keys/my_api_keys.dart';
 import 'package:ambulance_dispatch_application/Services/locator_service.dart';
 import 'package:ambulance_dispatch_application/Services/navigation_and_dialog_service.dart';
 import 'package:ambulance_dispatch_application/View_Models/Paramedic_Management/paramedic_management.dart';
@@ -51,10 +52,8 @@ class _TicketDispatchPageState extends State<TicketDispatchPage> {
   }
 
   _init() async {
-    _cameraPosition = const CameraPosition(
-        target: LatLng(-29.0852,
-            26.1596), // this is just the example lat and lng for initializing
-        zoom: 12);
+    _cameraPosition =
+        const CameraPosition(target: LatLng(-29.0852, 26.1596), zoom: 12);
     await _initLocation();
     // moveToCurrentLocation();
   }
@@ -75,12 +74,12 @@ class _TicketDispatchPageState extends State<TicketDispatchPage> {
 
   _initLocation() async {
     if (mounted) {
-      await moveToPosition(LatLng(
+      await moveToPosition(
+        LatLng(
           context.read<ParamedicManager>().currentParamedicLocation!.latitude!,
-          context
-              .read<ParamedicManager>()
-              .currentParamedicLocation!
-              .longitude!));
+          context.read<ParamedicManager>().currentParamedicLocation!.longitude!,
+        ),
+      );
       subscriber = context
           .read<ParamedicManager>()
           .loc
@@ -94,53 +93,64 @@ class _TicketDispatchPageState extends State<TicketDispatchPage> {
                 .status ==
             "Dispatched") {
           await database
-              .collection('Ticket')
+              .collection('Tickets')
               .doc(context.read<ParamedicManager>().dispatchTicket!.ticketId)
               .update({
-            'Dispatched_Ambulance.Ambulance.RealTime_Location':
-                GeoPoint(newLocation.latitude!, newLocation.longitude!),
+            'Dispatched_Ambulance.Ambulance.RealTime_Location': GeoPoint(
+              newLocation.latitude!,
+              newLocation.longitude!,
+            ),
           });
           await database
-              .collection('Dispatched Ambulance')
-              .doc(context.read<ParamedicManager>().dispatchTicket!.ticketId)
+              .collection('Dispatched Ambulances')
+              .doc(
+                context.read<ParamedicManager>().dispatchTicket!.ticketId,
+              )
               .update({
-            'Ambulance.RealTime_Location':
-                GeoPoint(newLocation.latitude!, newLocation.longitude!),
+            'Ambulance.RealTime_Location': GeoPoint(
+              newLocation.latitude!,
+              newLocation.longitude!,
+            ),
           });
         }
         await database
-            .collection('Ambulance')
-            .doc(context
-                .read<ParamedicManager>()
-                .paramedicData!
-                .inAmbulance!
-                .ambulanceId!)
+            .collection('Ambulances')
+            .doc(
+              context
+                  .read<ParamedicManager>()
+                  .paramedicData!
+                  .inAmbulance!
+                  .ambulanceId!,
+            )
             .update({
-          'RealTime_Location':
-              GeoPoint(newLocation.latitude!, newLocation.longitude!),
+          'RealTime_Location': GeoPoint(
+            newLocation.latitude!,
+            newLocation.longitude!,
+          ),
         });
-        moveToPosition(LatLng(
-            context
-                .read<ParamedicManager>()
-                .currentParamedicLocation!
-                .latitude!,
-            context
-                .read<ParamedicManager>()
-                .currentParamedicLocation!
-                .longitude!));
-        setPolylines();
+        moveToPosition(
+          LatLng(
+            newLocation.latitude!,
+            newLocation.longitude!,
+          ),
+        );
+        setPolyline();
         updateMarker(newLocation);
       });
     }
   }
 
   updateMarker(LocationData newLoc) async {
-    ambulanceMarker = Marker(
-      markerId: const MarkerId('ambulance'),
-      position: LatLng(newLoc.latitude!, newLoc.longitude!),
-      icon: ambulanceIcon,
-    );
-    setState(() {});
+    setState(() {
+      ambulanceMarker = Marker(
+        markerId: const MarkerId('ambulance'),
+        position: LatLng(
+          newLoc.latitude!,
+          newLoc.longitude!,
+        ),
+        icon: ambulanceIcon,
+      );
+    });
   }
 
   moveToPosition(LatLng latlng) async {
@@ -152,10 +162,10 @@ class _TicketDispatchPageState extends State<TicketDispatchPage> {
     );
   }
 
-  setPolylines() async {
+  setPolyline() async {
     try {
       PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-        'AIzaSyBhIh0xzIHgbsmCy4pdSWqMUHY68MEjwPA',
+        APIKeys().googleAPI,
         PointLatLng(
             context
                 .read<ParamedicManager>()
@@ -176,6 +186,7 @@ class _TicketDispatchPageState extends State<TicketDispatchPage> {
                 .dispatchTicket!
                 .pickUpLocation
                 .longitude),
+        travelMode: TravelMode.driving,
       );
       if (result.status == 'OK') {
         polylineCoordinates = [];
@@ -310,7 +321,7 @@ class _TicketDispatchPageState extends State<TicketDispatchPage> {
                     if (!_googleMapController.isCompleted) {
                       _googleMapController.complete(controller);
                     }
-                    setPolylines();
+                    setPolyline();
                   },
                   polylines: _polyLines,
 

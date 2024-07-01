@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:ambulance_dispatch_application/Keys/my_api_keys.dart';
 import 'package:ambulance_dispatch_application/View_Models/Ticket_Management/ticket_management.dart';
 import 'package:ambulance_dispatch_application/Views/app_constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -53,14 +54,7 @@ class _AmbulanceTrackingPageState extends State<AmbulanceTrackingPage> {
         .bookedTicket!
         .dispatchedAmbulance!['RealTime_Location'] as GeoPoint;
     _cameraPosition = CameraPosition(
-        target: LatLng(
-            point!.latitude,
-            point!
-                .longitude), // this is just the example lat and lng for initializing
-        zoom: 12);
-    // imageData = await getMarkerIcon();
-
-    //updateMarker(point!, imageData!);
+        target: LatLng(point!.latitude, point!.longitude), zoom: 12);
 
     moveToPosition(LatLng(point!.latitude, point!.longitude));
     await _initLocation();
@@ -79,7 +73,7 @@ class _AmbulanceTrackingPageState extends State<AmbulanceTrackingPage> {
   _initLocation() async {
     if (mounted) {
       subscriber = database
-          .collection('Ticket')
+          .collection('Tickets')
           .doc(context.read<TicketManager>().bookedTicket!.ticketId)
           .snapshots()
           .listen((event) {
@@ -111,11 +105,11 @@ class _AmbulanceTrackingPageState extends State<AmbulanceTrackingPage> {
     });
   }
 
-  Future<Uint8List> getMarkerIcon() async {
-    ByteData byteData = await DefaultAssetBundle.of(context)
-        .load("assets/images/ambulance_top.png");
-    return byteData.buffer.asUint8List();
-  }
+  // Future<Uint8List> getMarkerIcon() async {
+  //   ByteData byteData = await DefaultAssetBundle.of(context)
+  //       .load("assets/images/ambulance_top.png");
+  //   return byteData.buffer.asUint8List();
+  // }
 
   // updateMarker(GeoPoint newlocation, Uint8List imageData) {
   //   setState(() {
@@ -142,7 +136,7 @@ class _AmbulanceTrackingPageState extends State<AmbulanceTrackingPage> {
   setPolylines() async {
     try {
       PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-        'AIzaSyBhIh0xzIHgbsmCy4pdSWqMUHY68MEjwPA',
+        APIKeys().googleAPI,
         PointLatLng(point!.latitude, point!.longitude),
         PointLatLng(
             context.read<TicketManager>().bookedTicket!.pickUpLocation.latitude,
@@ -151,6 +145,7 @@ class _AmbulanceTrackingPageState extends State<AmbulanceTrackingPage> {
                 .bookedTicket!
                 .pickUpLocation
                 .longitude),
+        travelMode: TravelMode.driving,
         //  PointLatLng(current.latitude, current.longitude),
         //  PointLatLng(destination.latitude, destination.longitude));
       );

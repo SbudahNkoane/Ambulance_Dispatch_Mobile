@@ -21,12 +21,12 @@ class TicketManager with ChangeNotifier {
   String get userProgressText => _userprogresstext;
 
   Stream ticketStatusStreamer(String ticketId) {
-    return database.collection('Ticket').doc(ticketId).snapshots();
+    return database.collection('Tickets').doc(ticketId).snapshots();
   }
 
   Stream userTicketsStreamer(String userID) {
     return database
-        .collection('Ticket')
+        .collection('Tickets')
         .where('User_Id', isEqualTo: userID)
         .snapshots();
   }
@@ -40,7 +40,7 @@ class TicketManager with ChangeNotifier {
   Future<Ticket> updateBookedTicket() async {
     try {
       database
-          .collection('Ticket')
+          .collection('Tickets')
           .doc(_bookedTicket!.ticketId)
           .snapshots()
           .listen(
@@ -64,21 +64,21 @@ class TicketManager with ChangeNotifier {
 
     try {
       await database
-          .collection('Ticket')
+          .collection('Tickets')
           .doc()
           .set(ticket.toJson())
           .onError((error, stackTrace) => state = error.toString())
           .then((value) async {
         //Firebase query====================
         final query = database
-            .collection('Ticket')
+            .collection('Tickets')
             .where('User_Id', isEqualTo: userID)
             .where('Booked_At', isEqualTo: ticket.bookedAt);
         //=========Listen to updates=============
 
         await query.get().then((value) async {
           await database
-              .collection('Ticket')
+              .collection('Tickets')
               .doc(value.docs[0].id)
               .update(
                 {'Ticket_Id': value.docs[0].id},
@@ -86,7 +86,7 @@ class TicketManager with ChangeNotifier {
               .onError((error, stackTrace) => null)
               .then((su) async {
                 await database
-                    .collection('Ticket')
+                    .collection('Tickets')
                     .doc(value.docs[0].id)
                     .get()
                     .then((value) async {
@@ -108,7 +108,7 @@ class TicketManager with ChangeNotifier {
 
   void trackMyTickets(String userID) {
     database
-        .collection('Ticket')
+        .collection('Tickets')
         .where('User_Id', isEqualTo: userID)
         .snapshots()
         .listen((event) async {
@@ -134,7 +134,7 @@ class TicketManager with ChangeNotifier {
     _userprogresstext = 'Getting Tickets...';
     notifyListeners();
     final docRef =
-        database.collection('Ticket').where('User_Id', isEqualTo: userID);
+        database.collection('Tickets').where('User_Id', isEqualTo: userID);
 
     try {
       await docRef.get().then((querySnapshot) async {

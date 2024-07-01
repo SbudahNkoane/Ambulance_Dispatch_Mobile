@@ -132,7 +132,7 @@ class _UserTicketsPageState extends State<UserTicketsPage> {
                                           style: GoogleFonts.alfaSlabOne(),
                                         ),
                                         Text(
-                                          'Closed',
+                                          'Closed:',
                                           style: GoogleFonts.alfaSlabOne(),
                                         ),
                                       ],
@@ -171,7 +171,9 @@ class _UserTicketsPageState extends State<UserTicketsPage> {
                                               fontWeight: FontWeight.bold),
                                         ),
                                         Text(
-                                          '${value[index].closedAt!.toDate().hour}:${value[index].closedAt!.toDate().minute}',
+                                          value[index].closedAt != null
+                                              ? '${value[index].closedAt!.toDate().hour}:${value[index].closedAt!.toDate().minute}'
+                                              : '',
                                           style: GoogleFonts.inter(
                                               fontWeight: FontWeight.bold),
                                         ),

@@ -31,7 +31,7 @@ class UserManager with ChangeNotifier {
   loc.Position? get currentLocation => _currentLocation;
   Stream userStreamer() {
     _userStream =
-        database.collection('User').doc(_userData!.userID).snapshots();
+        database.collection('Users').doc(_userData!.userID).snapshots();
     return _userStream!;
   }
 
@@ -93,7 +93,7 @@ class UserManager with ChangeNotifier {
   }
 
   void listenToUserUpdates(String id) {
-    database.collection("User").doc(id).snapshots().listen(
+    database.collection("Users").doc(id).snapshots().listen(
       (event) {
         _userData = User.fromJson(event.data() as Map<String, dynamic>);
         notifyListeners();
@@ -106,7 +106,7 @@ class UserManager with ChangeNotifier {
     _showprogress = true;
     _userprogresstext = 'Setting up profile...';
     notifyListeners();
-    final docRef = database.collection("User").doc(userID);
+    final docRef = database.collection("Users").doc(userID);
 
     try {
       await docRef.get().then(
@@ -116,10 +116,11 @@ class UserManager with ChangeNotifier {
       );
       listenToUserUpdates(userID);
       if (_userData!.userID == null) {
-        await docRef.set(
-          {'User_ID': userID},
-          SetOptions(merge: true),
-        ).onError((error, stackTrace) {});
+        await docRef.update({'User_ID': userID});
+        // await docRef.set(
+        //   {'User_ID': userID},
+        //   SetOptions(merge: true),
+        // ).onError((error, stackTrace) {});
       }
     } catch (e) {
     } finally {
@@ -142,7 +143,7 @@ class UserManager with ChangeNotifier {
     TaskSnapshot? uploadedSelfie;
     TaskSnapshot? uploadedIDBack;
     TaskSnapshot? uploadedIDFront;
-    final userInfo = database.collection("User").doc(userID);
+    final userInfo = database.collection("Users").doc(userID);
     final storageRef = FirebaseStorage.instance.ref();
     final selfiePath =
         storageRef.child('$userID/Images/Verification/Selfie.jpg');
@@ -182,12 +183,12 @@ class UserManager with ChangeNotifier {
   }
 
   Future<String> updateProfilePicture(
-      {required ImageSource source,
+      {required ImageSource? source,
       required String userID,
       required bool remove}) async {
     String state = 'OK';
 
-    final docRef = database.collection("User").doc(userID);
+    final docRef = database.collection("Users").doc(userID);
     final storageRef = FirebaseStorage.instance.ref();
     final path =
         storageRef.child('$userID/Images/Profile Picture/profilePicture.jpg');
@@ -196,7 +197,7 @@ class UserManager with ChangeNotifier {
       _userprogresstext = 'Updating Profile....';
       notifyListeners();
       try {
-        await database.collection('User').doc(userID).update({
+        await database.collection('Users').doc(userID).update({
           'Profile_Picture': null,
         });
       } on FirebaseException catch (error) {
@@ -208,40 +209,45 @@ class UserManager with ChangeNotifier {
         notifyListeners();
       }
     } else {
-      XFile? pickedFile = await ImagePicker().pickImage(
-        source: source,
-        maxWidth: 1800,
-        maxHeight: 1800,
-      );
-      if (pickedFile != null) {
-        _showprogress = true;
-        _userprogresstext = 'Updating Profile....';
-        notifyListeners();
-        File imageFile = File(pickedFile.path);
-        try {
-          await path.putFile(imageFile).then((p) async {
-            if (p.state == TaskState.success) {
-              String uploaded = await p.ref.getDownloadURL();
+      if (source != null) {
+        XFile? pickedFile = await ImagePicker().pickImage(
+          source: source,
+          maxWidth: 1800,
+          maxHeight: 1800,
+        );
+        if (pickedFile != null) {
+          _showprogress = true;
+          _userprogresstext = 'Updating Profile....';
+          notifyListeners();
+          File imageFile = File(pickedFile.path);
+          try {
+            await path.putFile(imageFile).then((p) async {
+              if (p.state == TaskState.success) {
+                String uploaded = await p.ref.getDownloadURL();
 
-              await docRef.set(
-                {
-                  'Profile_Picture': uploaded,
-                },
-                SetOptions(merge: true),
-              )
-                  // .then((value) async {
-                  //   await docRef.get().then(
-                  //     (DocumentSnapshot doc) {
-                  //       _userData = User.fromJson(doc.data() as Map<String, dynamic>);
-                  //     },
-                  //     onError: (e) => print("Error getting document: $e"),
-                  //   );
-                  // })
-                  .onError((error, stackTrace) {});
-            }
-          });
-        } on FirebaseException catch (e) {
-          state = e.message!;
+                await docRef.set(
+                  {
+                    'Profile_Picture': uploaded,
+                  },
+                  SetOptions(merge: true),
+                )
+                    // .then((value) async {
+                    //   await docRef.get().then(
+                    //     (DocumentSnapshot doc) {
+                    //       _userData = User.fromJson(doc.data() as Map<String, dynamic>);
+                    //     },
+                    //     onError: (e) => print("Error getting document: $e"),
+                    //   );
+                    // })
+                    .onError((error, stackTrace) {});
+              }
+            });
+          } on FirebaseException catch (e) {
+            state = e.message!;
+          } finally {
+            _showprogress = false;
+            notifyListeners();
+          }
         }
       }
     }

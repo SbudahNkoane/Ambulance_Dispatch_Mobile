@@ -32,7 +32,7 @@ class _TicketViewPageState extends State<TicketViewPage> {
                 const SizedBox(
                   height: 20,
                 ),
-                Text('${value.ticketId}'),
+                Text(value.ticketId),
                 const SizedBox(
                   height: 40,
                 ),

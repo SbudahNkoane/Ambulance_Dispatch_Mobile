@@ -32,6 +32,9 @@ migrate_working_dir/
 .pub/
 /build/
 
+# Sensitive information
+/lib/Keys/
+
 # Symbolication related
 app.*.symbols
 

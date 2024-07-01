@@ -65,22 +65,17 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             SingleChildScrollView(
               child: Container(
-                // color: Colors.blue,
-                padding: const EdgeInsets.only(left: 20, right: 20),
+                padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         "Sign In",
-                        style: GoogleFonts.moul(fontSize: 40),
-                        // TextStyle(
-                        //     letterSpacing: 1,
-                        //     fontSize: 40,
-                        //     fontWeight: FontWeight.bold),
+                        style: GoogleFonts.concertOne(fontSize: 40),
                       ),
-                      const SizedBox(
-                        height: 80,
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height / 15,
                       ),
                       Form(
                         key: _loginFormKey,
@@ -124,6 +119,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               },
                               hasIconButton: true,
                             ),
+                            const SizedBox(
+                              height: 10,
+                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
@@ -142,6 +140,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ],
                             ),
+                            const SizedBox(
+                              height: 10,
+                            ),
                             AppBlueButton(
                               text: 'Sign In',
                               onPressed: () async {
@@ -151,7 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       .contains('@para.com')) {
                                     locator
                                         .get<NavigationAndDialogService>()
-                                        .showSnackBar(
+                                        .showErrorSnackBar(
                                             context: context,
                                             message:
                                                 'You cannot sign in as a normal user with this account.Sign in as Paramedic',
@@ -166,7 +167,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     if (result != 'OK') {
                                       return locator
                                           .get<NavigationAndDialogService>()
-                                          .showSnackBar(
+                                          .showErrorSnackBar(
                                             context: context,
                                             message: result,
                                             title: 'Oops',
@@ -214,7 +215,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     if (result != 'OK') {
                                       locator
                                           .get<NavigationAndDialogService>()
-                                          .showSnackBar(
+                                          .showErrorSnackBar(
                                             context: context,
                                             message: result,
                                             title: 'Oops',
@@ -245,7 +246,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   } else {
                                     locator
                                         .get<NavigationAndDialogService>()
-                                        .showSnackBar(
+                                        .showErrorSnackBar(
                                             context: context,
                                             message:
                                                 'You cannot sign in as a Paramedic with this account.Sign in',
@@ -264,6 +265,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                           MediaQuery.of(context).size.width /
                                               30,
                                       fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width / 20,
                                 ),
                                 TextButton(
                                   onPressed: () async {

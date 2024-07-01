@@ -42,7 +42,7 @@ class ParamedicManager with ChangeNotifier {
   Stream? get userStream => _userStream;
   Stream userStreamer() {
     _userStream = database
-        .collection('Paramedic')
+        .collection('Paramedics')
         .doc(_paramedicData!.userID)
         .snapshots();
     return _userStream!;
@@ -50,7 +50,7 @@ class ParamedicManager with ChangeNotifier {
 
   void trackParamedicDataChanges() {
     database
-        .collection('Paramedic')
+        .collection('Paramedics')
         .doc(_paramedicData!.userID)
         .snapshots()
         .listen((event) {
@@ -61,19 +61,19 @@ class ParamedicManager with ChangeNotifier {
 
   void trackAmbulanceDataChanges(QuerySnapshot<Map<String, dynamic>> snapshot) {
     database
-        .collection('Ambulance')
+        .collection('Ambulances')
         .doc(snapshot.docs[0].id)
         .snapshots()
         .listen((event) async {
       if (event.data()!['Status'] == 'Dispatched') {
         await database
-            .collection('Dispatched Ambulance')
+            .collection('Dispatched Ambulances')
             .where('Ambulance.Number_Plate',
                 isEqualTo: event.data()!['Number_Plate'])
             .get()
             .then((dispatchedAmbulance) async {
           await database
-              .collection('Ticket')
+              .collection('Tickets')
               .doc(dispatchedAmbulance.docs[0].id)
               .get()
               .then((ticket) {
@@ -84,17 +84,17 @@ class ParamedicManager with ChangeNotifier {
       var paramedics = event.data()!['Paramedics'];
       if (paramedics.isEmpty) {
         await database
-            .collection('Paramedic')
+            .collection('Paramedics')
             .where('In_Ambulance.Ambulance_Id', isEqualTo: event.id)
             .get()
             .then((value) {
           database
-              .collection('Ambulance')
+              .collection('Ambulances')
               .doc(event.id)
               .update({'Status': 'Unoccupied'});
           for (var doc in value.docs) {
             database
-                .collection('Paramedic')
+                .collection('Paramedics')
                 .doc(doc.id)
                 .update({'In_Ambulance': {}});
           }
@@ -108,12 +108,12 @@ class ParamedicManager with ChangeNotifier {
           if (paramedics
               .contains(paramedic['User_ID'] == _paramedicData!.userID)) {
             await database
-                .collection('Paramedic')
+                .collection('Paramedics')
                 .doc(_paramedicData!.userID)
                 .update({'In_Ambulance': {}});
           }
           await database
-              .collection('Paramedic')
+              .collection('Paramedics')
               .doc(paramedic['User_ID'])
               .update({'In_Ambulance': event.data()});
         }
@@ -128,11 +128,11 @@ class ParamedicManager with ChangeNotifier {
     notifyListeners();
     try {
       await database
-          .collection('Ambulance')
+          .collection('Ambulances')
           .doc(_paramedicData!.inAmbulance!.ambulanceId!)
           .update({'Status': 'Available'}).then((value) async {
         await database
-            .collection('Ticket')
+            .collection('Tickets')
             .doc(_dispatchTicket!.ticketId)
             .update({
           'Status': 'Closed',
@@ -174,7 +174,7 @@ class ParamedicManager with ChangeNotifier {
       //     }
       //   }
       // });
-      await database.collection('Ambulance').doc(ambulanceID).update({
+      await database.collection('Ambulances').doc(ambulanceID).update({
         'Paramedics': FieldValue.arrayRemove([
           _paramedicData!.toJson(),
         ])
@@ -207,7 +207,7 @@ class ParamedicManager with ChangeNotifier {
     notifyListeners();
     try {
       var query = database
-          .collection('Ambulance')
+          .collection('Ambulances')
           .where('Number_Plate', isEqualTo: ambulance.numberPlate);
       //====Go to database and get the Ambulance info======
       query.get().then((ambulanceDoc) async {
@@ -215,7 +215,7 @@ class ParamedicManager with ChangeNotifier {
         //====Listen to any change to its data=====
 
         await database
-            .collection('Ambulance')
+            .collection('Ambulances')
             .doc(ambulanceDoc.docs[0].id)
             .update(
           {
@@ -274,7 +274,7 @@ class ParamedicManager with ChangeNotifier {
     _showprogress = true;
     _userprogresstext = 'Setting up profile...';
     notifyListeners();
-    final docRef = database.collection("Paramedic").doc(userID);
+    final docRef = database.collection("Paramedics").doc(userID);
 
     try {
       await docRef.get().then(

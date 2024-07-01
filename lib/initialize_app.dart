@@ -4,7 +4,7 @@ import 'package:ambulance_dispatch_application/Routes/app_routes.dart';
 import 'package:ambulance_dispatch_application/View_Models/Paramedic_Management/paramedic_management.dart';
 import 'package:ambulance_dispatch_application/View_Models/User_Management/Authentication/authentication.dart';
 import 'package:ambulance_dispatch_application/View_Models/User_Management/user_management.dart';
-import 'package:ambulance_dispatch_application/firebase_options.dart';
+import 'package:ambulance_dispatch_application/Keys/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -26,13 +26,13 @@ class InitApp {
           context.read<UserAuthentication>().setCurrentUser(user);
           if (user.email!.endsWith('para.com')) {
             await context.read<ParamedicManager>().getCurrentParamedicData(
-                context.read<UserAuthentication>().currentUser!.uid);
+                  user.uid,
+                );
 
             Navigator.of(context)
                 .popAndPushNamed(AppRouteManager.paramedicHomePage);
           } else {
-            await context.read<UserManager>().getCurrentUserData(
-                context.read<UserAuthentication>().currentUser!.uid);
+            await context.read<UserManager>().getCurrentUserData(user.uid);
             Navigator.of(context).popAndPushNamed(AppRouteManager.userHomePage);
           }
         }

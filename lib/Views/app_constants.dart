@@ -59,7 +59,7 @@ class AppTextField extends StatefulWidget {
     super.key,
     required this.labelText,
     required this.prefixIcon,
-    this.maxCharacters,
+    this.maxLength,
     this.counter,
     required this.keyboardType,
     this.hideText = false,
@@ -76,7 +76,7 @@ class AppTextField extends StatefulWidget {
   final void Function()? onIconPressed;
   final IconData? suffixIcon;
   final int? counter;
-  final int? maxCharacters;
+  final int? maxLength;
   final TextEditingController controller;
   final TextInputType keyboardType;
   final bool hideText;
@@ -101,10 +101,12 @@ class _AppTextFieldState extends State<AppTextField> {
         cursorHeight: 26,
         obscureText: widget.hideText,
         controller: widget.controller,
-        maxLength: widget.maxCharacters,
+        maxLength: widget.maxLength,
         decoration: InputDecoration(
           label: Text(widget.labelText),
-          labelStyle: GoogleFonts.orelegaOne(),
+          labelStyle: GoogleFonts.poppins(
+            fontWeight: FontWeight.w500,
+          ),
           fillColor: AppConstants().appGrey,
           filled: true,
           errorBorder: OutlineInputBorder(
@@ -135,9 +137,6 @@ class _AppTextFieldState extends State<AppTextField> {
               color: AppConstants().appDarkBlue,
             ),
           ),
-          counter: widget.maxCharacters != null
-              ? Text("${widget.counter}/${widget.maxCharacters}")
-              : const SizedBox(),
           prefixIcon: Icon(
             widget.prefixIcon,
             size: 18,

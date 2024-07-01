@@ -8,7 +8,7 @@ class AmbulanceManager with ChangeNotifier {
   List<Ambulance> get availableAmbulances => _availableAmbulances;
   Future<List<Ambulance>> getAvailableAmbulances() async {
     try {
-      final docRef = database.collection("Ambulance").where(
+      final docRef = database.collection("Ambulances").where(
             Filter.or(
               Filter('Status', isEqualTo: 'Available'),
               Filter('Status', isEqualTo: 'Unoccupied'),

@@ -18,7 +18,9 @@ class AppProgressIndicator extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               LoadingAnimationWidget.threeRotatingDots(
-                  color: const Color.fromARGB(255, 192, 227, 247), size: 70),
+                color: const Color.fromARGB(255, 192, 227, 247),
+                size: 70,
+              ),
               const SizedBox(
                 height: 16,
               ),

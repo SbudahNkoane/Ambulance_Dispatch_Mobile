@@ -60,14 +60,14 @@ class _AssignAmbulancePageState extends State<AssignAmbulancePage> {
       if (context.read<ParamedicManager>().paramedicData!.inAmbulance!.status ==
           "Dispatched") {
         database
-            .collection('Ticket')
+            .collection('Tickets')
             .doc(context.read<ParamedicManager>().dispatchTicket!.ticketId)
             .update({
           'Dispatched_Ambulance.Ambulance.RealTime_Location':
               GeoPoint(newLocation.latitude!, newLocation.longitude!),
         });
         database
-            .collection('Dispatched Ambulance')
+            .collection('Dispatched Ambulances')
             .doc(context.read<ParamedicManager>().dispatchTicket!.ticketId)
             .update({
           'Ambulance.RealTime_Location':
@@ -75,7 +75,7 @@ class _AssignAmbulancePageState extends State<AssignAmbulancePage> {
         });
       }
       await database
-          .collection('Ambulance')
+          .collection('Ambulances')
           .doc(context
               .read<ParamedicManager>()
               .paramedicData!
