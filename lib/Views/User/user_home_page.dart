@@ -214,49 +214,52 @@ class _HomeState extends State<Home> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Text("Loading...");
               }
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        'Hello ${userData.names}',
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: userData.accountStatus == 'Not Verified'
-                        ? MediaQuery.of(context).size.height / 7
-                        : MediaQuery.of(context).size.height / 6.5,
-                  ),
-                  userData.accountStatus == 'Not Verified'
-                      ? SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          child: Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(10),
-                              child: Text(
-                                'You are one step away!!\nMake sure to apply for verification by clicking the Apply button.',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.inter(
-                                    fontWeight: FontWeight.bold, fontSize: 18),
-                              ),
-                            ),
-                          ))
-                      : Text(
-                          'Welcome',
-                          style: GoogleFonts.inter(
-                              fontWeight: FontWeight.bold, fontSize: 18),
+              return SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          'Hello ${userData.names}',
                         ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height / 30,
-                  ),
-                  Image.asset(
-                    'assets/images/med.png',
-                    height: MediaQuery.of(context).size.height / 2.8,
-                    width: MediaQuery.of(context).size.width,
-                  ),
-                ],
+                      ],
+                    ),
+                    SizedBox(
+                      height: userData.accountStatus == 'Not Verified'
+                          ? MediaQuery.of(context).size.height / 7
+                          : MediaQuery.of(context).size.height / 6.5,
+                    ),
+                    userData.accountStatus == 'Not Verified'
+                        ? SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            child: Card(
+                              child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Text(
+                                  'You are one step away!!\nMake sure to apply for verification by clicking the Apply button.',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.inter(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                                ),
+                              ),
+                            ))
+                        : Text(
+                            'Welcome',
+                            style: GoogleFonts.inter(
+                                fontWeight: FontWeight.bold, fontSize: 18),
+                          ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height / 30,
+                    ),
+                    Image.asset(
+                      'assets/images/med.png',
+                      height: MediaQuery.of(context).size.height / 2.8,
+                      width: MediaQuery.of(context).size.width,
+                    ),
+                  ],
+                ),
               );
             },
           ),

@@ -282,7 +282,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     style: TextStyle(
                                         fontSize:
                                             MediaQuery.of(context).size.width /
-                                                30,
+                                                35,
                                         fontWeight: FontWeight.bold),
                                   ),
                                 )

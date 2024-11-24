@@ -204,9 +204,8 @@ class _TicketDispatchPageState extends State<TicketDispatchPage> {
         });
       }
     } catch (e) {
-      locator
-          .get<NavigationAndDialogService>()
-          .showSnackBar(message: e.toString(), title: 'An Error Occured');
+      locator.get<NavigationAndDialogService>().showSnackBar(
+          context: context, message: e.toString(), title: 'An Error Occured');
     }
   }
 

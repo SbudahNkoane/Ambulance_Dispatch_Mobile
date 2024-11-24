@@ -281,51 +281,70 @@ class _AssignAmbulancePageState extends State<AssignAmbulancePage> {
                   : Selector<AmbulanceManager, List<Ambulance>>(
                       selector: (p0, p1) => p1.availableAmbulances,
                       builder: (context, value, child) {
-                        return Container(
-                          padding: const EdgeInsets.only(left: 10, right: 10),
-                          height: MediaQuery.of(context).size.height,
-                          child: ListView.builder(
-                            itemCount: context
+                        return context
                                 .read<AmbulanceManager>()
                                 .availableAmbulances
-                                .length,
-                            itemBuilder: (context, index) {
-                              return Card(
-                                child: ListTile(
-                                  title: Text(
-                                      'Ambulance Plate:${value[index].numberPlate}'),
-                                  subtitle: SizedBox(
-                                    height: 70,
-                                    child: ListView.builder(
-                                      itemCount:
-                                          value[index].paramedics!.length,
-                                      itemBuilder: (context, index) {
-                                        return Text(value[index]
-                                            .paramedics![index]['Names']);
-                                      },
-                                    ),
-                                  ),
-                                  trailing: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color.fromARGB(
-                                          255, 20, 61, 241),
-                                      foregroundColor: const Color.fromARGB(
-                                          255, 223, 223, 223),
-                                    ),
-                                    onPressed: () async {
-                                      await context
-                                          .read<ParamedicManager>()
-                                          .driveAmbulance(value[index]);
-                                    },
-                                    child: Text(value[index].paramedics!.isEmpty
-                                        ? 'Drive now'
-                                        : 'Join Crew'),
+                                .isNotEmpty
+                            ? Container(
+                                padding:
+                                    const EdgeInsets.only(left: 10, right: 10),
+                                height: MediaQuery.of(context).size.height,
+                                child: ListView.builder(
+                                  itemCount: context
+                                      .read<AmbulanceManager>()
+                                      .availableAmbulances
+                                      .length,
+                                  itemBuilder: (context, index) {
+                                    return Card(
+                                      child: ListTile(
+                                        title: Text(
+                                            'Ambulance Plate:${value[index].numberPlate}'),
+                                        subtitle: SizedBox(
+                                          height: 70,
+                                          child: ListView.builder(
+                                            itemCount:
+                                                value[index].paramedics!.length,
+                                            itemBuilder: (context, index) {
+                                              return Text(value[index]
+                                                  .paramedics![index]['Names']);
+                                            },
+                                          ),
+                                        ),
+                                        trailing: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                const Color.fromARGB(
+                                                    255, 20, 61, 241),
+                                            foregroundColor:
+                                                const Color.fromARGB(
+                                                    255, 223, 223, 223),
+                                          ),
+                                          onPressed: () async {
+                                            await context
+                                                .read<ParamedicManager>()
+                                                .driveAmbulance(value[index]);
+                                          },
+                                          child: Text(
+                                              value[index].paramedics!.isEmpty
+                                                  ? 'Drive now'
+                                                  : 'Join Crew'),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              )
+                            : Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 10, right: 10),
+                                  child: Text(
+                                    "No Ambulances added to the system as yet. Contact an Administrator.",
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.poppins(fontSize: 14),
                                   ),
                                 ),
                               );
-                            },
-                          ),
-                        );
                       },
                     );
             },
